@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+    <title>用户管理</title>
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+</head>
+
+<body class="fixed-header fixed-ribbon fixed-navigation desktop-detected pace-done">
+    <!-- HEADER -->
+    <header id="header">
+        <div class="navbar navbar-default" id="navbar">
+            <div class="navbar-container" id="navbar-container">
+                <div class="navbar-header pull-left">
+                    <a href="#" class="navbar-brand">
+                        <img alt="用户管理系统" width="250px" src="../../img/logo1_white-.png" class="txt-color-white" style="margin-top:-5px;">
+                    </a>
+
+                </div>
+                <div class="navbar-header pull-right" role="navigation">
+                    <ul class="nav ace-nav">
+                        <li class="light-blue">
+                            <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                                <img class="nav-user-photo" src="../../img/user48x48.png"/>
+                                    <span class="user-info">
+                                         <small>欢迎光临</small>
+                                         <span id="loginUser"></span>
+                                    </span>
+                                <i class="fa fa-sort-down"></i>
+                            </a>
+                            <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#modifyPasswordModal">
+                                        <i class="fa fa-lg fa-plus"></i>更改密码
+                                    </a>
+                                </li>
+
+                                <li class="divider"></li>
+                                <li>
+                                    <a id="logout" href="../login.html">
+                                        <i class="fa fa-power-off"></i>退出
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="modal fade" id="modifyPasswordModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="password-form" class=" vlidate-form client-form">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div>
+                                        <label> 旧  密  码</label>
+                                        <input id="password" name="password" type="password" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <label> 新  密  码</label>
+                                        <input id="newPassword" name="newPassword" type="password" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <label> 确认密码</label>
+                                        <input id="passwordConfirm" name="passwordConfirm" type="password" class="form-control"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="btn-modifiedPassword" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    loadScript("../../js/login.js", initTop);
+    function initTop() {
+        login.initTop();
+    }
+</script>
+</html>

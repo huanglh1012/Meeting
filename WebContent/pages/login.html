@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+    <title></title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Basic Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/font-awesome.min.css">
+    <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/smartadmin-production.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/smartadmin-skins.css">
+    <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/demo.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/business/login.css">
+    <!-- FAVICONS -->
+    <link rel="shortcut icon" href="../img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../img/favicon/favicon.ico" type="image/x-icon">
+</head>
+<body class="animated fadeInDown">
+    <input id="dtmsURL" type="hidden" value="${dtmsURL}">
+    <input id="itmsURL" type="hidden" value="${itmsURL}">
+    <input id="sysURL" type="hidden" value="${sysURL}">
+    <input id="pmsURL" type="hidden" value="${pmsURL}">
+    <input id="knowlegeURL" type="hidden" value="${knowlegeURL}">
+    <div id="wrapper">
+        <!-- MAIN CONTENT -->
+        <div id="mainContent" class="">
+            <div id="leftContent">
+                <div class="leftTitle">
+                    <img src="../img/login/companyLogo.png">
+                    <sup class="badge bounceIn animated">版本</sup>
+                </div>
+                <div class="clearfix"></div>
+                <div class="simpleTile dtms text-center selectedTile" data-key="dtms"><img src="../img/login/systemName_01.png"></div>
+                <div class="simpleTile itms text-center" data-key="itms"><img src="../img/login/systemName_02.png"></div>
+                <div class="simpleTile sys text-center" data-key="sys"><img src="../img/login/systemName_05.png"></div>
+                <div class="clearfix"></div>
+                <div class="leftFooter">
+                    <p>公司网站&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;友情链接&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;法律声明</p>
+                    <p>东信和平科技股份有限公司&nbsp;&nbsp;&nbsp;</p>
+                </div>
+            </div>
+            <div id="rightContent">
+                <div id="rightTitle"><img src="../img/login/systemLogo_01.png"></div>
+                <div id="divForm">
+                    <form id="loginForm" class="smart-form client-form" method="post">
+                        <section>
+                            <label class="label" data-i18n="systemAccount"></label>
+                            <label class="input"> <i class="icon-append fa fa-user"></i>
+                                <input id="username" name="username" placeholder="用户名">
+                                <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> 请输入用户名</b></label>
+                        </section>
+
+                        <section>
+                            <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                <input type="password" id="password" name="password" placeholder="密码">
+                                <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> 请输入你的密码</b> </label>
+                        </section>
+
+                        <section>
+                            <button id="btnSubmit" type="submit" class="btn">
+                                登录
+                            </button>
+                        </section>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="backImg"></div>
+    </div>
+</body>
+
+<script src="../js/libs/jquery-2.0.2.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        document.write('<script src="../../js/libs/jquery-2.0.2.min.js"><\/script>');
+    }
+</script>
+<script src="../js/libs/jquery-ui-1.10.3.min.js"></script>
+<script>
+    if (!window.jQuery.ui) {
+        document.write('<script src="../../js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+    }
+</script>
+
+<script src="../js/core/ecpLoader.js"></script>
+<!--[if IE 7]>
+<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+<![endif]-->
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        app.internationalInit('UserManagement','../');
+        login.init();
+    });
+</script>
+</html>
