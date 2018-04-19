@@ -53,7 +53,7 @@
 //        'js/resetheight.js',
         // 工具类
         'js/core/globalInfo.js',
-        'js/core/globalInfoLoader.js',
+        //'js/core/globalInfoLoader.js',
         'js/util/MyJsonUtil.js',
         'js/util/StringUtil.js',
         'js/util/DomUtil.js',

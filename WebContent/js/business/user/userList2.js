@@ -20,28 +20,29 @@ var userList = function () {
             todayHighlight : 1,
             autoclose: true
         }).on("changeDate", function(e) {
-                if ($(e.target).data("type") === "start") {
-                    $("#endDate").datepicker("setStartDate", e.date);
-                } else {
-                    $("#startDate").datepicker("setEndDate", e.date);
-                }
-            });
+            if ($(e.target).data("type") === "start") {
+                $("#endDate").datepicker("setStartDate", e.date);
+            } else {
+                $("#startDate").datepicker("setEndDate", e.date);
+            }
+        });
     }
 
     var handleTable = function () {
         // 表头定义
         var tableHead = [
-            { "sTitle": "用户ID", "mData": "employeeId","bVisible":false},
-            { "sTitle": "姓名","mData": "employeeName","type" :"string" },
-            { "sTitle": "身份证号", "mData": "identifyCardNumber","type":"string"},
-            { "sTitle": "性别", "mData": "employeeSex","type" :"string" },
-            { "sTitle": "账号", "mData": "login","type" :"string"},
-            { "sTitle": "部门", "mData": "departmentName","type" :"departmentCombo"},
-            { "sTitle": "职务", "mData": "postName","type":"postCombo" },
-            { "sTitle": "角色", "mData": "roleName" ,"type" :"roleCombo"},
-            { "sTitle": "联系电话", "mData": "telephone","type" :"string"}
+            { "sTitle": "报表任务信息ID", "mData": "reportTaskId","bVisible":false},
+            { "sTitle": "报表名称","mData": "reportTaskName","type" :"string" },
+            { "sTitle": "活动状态", "mData": "repTaskActivityTypeName","type":"repTaskActivityTypeCombo"},
+            { "sTitle": "产品类型", "mData": "productTypeName","type" :"string" },
+            { "sTitle": "品牌", "mData": "brandName","type" :"string"},
+            { "sTitle": "运营商", "mData": "operatorName","type" :"string"},
+            { "sTitle": "分发类型", "mData": "reportSendTypeName","type":"reportSendTypeCombo" },
+            { "sTitle": "创建人", "mData": "paaUsername" ,"type" :"string"},
+            { "sTitle": "开始时间", "mData": "startTime","type" :"date"},
+            { "sTitle": "结束时间","mData": "endTime","type" :"date"}
         ];
-        var oTable =  $('#dt_issues').dataTable({
+       var oTable =  $('#dt_issues').dataTable({
             "aoColumns": tableHead,
             "serverSide": true,
             "bAutoWidth": false,
@@ -91,27 +92,7 @@ var userList = function () {
 
     return {
         _select2InitValue: {
-            departmentName: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            postName: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            roleName: [{
+            reportSendTypeName: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {

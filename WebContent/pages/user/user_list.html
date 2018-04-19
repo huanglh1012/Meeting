@@ -61,42 +61,52 @@
                                                         </li>
                                                         <li class="divider"></li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="reportTaskName">报表名称</a>
+                                                            <a href="javascript:;" data-last-value="employeeName">姓名</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="productTypeName">产品类型</a>
+                                                            <a href="javascript:;" data-last-value="identifyCardNumber">身份证号</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="brandName">品牌</a>
+                                                            <a href="javascript:;" data-last-value="employeeSex">性别</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="operatorName">运营商</a>
+                                                            <a href="javascript:;" data-last-value="login">账号</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="reportSendTypeName" data-multi="true">分发类型</a>
+                                                            <a href="javascript:;" data-last-value="departmentName" data-multi="true">部门</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:;" data-last-value="postName" data-multi="true">职务</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:;" data-last-value="roleName" data-multi="true">角色</a>
                                                         </li>
                                                     </ul>
                                                 </div>
-        	                                    <input class="form-control" type="text" placeholder="项目提示" name="allMatchers" data-keyup="true">
-        
-        	                                    <input class="form-control hidden" type="text" placeholder="报表名称"  name="reportTaskName" data-keyup="true">
-        
-                                                <input class="form-control hidden" name="productTypeName" type="text" placeholder="产品类型" data-keyup="true">
-        
-        	                                    <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                    <input class="form-control hidden" name="brandName" type="text" placeholder="品牌"  data-keyup="true">
-        
-        	                                    <!--请保留name="severity"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                    <input class="form-control hidden" name="operatorName" type="text" placeholder="运营商"  data-keyup="true">
-        
-                                                <input class="hidden" name="reportSendTypeName" type="hidden" placeholder="分发类型" data-src="local">
-        
+                                                <input class="form-control" type="text" placeholder="项目提示" name="allMatchers" data-keyup="true">
+
+                                                <input class="form-control hidden" type="text" placeholder="姓名"  name="employeeName" data-keyup="true">
+
+                                                <input class="form-control hidden" name="identifyCardNumber" type="text" placeholder="身份证号" data-keyup="true">
+
+                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                <input class="form-control hidden" name="employeeSex" type="text" placeholder="性别"  data-keyup="true">
+
+                                                <!--请保留name="severity"和data-src="local", data-src属性指示数据来源于本地-->
+                                                <input class="form-control hidden" name="login" type="text" placeholder="账号"  data-keyup="true">
+
+                                                <input class="hidden" name="departmentName" type="hidden" placeholder="部门" data-src="local">
+
+                                                <input class="hidden" name="postName" type="hidden" placeholder="职务" data-src="local">
+
+                                                <input class="hidden" name="roleName" type="hidden" placeholder="角色" data-src="local">
+
         	                                    <div class="input-group-btn">
         	                                      <button id="btn-simple-search" type="button" class="btn btn-primary">
         	                                          <i class="fa fa-fw fa-search "></i>搜索
         	                                      </button>
         	                                    </div>
-        
+
         	                                    <div class="input-group-btn">
         	                                      <button id="btn-show-more-search" type="button" class="btn btn-default" data-search-mode="combination">
         	                                      高级
@@ -105,7 +115,7 @@
         	                                </div>
         	                            </form>
         	                        </div>
-        
+
         	                        <!--more search-->
         	                        <div id="more-search" style="display: none;">
         	                            <form id="combinational-search-form">
@@ -120,7 +130,7 @@
         	                                            <div class="col-sm-6 col-md-4 col-lg-4">
         	                                                <div class="form-group">
         	                                                    <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                                    <input name="reportSendTypeName" type="hidden" placeholder="分发类型" data-moda="combination" data-src="local" data-type="checkbox">
+        	                                                    <input name="roleName" type="hidden" placeholder="分发类型" data-moda="combination" data-src="local" data-type="checkbox">
         	                                                </div>
         	                                            </div>
                                                     </div>
