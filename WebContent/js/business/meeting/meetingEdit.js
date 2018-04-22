@@ -1,6 +1,6 @@
 /**
- * FileName: userEdit.js
- * File description: 用于加载和初始化自动化规则配置页面的组件及内容
+ * FileName: meetingEdit.js
+ * File description: 用于加载和初始化会议配置页面的组件及内容
  * Copyright (c) 2016 Eastcompeace, Inc. All Rights Reserved.
  *
  * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
@@ -8,14 +8,44 @@
  */
 
 /**
- * userEdit所有属性和方法定义
- * @type {userEdit}
+ * meetingEdit
+ * @type {meetingEdit}
  */
-var userEdit = function () {
+var meetingEdit = function () {
+
+    var handleDatePickers = function () {
+        $("#messageNoticeTime,#meetingStartTime").datetimepicker({
+            language:'zh-CN',
+            format: "yyyy-mm-dd hh:ii"
+        });
+
+        $("#meetingProposeTime").datepicker({
+            format: "yyyy-mm-dd",
+            minViewMode: "days",
+            todayHighlight : 1,
+            autoclose: true
+        }).on("changeDate", function(e) {
+                if ($(e.target).data("type") === "start") {
+                    $("#endDate").datepicker("setStartDate", e.date);
+                } else {
+                    $("#startDate").datepicker("setEndDate", e.date);
+                }
+            });
+    }
+
+    var handleTimePickers = function () {
+        if (jQuery().timepicker) {
+            $('.timepicker-24').timepicker({
+                minuteStep: 1,
+                showSeconds: true,
+                showMeridian: false
+            });
+        }
+    }
 
     var handleSelect2 = function () {
-        $("#departmentId").select2({
-            placeholder: "请选择或者输入一个项目名称",
+        $("#chargerId").select2({
+            placeholder: "请选择主持人",
             allowClear: true,
             maximumInputLength: 200,
 
@@ -79,8 +109,8 @@ var userEdit = function () {
                 validator.cleanValidation();
             });
 
-        $("#postId").select2({
-            placeholder: "请选择或者输入一个项目名称",
+        $("#meetingRoomId").select2({
+            placeholder: "请选择会议室",
             allowClear: true,
             maximumInputLength: 200,
 
@@ -144,8 +174,73 @@ var userEdit = function () {
                 validator.cleanValidation();
             });
 
-        $("#roleId").select2({
-            placeholder: "请选择或者输入一个项目名称",
+        $("#proposerId").select2({
+            placeholder: "请选择会议室",
+            allowClear: true,
+            maximumInputLength: 200,
+
+            formatInputTooLong: function (input, max) {
+                var n = input.length - max;
+                return "项目名称过长，至多允许200个字符，" + "请删掉" + n + "个字符";
+            },
+
+            query: function(options) { //search
+                var realParams = {
+                    pageSize: 5,  //默认每次显示5条记录
+                    pageNum: options.page,
+                    "projectQueryCondition.type" : "card",
+                    "projectQueryCondition.name" : options.term
+                };
+
+                var queryConditions = [];
+                var putObj = [];
+                var obj = {};
+                obj.isLike = true;
+                obj.isRaw = false;
+                obj.isEntityField = false;
+                obj.isCaseSensitive = false;
+                obj.fieldName = "TEXT";
+                obj.type = "string";
+                obj.stringCondition = options.term;
+                queryConditions.push(obj);
+
+                putObj.push(StringUtil.decorateRequestData('List',queryConditions));
+                putObj.push(StringUtil.decorateRequestData('Integer',(options.page-1)*5 + 1));
+                putObj.push(StringUtil.decorateRequestData('Integer',5));
+
+                var proxyObj = new Object();
+                proxyObj.proxyClass = "fileController";
+                proxyObj.proxyMethod = "getUsedTaskStrategyListByCondition";
+                proxyObj.jsonString = MyJsonUtil.obj2str(putObj);
+
+                $.ajax({
+                    url : $.url_root + "/controllerProxy.do?method=callBack",
+                    dataType : "json",
+                    type: "POST",
+                    data : proxyObj,
+
+                    success : function(data) {
+                        checkResult(data, {
+                            showBox: false,
+                            callback: function() {
+                                options.callback(data.json);
+                            }
+                        });
+                    }
+                });
+            }
+        }).on('select2-selected', function(e) { //fire when selected the option
+                console.log('select2-selected');
+                var taskStrategyId = e.choice.id;
+                $("#taskStrategyId").val(taskStrategyId);  // empty the value first
+//                $("#create-issue-form").valid();
+            }).on('select2-clearing', function(e) {
+                $(".changed-form").find("input.changed").val("");
+                validator.cleanValidation();
+            });
+
+        $("#proposeDepartmentId").select2({
+            placeholder: "请选择会议室",
             allowClear: true,
             maximumInputLength: 200,
 
@@ -468,6 +563,8 @@ var userEdit = function () {
             handleTree();
             handleForm();
             handleFileUpload();
+            handleDatePickers();
+            handleTimePickers();
         }
     };
 }();

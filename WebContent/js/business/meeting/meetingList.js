@@ -1,6 +1,6 @@
 /**
- * FileName: userList.js
- * File description: 用于加载用户列表页面的组件及内容
+ * FileName: meetingList.js
+ * File description: 用于加载会议列表页面的组件及内容
  * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
  *
  * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
@@ -8,13 +8,13 @@
  */
 
 /**
- * userList所有属性和方法定义
- * @type {userList}
+ * meetingList所有属性和方法定义
+ * @type {meetingList}
  */
-var userList = function () {
+var meetingList = function () {
 
     var handleDatePicker = function () {
-        $("#startDate, #endDate").datepicker({
+        $("#meetingStartTime, #meetingEndTime").datepicker({
             format: "yyyy-mm-dd",
             minViewMode: "days",
             todayHighlight : 1,
@@ -31,17 +31,15 @@ var userList = function () {
     var handleTable = function () {
         // 表头定义
         var tableHead = [
-            { "sTitle": "用户ID", "mData": "employeeId","bVisible":false},
-            { "sTitle": "姓名","mData": "employeeName","type" :"string" },
-            { "sTitle": "身份证号", "mData": "identifyCardNumber","type":"string"},
-            { "sTitle": "性别", "mData": "employeeSex","type" :"string" },
-            { "sTitle": "账号", "mData": "login","type" :"string"},
-            { "sTitle": "部门", "mData": "departmentName","type" :"departmentCombo"},
-            { "sTitle": "职务", "mData": "postName","type":"postCombo" },
-            { "sTitle": "角色", "mData": "roleName" ,"type" :"roleCombo"},
-            { "sTitle": "联系电话", "mData": "telephone","type" :"string"}
+            { "sTitle": "会议ID", "mData": "meetingId","bVisible":false},
+            { "sTitle": "会议主题","mData": "meetingSubject","type" :"string" },
+            { "sTitle": "会议时间", "mData": "meetingStartTime","type":"date"},
+            { "sTitle": "会议地点", "mData": "meetingRoomAddress","type" :"string" },
+            { "sTitle": "发起人", "mData": "proposer","type" :"proposerCombo"},
+            { "sTitle": "发起部门", "mData": "proposeDepartment","type" :"proposeDepartmentCombo"},
+            { "sTitle": "会议状态", "mData": "meetingStatus","type" :"meetingStatusCombo"}
         ];
-        var oTable =  $('#dt_issues').dataTable({
+        var oTable =  $('#meetingList').dataTable({
             "aoColumns": tableHead,
             "serverSide": true,
             "bAutoWidth": false,
@@ -91,7 +89,7 @@ var userList = function () {
 
     return {
         _select2InitValue: {
-            sexName: [{
+            proposeDepartment: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {
@@ -101,7 +99,7 @@ var userList = function () {
                 "id": "FTP专线",
                 "text": "FTP专线"
             }],
-            departmentName: [{
+            proposeEmployee: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {
@@ -111,7 +109,7 @@ var userList = function () {
                 "id": "FTP专线",
                 "text": "FTP专线"
             }],
-            postName: [{
+            charger: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {
@@ -121,7 +119,7 @@ var userList = function () {
                 "id": "FTP专线",
                 "text": "FTP专线"
             }],
-            roleName: [{
+            meetingRoomAddress: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {

@@ -29,8 +29,8 @@
         <div id="ribbon">
             <!-- breadcrumb -->
             <ol class="breadcrumb">
-                <li><a href="/dashboard_cardpro.jspa" data-item-index="1">权限管理</a></li>
-                <li>用户列表</li>
+                <li><a href="/dashboard_cardpro.jspa" data-item-index="1">会议管理</a></li>
+                <li>会议列表</li>
             </ol>
             <!-- end breadcrumb -->
         </div>
@@ -61,45 +61,34 @@
                                                         </li>
                                                         <li class="divider"></li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="employeeName">姓名</a>
+                                                            <a href="javascript:;" data-last-value="meetingSubject">会议主题</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="identifyCardNumber">身份证号</a>
+                                                            <a href="javascript:;" data-last-value="proposeDepartment" data-multi="true">发起部门</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="sexName" data-multi="false">性别</a>
+                                                            <a href="javascript:;" data-last-value="proposeEmployee" data-multi="true">发起人</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="login">账号</a>
+                                                            <a href="javascript:;" data-last-value="charger" data-multi="true">主持人</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="departmentName" data-multi="true">部门</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:;" data-last-value="postName" data-multi="true">职务</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:;" data-last-value="roleName" data-multi="true">角色</a>
+                                                            <a href="javascript:;" data-last-value="meetingRoomAddress" data-multi="true">会议地点</a>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <input class="form-control" type="text" placeholder="项目提示" name="allMatchers" data-keyup="true">
+                                                <input class="form-control" type="text" placeholder="提示" name="allMatchers" data-keyup="true">
 
-                                                <input class="form-control hidden" type="text" placeholder="姓名"  name="employeeName" data-keyup="true">
-
-                                                <input class="form-control hidden" name="identifyCardNumber" type="text" placeholder="身份证号" data-keyup="true">
+                                                <input class="form-control hidden" type="text" placeholder="会议主题"  name="meetingSubject" data-keyup="true">
 
                                                 <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                <input class="hidden" name="sexName" type="hidden" placeholder="性别"  data-src="local">
+                                                <input class="hidden" name="proposeDepartment" type="hidden" placeholder="发起部门" data-src="local">
 
-                                                <!--请保留name="severity"和data-src="local", data-src属性指示数据来源于本地-->
-                                                <input class="form-control hidden" name="login" type="text" placeholder="账号"  data-keyup="true">
+                                                <input class="hidden" name="proposeEmployee" type="hidden" placeholder="发起人" data-src="local">
 
-                                                <input class="hidden" name="departmentName" type="hidden" placeholder="部门" data-src="local">
+                                                <input class="hidden" name="charger" type="hidden" placeholder="主持人" data-src="local">
 
-                                                <input class="hidden" name="postName" type="hidden" placeholder="职务" data-src="local">
-
-                                                <input class="hidden" name="roleName" type="hidden" placeholder="角色" data-src="local">
+                                                <input class="hidden" name="meetingRoomAddress" type="hidden" placeholder="会议地点"  data-src="local">
 
         	                                    <div class="input-group-btn">
         	                                      <button id="btn-simple-search" type="button" class="btn btn-primary">
@@ -122,27 +111,49 @@
         	                                <div class="row">
         	                                    <div class="col-sm-10 col-md-10 col-lg-10">
         	                                        <div class="row" style="margin: 0;">
-        	                                            <div class="col-sm-6 col-md-4 col-lg-4">
+        	                                            <div class="col-sm-12 col-md-8 col-lg-8">
         	                                                <div class="form-group">
-        	                                                    <input class="form-control" style="padding-left: 5px;" name="reportTaskName" type="text" placeholder="报表名称" data-moda="combination" data-type="string">
-        	                                                </div>
-        	                                            </div>
-        	                                            <div class="col-sm-6 col-md-4 col-lg-4">
-        	                                                <div class="form-group">
-        	                                                    <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                                    <input name="roleName" type="hidden" placeholder="分发类型" data-moda="combination" data-src="local" data-type="checkbox">
+        	                                                    <input class="form-control" style="padding-left: 5px;" name="meetingSubject" type="text" placeholder="会议主题" data-moda="combination" data-type="string">
         	                                                </div>
         	                                            </div>
                                                     </div>
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <input id="startDate" type="text" placeholder="开始日期" class="form-control input-sm" name="startTime" data-type="date" data-moda="combination">
+                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                                <input name="proposeDepartment" type="hidden" placeholder="发起部门" data-moda="combination" data-src="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <input id="endDate" type="text" placeholder="结束日期" class="form-control input-sm" name="endTime" data-type="date" data-moda="combination">
+                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                                <input name="proposeEmployee" type="hidden" placeholder="发起人" data-moda="combination" data-src="local" data-type="checkbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin: 0;">
+                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                                <input name="charger" type="hidden" placeholder="主持人" data-moda="combination" data-src="local" data-type="checkbox">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingRoomAddress" type="hidden" placeholder="会议地点" data-moda="combination" data-src="local" data-type="checkbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin: 0;">
+                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <input id="meetingStartTime" type="text" placeholder="会议开始时间" class="form-control input-sm" name="meetingStartTime" data-type="date" data-moda="combination">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <input id="meetingEndTime" type="text" placeholder="会议结束日期" class="form-control input-sm" name="meetingEndTime" data-type="date" data-moda="combination">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -169,20 +180,23 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="well">
                         <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
-                            <a href='user_new.html' class="btn btn-warning btn-sm pull-right" >
-                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改</span>
+                            <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
+                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >结束会议</span>
                             </a>
-                            <a href='user_new.html' class="btn btn-success btn-sm pull-right" >
-                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除</span>
+                            <a href='meeting_new.html' class="btn btn-success btn-sm pull-right" >
+                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除会议</span>
                             </a>
-                            <a href='user_new.html' class="btn btn-primary btn-sm pull-right" >
-                                <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">增加</span>
+                            <a href='meeting_new.html' class="btn btn-warning btn-sm pull-right" >
+                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >编辑会议</span>
+                            </a>
+                            <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
+                                <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">发起会议</span>
                             </a>
                             <!--<div class="btn-group hidden-phone pull-right">-->
                                 <!--<a class="btn dropdown-toggle btn-sm btn-primary exportToExcelTables"><i class="fa fa-cog"></i>导出</a>-->
                             <!--</div>-->
                         </div>
-                        <table id="dt_issues" width="100%;" style="width: 100%;" class="table table-striped table-hover compact fixedTable dt-responsive no-wrap table-bordered">
+                        <table id="meetingList" width="100%;" style="width: 100%;" class="table table-striped table-hover compact fixedTable dt-responsive no-wrap table-bordered">
                         </table>
                     </div>
                 </div>
@@ -223,7 +237,7 @@
 <script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
 <script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
 <script src="../../js/core/searchCommon.js"></script>
-<script src="../../js/business/user/userList.js"></script>
+<script src="../../js/business/meeting/meetingList.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#top").load("../../pages/top.html");
@@ -234,7 +248,7 @@
     window.onload = function(){
         app.init();
         app.internationalInit('UserManagement');
-        userList.init();
+        meetingList.init();
     }
 
     // 不加载app.js其他浏览器会显示不了左侧导航的+-图标，火狐则可以正常显示
