@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+    <!-- Basic Styles -->
+    <link href="../../css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/font-awesome.min.css" media="screen" rel="stylesheet" type="text/css">
+    <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
+    <link href="../../css/smartadmin-production.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/smartadmin-skins.css" media="screen" rel="stylesheet" type="text/css">
+    <!-- Common Style -->
+    <link href="../../css/common.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/demo.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/navigation.css" media="screen" rel="stylesheet" type="text/css">
+
+    <link href="../../css/dataTables.colVis.css" media="screen" rel="stylesheet" type="text/css">
+    <!-- Date Picker -->
+    <link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <!-- Left panel : Navigation area -->
+    <div id="top"></div>
+    <div id="leftnav"></div>
+    <!-- END NAVIGATION -->
+
+    <div id="main" role="main">
+        <!-- RIBBON -->
+        <div id="ribbon">
+            <!-- breadcrumb -->
+            <ol class="breadcrumb">
+                <li><a href="/dashboard_cardpro.jspa" data-item-index="1">权限管理</a></li>
+                <li>职务列表</li>
+            </ol>
+            <!-- end breadcrumb -->
+        </div>
+        <!-- END RIBBON -->
+
+        <!-- MAIN CONTENT -->
+        <div id="content">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="well">
+                        <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
+                            <a href='meeting_new.html' class="btn btn-success btn-sm pull-right" >
+                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除</span>
+                            </a>
+                            <a href='meeting_new.html' class="btn btn-warning btn-sm pull-right" >
+                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改</span>
+                            </a>
+                            <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
+                                <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">增加</span>
+                            </a>
+                        </div>
+                        <table id="postList" width="100%;" style="width: 100%;" class="table table-striped table-hover compact fixedTable dt-responsive no-wrap table-bordered">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 不能删除，查询所用 -->
+    <!-- the query mode, simple query or combinational query -->
+    <input id="query-mode" type="hidden" value="simple">
+    <div id="footer"></div>
+</body>
+
+<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
+<script data-pace-options='{ "restartOnRequestAfter": true }' src="../../js/plugin/pace/pace.min.js"></script>
+<script src="../../js/libs/jquery-2.0.2.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        document.write('<script src="../../js/libs/jquery-2.0.2.min.js"><\/script>');
+    }
+</script>
+<script src="../../js/libs/jquery-ui-1.10.3.min.js"></script>
+<script>
+    if (!window.jQuery.ui) {
+        document.write('<script src="../../js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+    }
+</script>
+<script src="../../js/core/ecpLoader.js"></script>
+<!-- JQUERY SELECT2 INPUT -->
+<script src="../../js/plugin/select2/select2.min.js"></script>
+<!-- bootstrap-datepicker-master -->
+<script src="../../js/plugin/bootstrap-datepicker-master/bootstrap-datepicker.js"></script>
+<script src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
+<script src="../../js/plugin/datatables10/dataTables.colReorder.js"></script>
+<script src="../../js/plugin/datatables10/dataTables.colVis.min.js"></script>
+<script src="../../js/plugin/datatables/ZeroClipboard.js"></script>
+<script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
+<script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
+<script src="../../js/core/searchCommon.js"></script>
+<script src="../../js/business/user/roleList.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#top").load("../../pages/top.html");
+        $("#leftnav").load("../../pages/leftnav.html");
+        $("#footer").load("../../pages/footer.html");
+    });
+
+    window.onload = function(){
+        app.init();
+        app.internationalInit('UserManagement');
+        roleList.init();
+    }
+
+    // 不加载app.js其他浏览器会显示不了左侧导航的+-图标，火狐则可以正常显示
+    loadScript("../../js/app.js", initTop);
+    function initTop() {
+
+    }
+</script>
+</html>
