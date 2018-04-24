@@ -48,12 +48,53 @@
                             <a href='meeting_new.html' class="btn btn-warning btn-sm pull-right" >
                                 <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改</span>
                             </a>
-                            <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
+                            <a href="#" class="btn btn-primary btn-sm pull-right" id="add">
                                 <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">增加</span>
                             </a>
                         </div>
                         <table id="postList" width="100%;" style="width: 100%;" class="table table-striped table-hover compact fixedTable dt-responsive no-wrap table-bordered">
                         </table>
+                        <!-- 消息提示框-->
+                        <div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">编辑职务</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">
+                                                        职务
+                                                    </label>
+                                                    <div>
+                                                        <input class="form-control required-validation" name="postName" style="width: 100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">
+                                                        职务描述
+                                                    </label>
+                                                    <div>
+                                                        <input class="form-control required-validation" name="postSummary" style="width: 100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary">确定</button>
+                                        <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -93,7 +134,7 @@
 <script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
 <script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
 <script src="../../js/core/searchCommon.js"></script>
-<script src="../../js/business/user/roleList.js"></script>
+<script src="../../js/business/user/postList.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#top").load("../../pages/top.html");
@@ -104,7 +145,7 @@
     window.onload = function(){
         app.init();
         app.internationalInit('UserManagement');
-        roleList.init();
+        postList.init();
     }
 
     // 不加载app.js其他浏览器会显示不了左侧导航的+-图标，火狐则可以正常显示

@@ -13,6 +13,12 @@
  */
 var departmentList = function () {
 
+    var handleButton = function() {
+        $('#add').on('click', function (e) {
+            $('#myModal').modal('show',true);
+        });
+    }
+
     var handleTree = function() {
         var setting = {
             view: {
@@ -88,6 +94,7 @@ var departmentList = function () {
 
     return {
         init: function () {
+            handleButton();
             handleTree();
         }
     };

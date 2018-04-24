@@ -12,6 +12,11 @@
  * @type {meetingEdit}
  */
 var meetingEdit = function () {
+    var handleButton = function() {
+        $('#meetingJoiner').on('click', function (e) {
+            $('#myModal').modal('show',true);
+        });
+    }
 
     var handleDatePickers = function () {
         $("#messageNoticeTime,#meetingStartTime").datetimepicker({
@@ -565,6 +570,7 @@ var meetingEdit = function () {
             handleFileUpload();
             handleDatePickers();
             handleTimePickers();
+            handleButton();
         }
     };
 }();

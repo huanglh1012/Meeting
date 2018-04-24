@@ -240,6 +240,44 @@
                                             <a title="取消提交" href="../user/user_list.html" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp; 取消</a>
                                         </div>
                                     </div>
+                                    <div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title" id="myModalLabel">选择人员</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <div>
+                                                                    <input class="form-control required-validation" name="parentDepartmentName" style="width: 100%">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <div>
+                                                                    <button type="button" class="btn btn-primary">查找</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div id="treeDemo" class="ztree" style="min-height: 100px">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary">确定</button>
+                                                    <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal -->
+                                    </div>
                                 </div>
                             <!--end row-->
                             <!-- </form> -->

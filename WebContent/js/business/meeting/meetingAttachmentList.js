@@ -14,7 +14,7 @@
 var meetingAttachmentList = function () {
 
     var handleDatePicker = function () {
-        $("#meetingStartTime, #meetingEndTime").datepicker({
+        $("#meetingStartTime, #meetingEndTime,#uploadStartTime, #uploadEndTime").datepicker({
             format: "yyyy-mm-dd",
             minViewMode: "days",
             todayHighlight : 1,
@@ -90,7 +90,7 @@ var meetingAttachmentList = function () {
 
     return {
         _select2InitValue: {
-            proposeDepartment: [{
+            uploadDepartment: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {
@@ -100,7 +100,7 @@ var meetingAttachmentList = function () {
                 "id": "FTP专线",
                 "text": "FTP专线"
             }],
-            proposeEmployee: [{
+            uploadEmployee: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {
@@ -120,7 +120,7 @@ var meetingAttachmentList = function () {
                 "id": "FTP专线",
                 "text": "FTP专线"
             }],
-            meetingRoomAddress: [{
+            meetingStatus: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {

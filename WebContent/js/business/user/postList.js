@@ -14,6 +14,10 @@
 var postList = function () {
 
     var handleTable = function () {
+        $('#add').on('click', function (e) {
+            $('#myModal').modal('show',true);
+        });
+
         // 表头定义
         var tableHead = [
             { "sTitle": "职务ID", "mData": "meetingRoomId","bVisible":false},

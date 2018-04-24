@@ -31,7 +31,7 @@
         /********************** JS文件加载 ************************/
         'js/libs/i18n/jquery.i18n.properties.min.js',
         // BOOTSTRAP JS
-        'js/bootstrap/bootstrap.min.js',
+        'js/bootstrap/bootstrap2.js',
         // JARVIS WIDGETS
         'js/smartwidgets/jarvis.widget.min.js',
         // JQUERY VALIDATE -->

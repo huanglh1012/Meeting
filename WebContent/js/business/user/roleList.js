@@ -13,47 +13,56 @@
  */
 var roleList = function () {
 
-    var handleTable = function () {
-        // 表头定义
-        var tableHead = [
-            { "sTitle": "职务ID", "mData": "meetingRoomId","bVisible":false},
-            { "sTitle": "职务","mData": "postName","type" :"string" },
-            { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
-        ];
-        var oTable =  $('#postList').dataTable({
-            "aoColumns": tableHead,
-            "serverSide": true,
-            "bAutoWidth": false,
-            "responsive": true,
-            "ordering": true,
-            "order": [[ 2, "ASC" ]],
-            "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
-            "lengthChange": true,
-            "paging": true,
-            "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
-            "ajax": {
-                url: "../../controllerProxy.do?method=callBack",
-                type: "POST",
-                dataSrc: "data",
-                data: $.proxy(searchCommon.setDatatableData, searchCommon)
+    var handleTree = function() {
+        var setting = {
+            view: {
+//                addHoverDom: addHoverDom,
+//                removeHoverDom: removeHoverDom,
+                selectedMulti: false
             },
-            "columnDefs": [{
-                "targets": [0],
-                "render": function(data, type, full) {
-                    return '<a title="' + data + '" target="_blank" href="' + $.url_root + '/issue/viewIssueOfCard.jspa?issueId=' + full.issueId + '">' + data + '</a>';
+            check: {
+                enable: false
+            },
+            data: {
+                simpleData: {
+                    enable: true
                 }
-            }, {
-                "targets": [1],
-                "render": function(data, type, full) {
-                    return '<a class="without-decoration font-default" title="' + data + '" href="javascript:;">' + data + '</a>';
-                }
-            }]
-        });
+            },
+            edit: {
+                enable: false
+            }
+        };
+
+        var zNodes =[
+            { id:1, pId:0, name:"管理员"},
+            { id:2, pId:0, name:"公司领导"},
+            { id:3, pId:0, name:"普通员工"}
+        ];
+
+        var newCount = 1;
+        function addHoverDom(treeId, treeNode) {
+            var sObj = $("#" + treeNode.tId + "_span");
+            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                + "' title='add node' onfocus='this.blur();'></span>";
+            sObj.after(addStr);
+            var btn = $("#addBtn_"+treeNode.tId);
+            if (btn) btn.bind("click", function(){
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+                return false;
+            });
+        };
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_"+treeNode.tId).unbind().remove();
+        };
+
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
     }
 
     return {
         init: function () {
-            handleTable();
+            handleTree();
         }
     };
 }();
