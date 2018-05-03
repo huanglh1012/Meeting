@@ -133,12 +133,33 @@
                                                     </div>
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
+                                                            <div class="col-sm-5 col-md-5 col-lg-5"   style="padding: 0;">
+                                                                <div class="form-group">
+                                                                    <input id="meetingStartTime" type="text" placeholder="会议时间" class="form-control input-sm" name="meetingStartTime" data-type="date" data-moda="combination">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-2 col-md-2 col-lg-2"  style="padding-top: 5px;">
+                                                                <div class="form-group" >
+                                                                    <label class="control-label">
+                                                                        至
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-5 col-md-5 col-lg-5" style="padding: 0;">
+                                                                <div class="form-group">
+                                                                    <input id="meetingEndTime" type="text" placeholder="会议时间" class="form-control input-sm" name="meetingStartTime" data-type="date" data-moda="combination">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
                                                                 <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
                                                                 <input name="charger" type="hidden" placeholder="主持人" data-moda="combination" data-src="local" data-type="checkbox">
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                    </div>
+                                                    <div class="row" style="margin: 0;">
+                                                        <div class="col-sm-12 col-md-8 col-lg-8">
                                                             <div class="form-group">
                                                                 <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
                                                                 <input name="meetingRoomAddress" type="hidden" placeholder="会议地点" data-moda="combination" data-src="local" data-type="checkbox">
@@ -148,16 +169,32 @@
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <input id="meetingStartTime" type="text" placeholder="会议开始时间" class="form-control input-sm" name="meetingStartTime" data-type="date" data-moda="combination">
+                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                                <input name="joinDepartment" type="hidden" placeholder="参会部门" data-moda="combination" data-src="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <input id="meetingEndTime" type="text" placeholder="会议结束日期" class="form-control input-sm" name="meetingEndTime" data-type="date" data-moda="combination">
+                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                                <input name="joinEmployee" type="hidden" placeholder="参会人员" data-moda="combination" data-src="local" data-type="checkbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin: 0;">
+                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <input class="form-control" style="padding-left: 5px;" name="attachmentName" type="text" placeholder="材料名称" data-moda="combination" data-type="string">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingStatus" type="hidden" placeholder="会议状态" data-moda="combination" data-src="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                     </div>
         	                                    </div>
+
         	                                    <div class="col-sm-2 col-md-2 col-lg-2 responsive-alignment">
                                                     <div class="pull-right">
             	                                        <button id="btn-show-simple-search" type="button" class="btn btn-default pull-right" data-search-mode="simple">

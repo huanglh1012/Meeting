@@ -199,6 +199,46 @@
                                                 </div>
                                                 <span class="btn btn-success fileinput-button">
                                                     <i class="glyphicon glyphicon-upload"></i>
+                                                    <span>会议记录上传</span>
+                                                    <!-- The file input field used as target for the file upload widget -->
+                                                    <input id="file-upload" type="file" name="files[]" multiple>
+                                                </span>
+                                                <span class="btn btn-success fileinput-button">
+                                                    <i class="glyphicon glyphicon-download"></i>
+                                                    <span>会议记录下载</span>
+                                                    <!-- The file input field used as target for the file upload widget -->
+                                                    <input id="file-download">
+                                                </span>
+                                                <span class="btn btn-success fileinput-button">
+                                                    <i class="glyphicon glyphicon-minus-sign"></i>
+                                                    <span>会议记录删除</span>
+                                                    <!-- The file input field used as target for the file upload widget -->
+                                                    <input id="file-delete">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="chat-body no-padding profile-message">
+                                            <table id="fileAttachements2" class="table table-hover table-noborder">
+                                                <tbody>
+                                                <th>材料名称</th>
+                                                <th>上传人</th>
+                                                <th>上传部门</th>
+                                                <th>上传时间</th>
+                                                <th>操作</th>
+                                                </tbody>
+                                            </table>
+                                            <div id="fileAttachements_tmp" style="display: none">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="smart-form col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div class="hidden" id="imageError">
+                                                    <label style="font-size:10px; color:#DE1F00;"></label>
+                                                </div>
+                                                <span class="btn btn-success fileinput-button">
+                                                    <i class="glyphicon glyphicon-upload"></i>
                                                     <span>上传</span>
                                                     <!-- The file input field used as target for the file upload widget -->
                                                     <input id="file-upload" type="file" name="files[]" multiple>
@@ -217,7 +257,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                    <br>
+                                        <br>
                                         <div class="chat-body no-padding profile-message">
                                             <table id="fileAttachements" class="table table-hover table-noborder">
                                                 <tbody>

@@ -109,6 +109,26 @@ var meetingList = function () {
                 "id": "FTP专线",
                 "text": "FTP专线"
             }],
+            joinDepartment: [{
+                "id": "B2BIC",
+                "text": "B2BIC"
+            }, {
+                "id": "E-MAIL",
+                "text": "E-MAIL"
+            }, {
+                "id": "FTP专线",
+                "text": "FTP专线"
+            }],
+            joinEmployee: [{
+                "id": "B2BIC",
+                "text": "B2BIC"
+            }, {
+                "id": "E-MAIL",
+                "text": "E-MAIL"
+            }, {
+                "id": "FTP专线",
+                "text": "FTP专线"
+            }],
             charger: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
@@ -120,6 +140,16 @@ var meetingList = function () {
                 "text": "FTP专线"
             }],
             meetingRoomAddress: [{
+                "id": "B2BIC",
+                "text": "B2BIC"
+            }, {
+                "id": "E-MAIL",
+                "text": "E-MAIL"
+            }, {
+                "id": "FTP专线",
+                "text": "FTP专线"
+            }],
+            meetingStatus: [{
                 "id": "B2BIC",
                 "text": "B2BIC"
             }, {

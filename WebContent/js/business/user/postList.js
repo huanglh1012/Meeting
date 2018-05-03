@@ -55,9 +55,89 @@ var postList = function () {
         });
     }
 
+    var handleButton = function() {
+        $('#submitPost').on('click', function (e) {
+            var postName = $('#postName').val();
+            var postSummary = $('#postSummary').val();
+
+            var obj = [];
+            var addData = {};
+            addData['postName'] = postName
+            addData['postSummary'] = postSummary;
+            console.log(addData);
+            if (postName == '') {
+                bootbox.alert({
+                    className: 'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message: "职务名称不能为空",
+                    callback: function () {
+
+                    },
+                    title: "错误提示"
+                });
+            } else {
+                obj.push(StringUtil.decorateRequestData('PostDTO', addData));
+                //进度条
+                $('#progressBar').modal('show', true);
+                $.ajax({
+                    type: "POST",
+                    url: SMController.getUrl({
+                        controller: 'controllerProxy',
+                        method: 'callBack',
+                        proxyClass: 'securityController',
+                        proxyMethod: 'insertPost',
+                        jsonString: MyJsonUtil.obj2str(obj)
+                    }),
+                    dataType: "json",
+                    beforeSend: function(jqXHR, settings) {
+                        $.blockUI({
+                            message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请稍后...</span></div>' +
+                                '</div>'
+                        });
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        if (result.success) {
+                            $("#processStatus").text("提交成功，正在返回上一页面...");
+                            setTimeout(function(){
+                                $.unblockUI();
+                                history.back();
+                            }, 1500);
+
+                        } else {
+                            $.unblockUI();
+                            bootbox.alert({
+                                title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
+                                message:result.msg,
+                                className:'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
+                                        className: 'btn blue'
+                                    }
+                                },
+                                callback: function() {
+
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     return {
         init: function () {
             handleTable();
+            handleButton();
         }
     };
 }();

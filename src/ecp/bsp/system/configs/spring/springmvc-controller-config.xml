@@ -21,7 +21,7 @@
 	<!-- 把标记了@Controller注解的类转换为bean -->     
 	<context:component-scan base-package="ecp.bsp.business.file.controller.impl" /> 
 	<context:component-scan base-package="ecp.bsp.system.core" />  
-   
+   	<context:component-scan base-package="mis.security.controller" /> 
    	<!-- 开启注解式处理器支持 -->
    	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >
 		<property name="messageConverters">  

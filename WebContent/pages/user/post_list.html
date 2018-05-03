@@ -70,7 +70,7 @@
                                                         职务
                                                     </label>
                                                     <div>
-                                                        <input class="form-control required-validation" name="postName" style="width: 100%">
+                                                        <input class="form-control required-validation" id="postName" style="width: 100%">
                                                     </div>
                                                 </div>
                                             </div>
@@ -82,14 +82,14 @@
                                                         职务描述
                                                     </label>
                                                     <div>
-                                                        <input class="form-control required-validation" name="postSummary" style="width: 100%">
+                                                        <input class="form-control required-validation" id="postSummary" style="width: 100%">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary">确定</button>
+                                        <button type="button" class="btn btn-primary" id="submitPost">确定</button>
                                         <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
                                     </div>
                                 </div><!-- /.modal-content -->
@@ -133,6 +133,8 @@
 <script src="../../js/plugin/datatables/ZeroClipboard.js"></script>
 <script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
 <script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
+<!-- JQUERY BLOCK UI -->
+<script type="text/javascript" src="../../js/plugin/jquery-blockui/jquery.blockUI.js"></script>
 <script src="../../js/core/searchCommon.js"></script>
 <script src="../../js/business/user/postList.js"></script>
 <script type="text/javascript">
