@@ -31,308 +31,240 @@
             </ol>
         </div>
         <div id="content">
-            <form id="create-meeting-form" method="post">
-                <!-- end row -->
-                <!-- row -->
-                <div class="row">
-                    <article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-                    <!-- Widget ID (each widget will need unique ID)-->
-                    <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false"
-                      data-widget-togglebutton="false" data-widget-deletebutton="false"  data-widget-fullscreenbutton="false"
-                      data-widget-custombutton="false" data-widget-sortable="false">
-                      <header>
-                      </header>
-                        <!-- widget div-->
-                        <div>
-                            <!-- widget edit box -->
-                            <div class="jarviswidget-editbox">
-                            <!-- This area used as dropdown edit box -->
+            <form id="create-meeting-form" method="post" class="form-horizontal">
+                <div class="jarviswidget well">
+                    <div class="widget-body widget-hide-overflow">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <span class="font-md text-primary">会议信息</span>
                             </div>
-                            <!-- end widget edit box -->
-                            <!-- widget content -->
-                            <div class="widget-body widget-hide-overflow">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <span class="font-md text-primary">会议信息</span>
-                                    </div>
-                                </div>
-                                <hr class="simple">
-                                <!-- <form action="" id="checkout-form" class="" novalidate="novalidate"> -->
-                                <!--row-->
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tile">
-                                        <div class="row">
-                                            <div class="col-sm-9">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        会议主题
-                                                    </label>
-                                                    <div>
-                                                        <input class="form-control required-validation" name="meetingSubject" style="width: 100%" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        主持人
-                                                    </label>
-                                                    <div>
-                                                        <input id="chargerId" class="required-validation" name="chargerId" style="width: 100%" type="hidden" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        会议地点
-                                                    </label>
-                                                    <div>
-                                                        <input id="meetingRoomId" class="required-validation" name="meetingRoomId" style="width: 100%" type="hidden" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        会议时间
-                                                    </label>
-                                                    <div>
-                                                        <input id="meetingStartTime" type="text" placeholder="会议时间" class="form-control" name="meetingStartTime">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        <div class="basic-toggle-button">
-                                                            短信提醒
-                                                            <input type="checkbox" class="toggle" checked="checked" />
-                                                        </div>
-                                                    </label>
-                                                    <div>
-                                                        <input id="messageNoticeTime" type="text" placeholder="提醒时间" class="form-control" name="messageNoticeTime">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        发起部门
-                                                    </label>
-                                                    <div>
-                                                        <input id="proposeDepartmentId" class="required-validation" name="proposeDepartmentId" style="width: 100%" type="hidden" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        发起人
-                                                    </label>
-                                                    <div>
-                                                        <input id="proposerId" class="required-validation" name="proposerId" style="width: 100%" type="hidden" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        发起时间
-                                                    </label>
-                                                    <div>
-                                                        <input id="meetingProposeTime" type="text" placeholder="会议开始时间" class="form-control" name="meetingProposeTime">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        会议状态
-                                                    </label>
-                                                    <div>
-                                                        <input class="form-control required-validation" name="meetingStatusName" style="width: 100%"  data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        注意事项
-                                                    </label>
-                                                    <div>
-                                                        <textarea class="form-control required-validation" rows="3" name="meetingAttentions" style="resize: none;"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <span class="btn btn-success fileinput-button" style="margin-bottom: 5px">
-                                                        <i class="glyphicon glyphicon-plus-sign"></i>
-                                                        <span>参会部门或人员</span>
-                                                        <input id="meetingJoiner">
-                                                    </span>
-                                                    <div>
-                                                        <textarea class="form-control required-validation" rows="3" name="meetingJoiner" style="resize: none;"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div>
-                                            <h3>本次会议材料</h3>
-                                            <hr>
-                                        </div>
-                                        <div class="row">
-                                            <div class="smart-form col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <div class="hidden" id="imageError">
-                                                    <label style="font-size:10px; color:#DE1F00;"></label>
-                                                </div>
-                                                <span class="btn btn-success fileinput-button">
-                                                    <i class="glyphicon glyphicon-upload"></i>
-                                                    <span>会议记录上传</span>
-                                                    <!-- The file input field used as target for the file upload widget -->
-                                                    <input id="file-upload" type="file" name="files[]" multiple>
-                                                </span>
-                                                <span class="btn btn-success fileinput-button">
-                                                    <i class="glyphicon glyphicon-download"></i>
-                                                    <span>会议记录下载</span>
-                                                    <!-- The file input field used as target for the file upload widget -->
-                                                    <input id="file-download">
-                                                </span>
-                                                <span class="btn btn-success fileinput-button">
-                                                    <i class="glyphicon glyphicon-minus-sign"></i>
-                                                    <span>会议记录删除</span>
-                                                    <!-- The file input field used as target for the file upload widget -->
-                                                    <input id="file-delete">
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="chat-body no-padding profile-message">
-                                            <table id="fileAttachements2" class="table table-hover table-noborder">
-                                                <tbody>
-                                                <th>材料名称</th>
-                                                <th>上传人</th>
-                                                <th>上传部门</th>
-                                                <th>上传时间</th>
-                                                <th>操作</th>
-                                                </tbody>
-                                            </table>
-                                            <div id="fileAttachements_tmp" style="display: none">
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="smart-form col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <div class="hidden" id="imageError">
-                                                    <label style="font-size:10px; color:#DE1F00;"></label>
-                                                </div>
-                                                <span class="btn btn-success fileinput-button">
-                                                    <i class="glyphicon glyphicon-upload"></i>
-                                                    <span>上传</span>
-                                                    <!-- The file input field used as target for the file upload widget -->
-                                                    <input id="file-upload" type="file" name="files[]" multiple>
-                                                </span>
-                                                <span class="btn btn-success fileinput-button">
-                                                    <i class="glyphicon glyphicon-download"></i>
-                                                    <span>下载</span>
-                                                    <!-- The file input field used as target for the file upload widget -->
-                                                    <input id="file-download">
-                                                </span>
-                                                <span class="btn btn-success fileinput-button">
-                                                    <i class="glyphicon glyphicon-minus-sign"></i>
-                                                    <span>删除</span>
-                                                    <!-- The file input field used as target for the file upload widget -->
-                                                    <input id="file-delete">
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="chat-body no-padding profile-message">
-                                            <table id="fileAttachements" class="table table-hover table-noborder">
-                                                <tbody>
-                                                    <th>材料名称</th>
-                                                    <th>上传人</th>
-                                                    <th>上传部门</th>
-                                                    <th>上传时间</th>
-                                                    <th>操作</th>
-                                                </tbody>
-                                            </table>
-                                            <div id="fileAttachements_tmp" style="display: none">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <hr>
-                                        <div class="pull-right form-action-bar">
-                                            <button type="submit" title="提交该缺陷" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 提交</button>&nbsp;&nbsp;
-                                            <a title="取消提交" href="../user/user_list.html" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp; 取消</a>
-                                        </div>
-                                    </div>
-                                    <div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    <h4 class="modal-title" id="myModalLabel">选择人员</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <div>
-                                                                    <input class="form-control required-validation" name="parentDepartmentName" style="width: 100%">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <div>
-                                                                    <button type="button" class="btn btn-primary">查找</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <div id="treeDemo" class="ztree" style="min-height: 100px">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary">确定</button>
-                                                    <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
-                                                </div>
-                                            </div><!-- /.modal-content -->
-                                        </div><!-- /.modal -->
-                                    </div>
-                                </div>
-                            <!--end row-->
-                            <!-- </form> -->
-                            <!-- SEARCH CONTAINER -->
-                            </div>
-                        <!-- end widget content -->
                         </div>
-                      <!-- end widget div -->
+                        <hr class="simple">
+                        <!-- <form action="" id="checkout-form" class="" novalidate="novalidate"> -->
+                        <!--row-->
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tile">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        会议主题
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control required-validation" name="meetingSubject" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        会议地点
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input id="meetingRoomId" class="required-validation" name="meetingRoomId" style="width: 100%" type="hidden" data-max="200">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        会议时间
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input id="meetingStartTime" type="text" class="form-control" name="meetingStartTime">
+                                    </div>
+                                    <label class="col-sm-2 control-label">
+                                        主持人
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input id="chargerId" class="required-validation" name="chargerId" style="width: 100%" type="hidden" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        发起部门
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input id="proposeDepartmentId" class="required-validation" name="proposeDepartmentId" style="width: 100%" type="hidden" data-max="200">
+                                    </div>
+                                    <label class="col-sm-2 control-label">
+                                        发起人
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input id="proposerId" class="required-validation" name="proposerId" style="width: 100%" type="hidden" data-max="200">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        发起时间
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input id="meetingProposeTime" type="text" class="form-control" name="meetingProposeTime">
+                                    </div>
+                                    <label class="col-sm-2 control-label">
+                                        会议状态
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control required-validation" name="meetingStatusName" style="width: 100%"  data-max="200">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        提醒时间
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input id="messageNoticeTime" type="text" class="form-control" name="messageNoticeTime">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"> 短信提醒
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        注意事项
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control required-validation" rows="3" name="meetingAttentions" style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-2">
+                                        <span class="btn btn-success fileinput-button" style="margin-bottom: 5px">
+                                            <i class="glyphicon glyphicon-plus-sign"></i>
+                                            <span>参会部门或人员</span>
+                                            <input id="meetingJoiner">
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <textarea class="form-control required-validation" rows="3" name="meetingJoiner" style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div>
+                                    <h3>本次会议材料</h3>
+                                    <hr>
+                                </div>
+                                <div class="row">
+                                    <div class="smart-form col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="hidden" id="imageError">
+                                            <label style="font-size:10px; color:#DE1F00;"></label>
+                                        </div>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-upload"></i>
+                                            <span>会议记录上传</span>
+                                            <input id="file-upload" type="file" name="files[]" multiple>
+                                        </span>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-download"></i>
+                                            <span>会议记录下载</span>
+                                            <input id="file-download">
+                                        </span>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-minus-sign"></i>
+                                            <span>会议记录删除</span>
+                                            <input id="file-delete">
+                                        </span>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="chat-body no-padding profile-message">
+                                    <table id="fileAttachements" class="table table-hover table-noborder">
+                                        <tbody>
+                                        <th>材料名称</th>
+                                        <th>上传人</th>
+                                        <th>上传部门</th>
+                                        <th>上传时间</th>
+                                        <th>操作</th>
+                                        </tbody>
+                                    </table>
+                                    <div id="fileAttachements_tmp" style="display: none">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="smart-form col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="hidden" id="imageError2">
+                                            <label style="font-size:10px; color:#DE1F00;"></label>
+                                        </div>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-upload"></i>
+                                            <span>上传</span>
+                                            <input id="file-upload2" type="file" name="files[]" multiple>
+                                        </span>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-download"></i>
+                                            <span>下载</span>
+                                            <input id="file-download2">
+                                        </span>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-minus-sign"></i>
+                                            <span>删除</span>
+                                            <input id="file-delete2">
+                                        </span>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="chat-body no-padding profile-message">
+                                    <table id="fileAttachements2" class="table table-hover table-noborder">
+                                        <tbody>
+                                        <th>材料名称</th>
+                                        <th>上传人</th>
+                                        <th>上传部门</th>
+                                        <th>上传时间</th>
+                                        <th>操作</th>
+                                        </tbody>
+                                    </table>
+                                    <div id="fileAttachements_tmp2" style="display: none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <hr>
+                                <div class="pull-right form-action-bar">
+                                    <button type="submit" title="提交该缺陷" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 提交</button>&nbsp;&nbsp;
+                                    <a title="取消提交" href="../user/user_list.html" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp; 取消</a>
+                                </div>
+                            </div>
+                            <div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">选择人员</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <input class="form-control required-validation" name="parentDepartmentName" style="width: 100%">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <button type="button" class="btn btn-primary">查找</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div id="treeDemo" class="ztree" style="min-height: 100px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary">确定</button>
+                                            <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal -->
+                            </div>
+                        </div>
                     </div>
-                    <!-- end widget -->
-                    </article>
+                    </div>
+                    <!--创建人id和name  value="上传报表命名规则"  readonly="readonly"-->
+                    <input type="hidden" name="paaEmployeeId" id="paaEmployeeId"/>
+                    <input type="hidden" name="paaUsername" id="paaUsername" />
                 </div>
-                <!--创建人id和name  value="上传报表命名规则"  readonly="readonly"-->
-                <input type="hidden" name="paaEmployeeId" id="paaEmployeeId"/>
-                <input type="hidden" name="paaUsername" id="paaUsername" />
             </form>
         </div>
     </div>

@@ -15,179 +15,121 @@
     <link rel="stylesheet" href="../../css/ztree.css" type="text/css">
 </head>
 <body>
-    <div id="top"></div>
-    <div id="leftnav"></div>
-    <div id="main" role="main">
-        <div id="ribbon">
-            <!-- breadcrumb -->
-            <ol class="breadcrumb">
-                <li><a href="/dashboard_cardpro.jspa"/>权限管理</a></li>
-                <li><a href="/issue/issues_list_card.jspa">用户列表</a></li>
-                <li>编辑用户</li>
-            </ol>
-        </div>
-        <div id="content">
-            <form id="create-issue-form" method="post">
-                <!-- row -->
-                <div class="row">
-                    <article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-                    <!-- Widget ID (each widget will need unique ID)-->
-                    <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false"
-                      data-widget-togglebutton="false" data-widget-deletebutton="false"  data-widget-fullscreenbutton="false"
-                      data-widget-custombutton="false" data-widget-sortable="false">
-                        <!-- widget div-->
-                        <div>
-                            <!-- end widget edit box -->
-                            <!-- widget content -->
-                            <div class="widget-body widget-hide-overflow">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <span class="font-md text-primary">用户信息</span>
-                                    </div>
-                                </div>
-                                <hr class="simple">
-                                <!-- <form action="" id="checkout-form" class="" novalidate="novalidate"> -->
-                                <!--row-->
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tile">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        姓名
-                                                    </label>
-                                                    <div>
-                                                        <input class="form-control required-validation"  name="employeeName" laceholder="姓名" style="width: 100%">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label" >性别</label>
-                                                    <div class="controls">
-                                                        <input type="radio" name="optionsRadios2" value="option1" />
-                                                            男
-                                                        <input type="radio" name="optionsRadios2" value="option2" checked />
-                                                            女
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        身份证
-                                                    </label>
-                                                    <div>
-                                                        <input class="form-control required-validation" name="identifyCardNumber" style="width: 100%">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        部门
-                                                    </label>
-                                                    <div>
-                                                        <input id="departmentId" class="required-validation" name="departmentId" style="width: 100%" type="hidden" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        职务
-                                                    </label>
-                                                    <div>
-                                                        <input id="postId" class="required-validation" name="postId" style="width: 100%" type="hidden" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        角色
-                                                    </label>
-                                                    <div>
-                                                        <input id="roleId" class="required-validation" name="roleId" style="width: 100%" type="hidden" data-max="200">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        账号
-                                                    </label>
-                                                    <div>
-                                                        <input class="form-control required-validation" name="login" style="width: 100%" >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        密码
-                                                    </label>
-                                                    <div class="controls">
-                                                        <input type="password" name="password"  class="form-control" data-validate="{required: true, messages:{required:'Please enter field password'}}" style="width: 100%" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">
-                                                        确认密码
-                                                    </label>
-                                                    <div>
-                                                        <input type="password" name="confirmPassword"  class="form-control" data-validate="{required: true, messages:{required:'Please enter field password'}}" style="width: 100%" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <hr>
-                                        <div class="pull-right form-action-bar">
-                                            <button type="submit" title="确认提交" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 提交</button>&nbsp;&nbsp;
-                                            <a title="取消提交" href="../user/user_list.html" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp; 取消</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <!--end row-->
-                            <!-- </form> -->
-                            <!-- SEARCH CONTAINER -->
-                            </div>
-                        <!-- end widget content -->
-                        </div>
-                      <!-- end widget div -->
-                    </div>
-                    <!-- end widget -->
-                    </article>
-                </div>
-                <!--创建人id和name  value="上传报表命名规则"  readonly="readonly"-->
-                <input type="hidden" name="paaEmployeeId" id="paaEmployeeId"/>
-                <input type="hidden" name="paaUsername" id="paaUsername" />
-            </form>
-        </div>
+<div id="top"></div>
+<div id="leftnav"></div>
+<div id="main" role="main">
+    <div id="ribbon">
+        <!-- breadcrumb -->
+        <ol class="breadcrumb">
+            <li><a href="/dashboard_cardpro.jspa"/>权限管理</a></li>
+            <li><a href="/issue/issues_list_card.jspa">用户列表</a></li>
+            <li>编辑用户</li>
+        </ol>
     </div>
-    <input id="typeIndicator" type="hidden" value="card">
-    <div id="footer"></div>
+    <div id="content">
+        <form id="create-issue-form" method="post" class="form-horizontal">
+            <div class="jarviswidget well">
+                <div class="widget-body widget-hide-overflow">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <span class="font-md text-primary">用户信息</span>
+                        </div>
+                    </div>
+                    <hr class="simple">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tile">
+                            <div class="form-group" >
+                                <label class="col-sm-2 control-label">
+                                    姓名
+                                </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control required-validation"  name="employeeName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" >性别</label>
+                                <div class="col-sm-10">
+                                    <input type="radio" name="optionsRadios2" value="option1" />
+                                    男
+                                    <input type="radio" name="optionsRadios2" value="option2" checked />
+                                    女
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    身份证
+                                </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control required-validation" name="identifyCardNumber" style="width: 100%">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    部门
+                                </label>
+                                <div class="col-sm-10">
+                                    <input id="departmentId" class="required-validation" name="departmentId" style="width: 100%" type="hidden" data-max="200">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    职务
+                                </label>
+                                <div class="col-sm-10">
+                                    <input id="postId" class="required-validation" name="postId" style="width: 100%" type="hidden" data-max="200">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    角色
+                                </label>
+                                <div class="col-sm-10">
+                                    <input id="roleId" class="required-validation" name="roleId" style="width: 100%" type="hidden" data-max="200">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    账号
+                                </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control required-validation" name="login" style="width: 100%" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    密码
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="password" name="password"  class="form-control" data-validate="{required: true, messages:{required:'Please enter field password'}}" style="width: 100%" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    确认密码
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="password" name="confirmPassword"  class="form-control" data-validate="{required: true, messages:{required:'Please enter field password'}}" style="width: 100%" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <hr>
+                            <div class="pull-right form-action-bar">
+                                <button type="submit" title="确认提交" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 提交</button>&nbsp;&nbsp;
+                                <a title="取消提交" href="../user/user_list.html" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp; 取消</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="paaEmployeeId" id="paaEmployeeId"/>
+            <input type="hidden" name="paaUsername" id="paaUsername" />
+        </form>
+    </div>
+</div>
+<input id="typeIndicator" type="hidden" value="card">
+<div id="footer"></div>
 </body>
 
 <script data-pace-options='{ "restartOnRequestAfter": true }' src="../../js/plugin/pace/pace.min.js"></script>
@@ -228,7 +170,7 @@
         $("#top").load("../../pages/top.html");
         $("#leftnav").load("../../pages/leftnav.html");
         $("#footer").load("../../pages/footer.html");
-   });
+    });
 
     window.onload = function(){
         app.init();

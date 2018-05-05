@@ -180,7 +180,7 @@ var meetingEdit = function () {
             });
 
         $("#proposerId").select2({
-            placeholder: "请选择会议室",
+            placeholder: "请选择发起人",
             allowClear: true,
             maximumInputLength: 200,
 
@@ -245,7 +245,7 @@ var meetingEdit = function () {
             });
 
         $("#proposeDepartmentId").select2({
-            placeholder: "请选择会议室",
+            placeholder: "请选择发起部门",
             allowClear: true,
             maximumInputLength: 200,
 
