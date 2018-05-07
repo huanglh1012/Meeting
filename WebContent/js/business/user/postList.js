@@ -14,13 +14,156 @@
 var postList = function () {
 
     var handleTable = function () {
+        var selectTr = null;
+        var tableHead = [
+            { "sTitle": "职务ID", "mData": "postId","bVisible":false},
+            { "sTitle": "职务","mData": "postName","type" :"string" },
+            { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
+        ];
+
+        //算法配置
+        var oTable = $('#postList').dataTable({
+            //表头设置
+            "aoColumns": tableHead,
+            "aLengthMenu":[ 10, 25, 50,100],
+            "bAutoWidth" : true,
+            //默认显示的分页数
+            "iDisplayLength": 25,
+            "oLanguage": { //国际化一些配置
+                "sLoadingRecords" : "正在获取数据，请稍候...",
+                "sLengthMenu" : "显示 _MENU_ 条",
+                "sZeroRecords" : "没有您要搜索的内容",
+                "sInfo" : "从 _START_ 到  _END_ 条记录 总记录数为 _TOTAL_ 条",
+                "sInfoEmpty" : "记录数为0",
+                "sInfoFiltered" : "(全部记录数 _MAX_ 条)",
+                "sInfoPostFix" : "",
+                "sSearch" : "搜索",
+                "sUrl" : "",
+                "oPaginate": {
+                    "sFirst" : "第一页",
+                    "sPrevious" : "上一页",
+                    "sNext" : "下一页",
+                    "sLast" : "最后一页"
+                }
+            },
+            // "sAjaxSource" : 'controllerProxy.do?method=callBack&proxyClass=fileController'+'&proxyMethod=getProductTypeList&jsonString='+null,
+            "sAjaxSource" : SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
+            //服务器端，数据回调处理
+            "fnServerData" : function(sSource, aDataSet, fnCallback) {
+                $.ajax({
+                    "dataType" : 'json',
+                    "type" : "POST",
+                    "url" : sSource,
+                    "data" : aDataSet,
+                    "success" : function(result){
+                        oTable.fnClearTable();
+                        oTable.fnAddData(result);}
+                });
+            }
+        });
+
+        //单击每一行的操作（根据复选框的值来获得行数据）
+        $('#postList tbody tr').on('click', function () {
+            console.log(1111);
+            // 复选框只能"单选"
+            $(':checkbox').each(function(){
+                $(this).click(function(){
+                    if($(this).attr('checked')){
+                        $(':checkbox').removeAttr('checked');
+                        $(this).attr('checked','checked');
+                    }
+                });
+            });
+            //获取当前的checkbox的值,选择或者不选择某一行
+            var isCheck = this.getElementsByTagName('input').item(0).checked ;
+            if(isCheck){
+                selectTr= this;
+                //console.log(oTable.fnGetData(selectTr));
+            }else{
+                selectTr = null ;
+            }
+        });
+
+        //双击每一行,查看数据
+        $('#postList tbody tr').on('dblclick', function () {
+            console.log(2222);
+            var data = oTable.fnGetData( this );
+            window.location.href='viewAlgorithm.html?encryptionAlgorithmId='+ data.encryptionAlgorithmId;
+        });
+
+        // "添加"按钮
+        $('#post_add').click(function (e) {
+            $('#myModal').modal('show',true);
+        });
+
+        //"修改"按钮
+        $('#post_modify').click(function (e) {
+            if(selectTr!=null){
+                var selectData = oTable.fnGetData(selectTr);
+                window.location.href='modifyAlgorithm.html?encryptionAlgorithmId='+ selectData.encryptionAlgorithmId;
+            }
+        });
+
+        // “删除” 按钮
+        $('#post_delete').click(function (e) {
+            if(selectTr!=null){
+                bootbox.confirm({
+                    buttons: {
+                        confirm: {
+                            label: '确认',
+                            className: 'btn green'
+                        },
+                        cancel: {
+                            label: '取消',
+                            className: 'btn'
+                        }
+                    },
+                    message: '确定删除这一行吗 ?',
+                    title: "消息提示",
+                    callback: function(result) {
+                        if(result) {
+                            var obj = [];
+                            var deleteData = oTable.fnGetData(selectTr);
+                            obj.push(StringUtil.decorateRequestData('String',deleteData.encryptionAlgorithmId));
+                            $.ajax({
+                                type:'post',
+                                dataType:"json",
+                                async: false,
+                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                    ,proxyClass:'fileController',proxyMethod:'deleteEncryptionAlgorithm',jsonString:MyJsonUtil.obj2str(obj)}),
+                                success:function(result){
+                                    if(result.success){
+                                        $.pnotify({
+                                            text: result.msg.actionResultMessage
+                                        });
+                                        //客户端”删除“
+                                        oTable.fnDeleteRow(selectTr);
+                                    }else{
+                                        $.pnotify({
+                                            type:'error',
+                                            text: result.msg,
+                                            delay: 8000
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+    };
+
+    var handleTable2 = function () {
         $('#add').on('click', function (e) {
             $('#myModal').modal('show',true);
         });
 
         // 表头定义
         var tableHead = [
-            { "sTitle": "职务ID", "mData": "meetingRoomId","bVisible":false},
+            { "sTitle": "职务ID", "mData": "postId","bVisible":false},
             { "sTitle": "职务","mData": "postName","type" :"string" },
             { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
         ];
@@ -35,11 +178,25 @@ var postList = function () {
             "lengthChange": true,
             "paging": true,
             "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
-            "ajax": {
-                url: "../../controllerProxy.do?method=callBack",
-                type: "POST",
-                dataSrc: "data",
-                data: $.proxy(searchCommon.setDatatableData, searchCommon)
+//            "ajax": {
+//                url: "../../controllerProxy.do?method=callBack",
+//                type: "POST",
+//                dataSrc: "data",
+//                data: $.proxy(searchCommon.setDatatableData, searchCommon)
+//            },
+            "sAjaxSource" : SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
+            //服务器端，数据回调处理
+            "fnServerData" : function(sSource, aDataSet, fnCallback) {
+                $.ajax({
+                    "dataType" : 'json',
+                    "type" : "POST",
+                    "url" : sSource,
+                    "data" : aDataSet,
+                    "success" : function(result){
+                        oTable.fnClearTable();
+                        oTable.fnAddData(result);}
+                });
             },
             "columnDefs": [{
                 "targets": [0],
@@ -108,7 +265,7 @@ var postList = function () {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
-                                history.back();
+                                $('#myModal').modal('show',false);
                             }, 1500);
 
                         } else {

@@ -19,7 +19,10 @@ import mis.security.entity.EmployeeEntity;
 import mis.security.entity.PostEntity;
 import mis.security.entity.RoleEntity;
 import mis.security.entity.RoleSecurityRfEntity;
+import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
+import ecp.bsp.system.commons.utils.ActionResultUtil;
+import ecp.bsp.system.commons.utils.LoggerUtil;
 import ecp.bsp.system.commons.utils.StringUtils;
 import ecp.bsp.system.core.BaseService;
 
@@ -381,21 +384,19 @@ public class SecurityService extends BaseService {
 	 * @throws Exception
 	 */
 	public ActionResult insertPost(PostDTO inPostDTO) throws Exception {
-		ActionResult tmpActionResult = new ActionResult();
-		tmpActionResult.setIsSuccessful(true);
-		
-		PostEntity tmpExistPostEntity = this.securityDAO.getEntity(PostEntity.class, "POST_NAME", inPostDTO.getPostName());
+		PostEntity tmpExistPostEntity = this.securityDAO.getEntity(PostEntity.class, "postName", inPostDTO.getPostName());
 
 		if (tmpExistPostEntity != null) {
-        	tmpActionResult.setIsSuccessful(false);
-			tmpActionResult.setActionResultMessage("当前新建的岗位名称与其它岗位名称相同，发生冲突");
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "当前新建的岗位名称与其它岗位名称相同，发生冲突.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
 		}
-        
+		
         PostEntity tmpNewPostEntity = new PostEntity();
         PostDTO.dtoToEntity(inPostDTO, tmpNewPostEntity);
 		this.securityDAO.insert(tmpNewPostEntity);
 		
-		return tmpActionResult;
+		return ActionResultUtil.getActionResult(tmpNewPostEntity.getPostId(), "新建岗位成功");
 	}
 	
 	/**

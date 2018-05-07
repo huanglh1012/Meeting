@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="post", schema = "meeting")
-public class PostEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
+public class PostEntity extends ecp.bsp.system.core.BaseEntity{
 	private static final long serialVersionUID = 1L;
 	private String postId;
 	private String postName;
@@ -18,16 +18,15 @@ public class PostEntity extends ecp.bsp.system.core.BaseEntity implements Serial
 
 	public PostEntity() {
 	}
-
-
+	
 	@Id
 	@Column(name="POST_ID", unique=true, nullable=false, length=32)
 	public String getPostId() {
-		return this.postId;
+		return this.getId();
 	}
 
 	public void setPostId(String postId) {
-		this.postId = postId;
+		this.setId(postId);
 	}
 
 
