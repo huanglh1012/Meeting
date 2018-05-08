@@ -414,14 +414,19 @@ public class SecurityService extends BaseService {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
 		
-		PostEntity tmpExistPostEntity = this.securityDAO.getEntity(PostEntity.class, "POST_NAME", inPostDTO.getPostName());
+		PostEntity tmpExistPostEntity = this.securityDAO.getEntity(PostEntity.class, "postName", inPostDTO.getPostName());
 
         if (inPostDTO.getPostId() != tmpExistPostEntity.getId() && inPostDTO.getPostName() == tmpExistPostEntity.getPostName()) {
         	tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("当前修改的岗位名称与其它岗位名称相同，发生冲突");
 		}
 		
-        PostEntity tmpCuttentPostEntity = this.securityDAO.getEntity(PostEntity.class, "POST_ID", inPostDTO.getPostId());
+        if (!inPostDTO.getPostId().equals(tmpExistPostEntity.getId()) && inPostDTO.getPostName().equals(tmpExistPostEntity.getPostName())) {
+        	tmpActionResult.setIsSuccessful(false);
+			tmpActionResult.setActionResultMessage("当前修改的岗位名称与其它岗位名称相同，发生冲突");
+		}
+        
+        PostEntity tmpCuttentPostEntity = this.securityDAO.getEntity(PostEntity.class, "postId", inPostDTO.getPostId());
 		if (tmpCuttentPostEntity != null) {
 			PostDTO.dtoToEntity(inPostDTO, tmpCuttentPostEntity);
 			this.securityDAO.update(tmpCuttentPostEntity);
@@ -444,7 +449,7 @@ public class SecurityService extends BaseService {
 	public ActionResult deletePost(String inPostId) throws Exception {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
-		PostEntity tmpPostEntity = this.securityDAO.getEntity(PostEntity.class, "POST_ID", inPostId);
+		PostEntity tmpPostEntity = this.securityDAO.getEntity(PostEntity.class, "postId", inPostId);
 		if (tmpPostEntity == null) {
 			tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("没有岗位可删除");

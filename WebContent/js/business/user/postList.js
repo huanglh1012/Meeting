@@ -13,10 +13,11 @@
  */
 var postList = function () {
     var oTable = null;
+    var selectTr = null;
     var handleTable = function () {
         var selectTr = null;
         var tableHead = [
-            { "sTitle": "职务ID", "mData": "meetingRoomId","bVisible":false},
+            { "sTitle": "职务ID", "mData": "postId","bVisible":false},
             { "sTitle": "职务","mData": "postName","type" :"string" },
             { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
         ];
@@ -62,22 +63,23 @@ var postList = function () {
         $('#postList tbody').on('click','tr', function () {
             // 复选框只能"单选"
             console.log("tr click")
-            var data = oTable.fnGetData(this);
-            console.log(data);
             if ($(this).hasClass("highlight")){
                 $(this).removeClass("highlight");
+                selectTr = null;
             } else {
                 oTable.$('tr.highlight').removeClass("highlight");
                 $(this).addClass("highlight");
+                selectTr = oTable.fnGetData(this);
             }
+            console.log(selectTr);
         });
 
         //双击每一行,查看数据
-        $('#postList tbody').on('dblclick', 'tr', function () {
-            var data = oTable.fnGetData( this );
-            $('#myModal').modal('show',true);
-            window.location.href='viewAlgorithm.html?encryptionAlgorithmId='+ data.encryptionAlgorithmId;
-        });
+//        $('#postList tbody').on('dblclick', 'tr', function () {
+//            var data = oTable.fnGetData( this );
+//            $('#myModal').modal('show',true);
+//            window.location.href='viewAlgorithm.html?encryptionAlgorithmId='+ data.encryptionAlgorithmId;
+//        });
 
         // "添加"按钮
         $('#post_add').click(function (e) {
@@ -88,10 +90,11 @@ var postList = function () {
         //"修改"按钮
         $('#post_modify').click(function (e) {
             clearModalData();
-            if(selectTr!=null){
-                var selectData = oTable.fnGetData(selectTr);
+            if(selectTr != null){
                 $('#myModal').modal('show',true);
-                window.location.href='modifyAlgorithm.html?encryptionAlgorithmId='+ selectData.encryptionAlgorithmId;
+                $('#postId').val(selectTr.postId);
+                $('#postName').val(selectTr.postName);
+                $('#postSummary').val(selectTr.postSummary);
             }
         });
 
@@ -114,18 +117,18 @@ var postList = function () {
                     callback: function(result) {
                         if(result) {
                             var obj = [];
-                            var deleteData = oTable.fnGetData(selectTr);
-                            obj.push(StringUtil.decorateRequestData('String',deleteData.encryptionAlgorithmId));
+                            obj.push(StringUtil.decorateRequestData('String',selectTr.postId));
                             $.ajax({
                                 type:'post',
                                 dataType:"json",
                                 async: false,
                                 url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                                    ,proxyClass:'fileController',proxyMethod:'deleteEncryptionAlgorithm',jsonString:MyJsonUtil.obj2str(obj)}),
+                                    ,proxyClass:'securityController',proxyMethod:'deletePost',jsonString:MyJsonUtil.obj2str(obj)}),
                                 success:function(result){
                                     if(result.success){
+                                        oTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: result.msg.actionResultMessage
+                                            text: '删除成功'
                                         });
                                         //客户端”删除“
                                         oTable.fnDeleteRow(selectTr);
@@ -146,9 +149,9 @@ var postList = function () {
 
 
         function clearModalData(){
-            $("#myModal").on("hidden.bs.modal", function() {
-                $(this).removeData("bs.modal");
-            });
+            $('#postId').val('');
+            $('#postName').val('');
+            $('#postSummary').val('');
         }
 
     };
@@ -197,14 +200,17 @@ var postList = function () {
 
     var handleButton = function() {
         $('#submitPost').on('click', function (e) {
+            var postId = $('#postId').val();
             var postName = $('#postName').val();
             var postSummary = $('#postSummary').val();
 
             var obj = [];
             var addData = {};
-            addData['postName'] = postName
+            addData['postId'] = postId;
+            addData['postName'] = postName;
             addData['postSummary'] = postSummary;
             console.log(addData);
+
             if (postName == '') {
                 bootbox.alert({
                     className: 'span4 alert-error',
@@ -222,6 +228,14 @@ var postList = function () {
                 });
             } else {
                 obj.push(StringUtil.decorateRequestData('PostDTO', addData));
+                var proxyClass = '';
+                var proxyMethod = '';
+                if (postId == '') {
+                    proxyClass = 'insertPost';
+                } else {
+                    proxyClass = 'insertPost';
+                }
+
                 //进度条
                 $('#progressBar').modal('show', true);
                 $.ajax({
@@ -230,7 +244,7 @@ var postList = function () {
                         controller: 'controllerProxy',
                         method: 'callBack',
                         proxyClass: 'securityController',
-                        proxyMethod: 'insertPost',
+                        proxyMethod: postId == '' ? 'insertPost' : 'updatePost',
                         jsonString: MyJsonUtil.obj2str(obj)
                     }),
                     dataType: "json",
