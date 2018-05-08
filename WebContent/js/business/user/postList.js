@@ -12,8 +12,148 @@
  * @type {postList}
  */
 var postList = function () {
-
+    var oTable = null;
     var handleTable = function () {
+        var selectTr = null;
+        var tableHead = [
+            { "sTitle": "职务ID", "mData": "meetingRoomId","bVisible":false},
+            { "sTitle": "职务","mData": "postName","type" :"string" },
+            { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
+        ];
+
+        //算法配置
+        oTable = $('#postList').dataTable({
+            //表头设置
+            "aoColumns": tableHead,
+            "aLengthMenu":[ 10, 25, 50,100],
+            "bAutoWidth" : true,
+            //默认显示的分页数
+            "iDisplayLength": 25,
+            "oLanguage": { //国际化一些配置
+                "sLoadingRecords" : "正在获取数据，请稍候...",
+                "sLengthMenu" : "显示 _MENU_ 条",
+                "sZeroRecords" : "没有您要搜索的内容",
+                "sInfo" : "从 _START_ 到  _END_ 条记录 总记录数为 _TOTAL_ 条",
+                "sInfoEmpty" : "记录数为0",
+                "sInfoFiltered" : "(全部记录数 _MAX_ 条)",
+                "sInfoPostFix" : "",
+                "sSearch" : "搜索",
+                "sUrl" : "",
+                "oPaginate": {
+                    "sFirst" : "第一页",
+                    "sPrevious" : "上一页",
+                    "sNext" : "下一页",
+                    "sLast" : "最后一页"
+                }
+            },
+            "ajax": {
+                type:"POST",
+                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                    ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
+                dataType:"json",
+                success:function(data) {
+                    oTable.fnClearTable();
+                    oTable.fnAddData(data);
+                }
+            }
+        });
+
+        //单击每一行的操作（根据复选框的值来获得行数据）
+        $('#postList tbody').on('click','tr', function () {
+            // 复选框只能"单选"
+            console.log("tr click")
+            var data = oTable.fnGetData(this);
+            console.log(data);
+            if ($(this).hasClass("highlight")){
+                $(this).removeClass("highlight");
+            } else {
+                oTable.$('tr.highlight').removeClass("highlight");
+                $(this).addClass("highlight");
+            }
+        });
+
+        //双击每一行,查看数据
+        $('#postList tbody').on('dblclick', 'tr', function () {
+            var data = oTable.fnGetData( this );
+            $('#myModal').modal('show',true);
+            window.location.href='viewAlgorithm.html?encryptionAlgorithmId='+ data.encryptionAlgorithmId;
+        });
+
+        // "添加"按钮
+        $('#post_add').click(function (e) {
+            clearModalData();
+            $('#myModal').modal('show',true);
+        });
+
+        //"修改"按钮
+        $('#post_modify').click(function (e) {
+            clearModalData();
+            if(selectTr!=null){
+                var selectData = oTable.fnGetData(selectTr);
+                $('#myModal').modal('show',true);
+                window.location.href='modifyAlgorithm.html?encryptionAlgorithmId='+ selectData.encryptionAlgorithmId;
+            }
+        });
+
+        // “删除” 按钮
+        $('#post_delete').click(function (e) {
+            if(selectTr!=null){
+                bootbox.confirm({
+                    buttons: {
+                        confirm: {
+                            label: '确认',
+                            className: 'btn green'
+                        },
+                        cancel: {
+                            label: '取消',
+                            className: 'btn'
+                        }
+                    },
+                    message: '确定删除这一行吗 ?',
+                    title: "消息提示",
+                    callback: function(result) {
+                        if(result) {
+                            var obj = [];
+                            var deleteData = oTable.fnGetData(selectTr);
+                            obj.push(StringUtil.decorateRequestData('String',deleteData.encryptionAlgorithmId));
+                            $.ajax({
+                                type:'post',
+                                dataType:"json",
+                                async: false,
+                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                    ,proxyClass:'fileController',proxyMethod:'deleteEncryptionAlgorithm',jsonString:MyJsonUtil.obj2str(obj)}),
+                                success:function(result){
+                                    if(result.success){
+                                        $.pnotify({
+                                            text: result.msg.actionResultMessage
+                                        });
+                                        //客户端”删除“
+                                        oTable.fnDeleteRow(selectTr);
+                                    }else{
+                                        $.pnotify({
+                                            type:'error',
+                                            text: result.msg,
+                                            delay: 8000
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+
+        function clearModalData(){
+            $("#myModal").on("hidden.bs.modal", function() {
+                $(this).removeData("bs.modal");
+            });
+        }
+
+    };
+
+    var handleTable2 = function () {
         $('#add').on('click', function (e) {
             $('#myModal').modal('show',true);
         });
@@ -108,7 +248,8 @@ var postList = function () {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
-                                history.back();
+                                $('#myModal').modal('hide');
+                                oTable.api().ajax.reload();
                             }, 1500);
 
                         } else {
