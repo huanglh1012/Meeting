@@ -12,17 +12,17 @@
  * @type {postList}
  */
 var postList = function () {
-
+    var oTable = null;
     var handleTable = function () {
         var selectTr = null;
         var tableHead = [
-            { "sTitle": "职务ID", "mData": "postId","bVisible":false},
+            { "sTitle": "职务ID", "mData": "meetingRoomId","bVisible":false},
             { "sTitle": "职务","mData": "postName","type" :"string" },
             { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
         ];
 
         //算法配置
-        var oTable = $('#postList').dataTable({
+        oTable = $('#postList').dataTable({
             //表头设置
             "aoColumns": tableHead,
             "aLengthMenu":[ 10, 25, 50,100],
@@ -46,61 +46,51 @@ var postList = function () {
                     "sLast" : "最后一页"
                 }
             },
-            // "sAjaxSource" : 'controllerProxy.do?method=callBack&proxyClass=fileController'+'&proxyMethod=getProductTypeList&jsonString='+null,
-            "sAjaxSource" : SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
-            //服务器端，数据回调处理
-            "fnServerData" : function(sSource, aDataSet, fnCallback) {
-                $.ajax({
-                    "dataType" : 'json',
-                    "type" : "POST",
-                    "url" : sSource,
-                    "data" : aDataSet,
-                    "success" : function(result){
-                        oTable.fnClearTable();
-                        oTable.fnAddData(result);}
-                });
+            "ajax": {
+                type:"POST",
+                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                    ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
+                dataType:"json",
+                success:function(data) {
+                    oTable.fnClearTable();
+                    oTable.fnAddData(data);
+                }
             }
         });
 
         //单击每一行的操作（根据复选框的值来获得行数据）
-        $('#postList tbody tr').on('click', function () {
-            console.log(1111);
+        $('#postList tbody').on('click','tr', function () {
             // 复选框只能"单选"
-            $(':checkbox').each(function(){
-                $(this).click(function(){
-                    if($(this).attr('checked')){
-                        $(':checkbox').removeAttr('checked');
-                        $(this).attr('checked','checked');
-                    }
-                });
-            });
-            //获取当前的checkbox的值,选择或者不选择某一行
-            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-            if(isCheck){
-                selectTr= this;
-                //console.log(oTable.fnGetData(selectTr));
-            }else{
-                selectTr = null ;
+            console.log("tr click")
+            var data = oTable.fnGetData(this);
+            console.log(data);
+            if ($(this).hasClass("highlight")){
+                $(this).removeClass("highlight");
+            } else {
+                oTable.$('tr.highlight').removeClass("highlight");
+                $(this).addClass("highlight");
             }
         });
 
         //双击每一行,查看数据
-        $('#postList tbody tr').on('dblclick', function () {
-            console.log(2222);
+        $('#postList tbody').on('dblclick', 'tr', function () {
             var data = oTable.fnGetData( this );
+            $('#myModal').modal('show',true);
             window.location.href='viewAlgorithm.html?encryptionAlgorithmId='+ data.encryptionAlgorithmId;
         });
 
         // "添加"按钮
         $('#post_add').click(function (e) {
+            clearModalData();
             $('#myModal').modal('show',true);
         });
 
         //"修改"按钮
         $('#post_modify').click(function (e) {
+            clearModalData();
             if(selectTr!=null){
                 var selectData = oTable.fnGetData(selectTr);
+                $('#myModal').modal('show',true);
                 window.location.href='modifyAlgorithm.html?encryptionAlgorithmId='+ selectData.encryptionAlgorithmId;
             }
         });
@@ -154,6 +144,13 @@ var postList = function () {
             }
         });
 
+
+        function clearModalData(){
+            $("#myModal").on("hidden.bs.modal", function() {
+                $(this).removeData("bs.modal");
+            });
+        }
+
     };
 
     var handleTable2 = function () {
@@ -163,7 +160,7 @@ var postList = function () {
 
         // 表头定义
         var tableHead = [
-            { "sTitle": "职务ID", "mData": "postId","bVisible":false},
+            { "sTitle": "职务ID", "mData": "meetingRoomId","bVisible":false},
             { "sTitle": "职务","mData": "postName","type" :"string" },
             { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
         ];
@@ -178,25 +175,11 @@ var postList = function () {
             "lengthChange": true,
             "paging": true,
             "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
-//            "ajax": {
-//                url: "../../controllerProxy.do?method=callBack",
-//                type: "POST",
-//                dataSrc: "data",
-//                data: $.proxy(searchCommon.setDatatableData, searchCommon)
-//            },
-            "sAjaxSource" : SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
-            //服务器端，数据回调处理
-            "fnServerData" : function(sSource, aDataSet, fnCallback) {
-                $.ajax({
-                    "dataType" : 'json',
-                    "type" : "POST",
-                    "url" : sSource,
-                    "data" : aDataSet,
-                    "success" : function(result){
-                        oTable.fnClearTable();
-                        oTable.fnAddData(result);}
-                });
+            "ajax": {
+                url: "../../controllerProxy.do?method=callBack",
+                type: "POST",
+                dataSrc: "data",
+                data: $.proxy(searchCommon.setDatatableData, searchCommon)
             },
             "columnDefs": [{
                 "targets": [0],
@@ -265,7 +248,8 @@ var postList = function () {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
-                                $('#myModal').modal('show',false);
+                                $('#myModal').modal('hide');
+                                oTable.api().ajax.reload();
                             }, 1500);
 
                         } else {
