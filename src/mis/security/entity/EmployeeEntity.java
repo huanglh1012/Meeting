@@ -19,7 +19,6 @@ public class EmployeeEntity extends ecp.bsp.system.core.BaseEntity implements Se
 	private String login;
 	private String password;
 	private String postId;
-	private String roleId;
 	private String sexId;
 	private String telephone;
 
@@ -92,17 +91,6 @@ public class EmployeeEntity extends ecp.bsp.system.core.BaseEntity implements Se
 	public void setPostId(String postId) {
 		this.postId = postId;
 	}
-
-
-	@Column(name="ROLE_ID", length=32)
-	public String getRoleId() {
-		return this.roleId;
-	}
-
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
-	}
-
 
 	@Column(name="SEX_ID", length=32)
 	public String getSexId() {

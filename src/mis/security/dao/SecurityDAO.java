@@ -50,4 +50,13 @@ public class SecurityDAO extends BaseDAO {
 	public List<SecurityDTO> getRoleSecurity(String inRoleId) {
 		return (List<SecurityDTO>) this.query(SecurityConst.SQL_GET_ROLE_SECURITY_LIST, SecurityDTO.class);
 	}
+
+	public void deleteEmployeeRoleByEmployeeId(String employeeId) throws Exception {
+		this.excuteSQL(SecurityConst.SQL_DELETE_EMPLOYEE_ROLE_BY_EMPLOYEE_ID, new Object[] { employeeId });
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SecurityDTO> getRoleSecurityByEmployeeId(String inEmployeeId) {
+		return (List<SecurityDTO>) this.query(SecurityConst.SQL_GET_ROLE_SECURITY_LIST_BY_EMPLOEE_ID, new Object[] { inEmployeeId }, SecurityDTO.class);
+	}
 }

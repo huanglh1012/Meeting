@@ -16,12 +16,12 @@ import mis.security.dto.RoleDTO;
 import mis.security.dto.SecurityDTO;
 import mis.security.entity.DepartmentEntity;
 import mis.security.entity.EmployeeEntity;
+import mis.security.entity.EmployeeRoleRfEntity;
 import mis.security.entity.PostEntity;
 import mis.security.entity.RoleEntity;
 import mis.security.entity.RoleSecurityRfEntity;
 import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
-import ecp.bsp.system.commons.utils.ActionResultUtil;
 import ecp.bsp.system.commons.utils.LoggerUtil;
 import ecp.bsp.system.commons.utils.StringUtils;
 import ecp.bsp.system.core.BaseService;
@@ -50,7 +50,7 @@ public class SecurityService extends BaseService {
 		// 将密码转化为md5码
 		String tmpPasswordMd5 = "";
 		// 用户是否存在
-		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "LOGIN", inLoginDTO.getLogin());
+		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "login", inLoginDTO.getLogin());
 		if (tmpEmployeeEntity == null) {
 			tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("'" + inLoginDTO.getLogin() + "'用户账号不存在");
@@ -58,7 +58,7 @@ public class SecurityService extends BaseService {
 		}
 		
 		// 密码是否正确
-		tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, new String[] {"LOGIN", "PASSWORD"}, new Object[] {inLoginDTO.getLogin(), tmpPasswordMd5});
+		tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, new String[] {"login", "password"}, new Object[] {inLoginDTO.getLogin(), tmpPasswordMd5});
 		if (tmpEmployeeEntity == null) {
 			tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("'" + inLoginDTO.getLogin() + "'用户的密码错误");
@@ -81,24 +81,47 @@ public class SecurityService extends BaseService {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
 		
-		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "LOGIN", inEmployeeDTO.getLogin());
+		// 账号不能为空也不能重复
+		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "login", inEmployeeDTO.getLogin());
 		if (tmpEmployeeEntity == null) {
 			tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("'" + inEmployeeDTO.getLogin() + "'用户账号已经存在");
 			return tmpActionResult;
 		}
 		
-		tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "IDENTIFY_CARD_NUMBER", inEmployeeDTO.getIdentifyCardNumber());
-		if (tmpEmployeeEntity != null) {
-			tmpActionResult.setIsSuccessful(false);
-			tmpActionResult.setActionResultMessage("'新增的用户身份证号'" + inEmployeeDTO.getIdentifyCardNumber() + "'和已有用户'" 
-			    + tmpEmployeeEntity.getEmployeeName() + "(" + tmpEmployeeEntity.getLogin() + ")" + "'发生冲突.");
-			return tmpActionResult;
+		// 身份证可以为空，如果身份证不为空则不能重复
+		String tmpIdentifyCardNumber = inEmployeeDTO.getIdentifyCardNumber();
+		if (StringUtils.isValidateString(tmpIdentifyCardNumber)) {
+			tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "identifyCardNumber", inEmployeeDTO.getIdentifyCardNumber());
+			if (tmpEmployeeEntity != null) {
+				tmpActionResult.setIsSuccessful(false);
+				tmpActionResult.setActionResultMessage("'新增的用户身份证号'" + inEmployeeDTO.getIdentifyCardNumber() + "'和已有用户'" 
+				    + tmpEmployeeEntity.getEmployeeName() + "(" + tmpEmployeeEntity.getLogin() + ")" + "'发生冲突.");
+				return tmpActionResult;
+			}
 		}
 		
 		EmployeeEntity tmpNewEmployeeEntity = new EmployeeEntity();
 		EmployeeDTO.dtoToEntity(inEmployeeDTO, tmpNewEmployeeEntity);
 		this.securityDAO.insert(tmpNewEmployeeEntity);
+		
+		EmployeeRoleRfEntity tmpEmployeeRoleRfEntity = null;
+		List<EmployeeRoleRfEntity> tmpEmployeeRoleRfEntityList = new ArrayList<EmployeeRoleRfEntity>();
+		List<String> tmpRoleIdList = inEmployeeDTO.getRoleIdList();
+		for (String tmpSubRoleId: tmpRoleIdList) {
+			if (StringUtils.isValidateString(tmpSubRoleId)) {
+				String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "未能获取用户权限数据，联系技术支持人员处理.";
+				LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+				throw new RuntimeException(exceptionMessage);
+			}
+			
+			tmpEmployeeRoleRfEntity = new EmployeeRoleRfEntity();
+			tmpEmployeeRoleRfEntity.setEmployeeId(tmpNewEmployeeEntity.getEmployeeId());
+			tmpEmployeeRoleRfEntity.setRoleId(tmpSubRoleId);
+		}
+		
+		this.securityDAO.deleteEmployeeRoleByEmployeeId(tmpNewEmployeeEntity.getEmployeeId());
+		this.securityDAO.insert(tmpEmployeeRoleRfEntityList);
 		
 		return tmpActionResult;
 	}
@@ -118,12 +141,16 @@ public class SecurityService extends BaseService {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
 		
-		EmployeeEntity tmpOtherEmployeeEntityOne = this.securityDAO.getEntity(EmployeeEntity.class, "IDENTIFY_CARD_NUMBER", inEmployeeDTO.getIdentifyCardNumber());
-		EmployeeEntity tmpOtherEmployeeEntityTwo = this.securityDAO.getEntity(EmployeeEntity.class, "LOGIN", inEmployeeDTO.getLogin());
+		EmployeeEntity tmpOtherEmployeeEntityOne = this.securityDAO.getEntity(EmployeeEntity.class, "identifyCardNumber", inEmployeeDTO.getIdentifyCardNumber());
+		EmployeeEntity tmpOtherEmployeeEntityTwo = this.securityDAO.getEntity(EmployeeEntity.class, "login", inEmployeeDTO.getLogin());
 		
-        if (inEmployeeDTO.getEmployeeId() != tmpOtherEmployeeEntityOne.getId() && inEmployeeDTO.getIdentifyCardNumber() == tmpOtherEmployeeEntityOne.getIdentifyCardNumber()) {
-        	tmpActionResult.setIsSuccessful(false);
-			tmpActionResult.setActionResultMessage("当前修改的用户身份证号码与其他用户身份证号码发生冲突");
+		// 身份证可以为空，如果身份证不为空则不能重复
+		String tmpIdentifyCardNumber = inEmployeeDTO.getIdentifyCardNumber();
+		if (StringUtils.isValidateString(tmpIdentifyCardNumber)) {
+			if (inEmployeeDTO.getEmployeeId() != tmpOtherEmployeeEntityOne.getId() && tmpIdentifyCardNumber == tmpOtherEmployeeEntityOne.getIdentifyCardNumber()) {
+				tmpActionResult.setIsSuccessful(false);
+				tmpActionResult.setActionResultMessage("当前修改的用户身份证号码与其他用户身份证号码发生冲突");
+			}
 		}
 
 		if (inEmployeeDTO.getEmployeeId() != tmpOtherEmployeeEntityTwo.getId() && inEmployeeDTO.getLogin() == tmpOtherEmployeeEntityTwo.getLogin()) {
@@ -135,10 +162,28 @@ public class SecurityService extends BaseService {
 			tmpActionResult.setActionResultMessage(tmpActionResult.getActionResultMessage() + "当前修改的用户账号与其他用户账号发生冲突");
 		}
 		
-		EmployeeEntity tmpCuttentEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "EMPLOYEE_ID", inEmployeeDTO.getEmployeeId());
+		EmployeeEntity tmpCuttentEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "employeeId", inEmployeeDTO.getEmployeeId());
 		if (tmpCuttentEmployeeEntity != null) {
 			EmployeeDTO.dtoToEntity(inEmployeeDTO, tmpCuttentEmployeeEntity);
 			this.securityDAO.update(tmpCuttentEmployeeEntity);
+			
+			EmployeeRoleRfEntity tmpEmployeeRoleRfEntity = null;
+			List<EmployeeRoleRfEntity> tmpEmployeeRoleRfEntityList = new ArrayList<EmployeeRoleRfEntity>();
+			List<String> tmpRoleIdList = inEmployeeDTO.getRoleIdList();
+			for (String tmpSubRoleId: tmpRoleIdList) {
+				if (StringUtils.isValidateString(tmpSubRoleId)) {
+					String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "未能获取用户权限数据，联系技术支持人员处理.";
+					LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+					throw new RuntimeException(exceptionMessage);
+				}
+				
+				tmpEmployeeRoleRfEntity = new EmployeeRoleRfEntity();
+				tmpEmployeeRoleRfEntity.setEmployeeId(tmpCuttentEmployeeEntity.getEmployeeId());
+				tmpEmployeeRoleRfEntity.setRoleId(tmpSubRoleId);
+			}
+			
+			this.securityDAO.deleteEmployeeRoleByEmployeeId(tmpCuttentEmployeeEntity.getEmployeeId());
+			this.securityDAO.insert(tmpEmployeeRoleRfEntityList);
 		}
 		
 		return tmpActionResult;
@@ -158,13 +203,14 @@ public class SecurityService extends BaseService {
 	public ActionResult deleteEmployee(String inEmployeeId) throws Exception {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
-		EmployeeEntity tmpCuttentEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "EMPLOYEE_ID", inEmployeeId);
+		EmployeeEntity tmpCuttentEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "employeeId", inEmployeeId);
 		if (tmpCuttentEmployeeEntity == null) {
 			tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("没有用户可删除");
 			return tmpActionResult;
 		}
 		
+		this.securityDAO.deleteEmployeeRoleByEmployeeId(tmpCuttentEmployeeEntity.getEmployeeId());
 		this.securityDAO.delete(tmpCuttentEmployeeEntity);
 		
 		return tmpActionResult;
@@ -195,7 +241,7 @@ public class SecurityService extends BaseService {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
 		
-		DepartmentEntity tmpExistDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "DEPARTMENT_NAME", inDepartmentDTO.getDepartmentName());
+		DepartmentEntity tmpExistDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "departmentName", inDepartmentDTO.getDepartmentName());
 
         if (inDepartmentDTO.getDepartmentId() != tmpExistDepartmentEntity.getId() && inDepartmentDTO.getDepartmentName() == tmpExistDepartmentEntity.getDepartmentName()) {
         	tmpActionResult.setIsSuccessful(false);
@@ -224,14 +270,14 @@ public class SecurityService extends BaseService {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
 		
-		DepartmentEntity tmpExistDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "DEPARTMENT_NAME", inDepartmentDTO.getDepartmentName());
+		DepartmentEntity tmpExistDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "departmentName", inDepartmentDTO.getDepartmentName());
 
         if (inDepartmentDTO.getDepartmentId() != tmpExistDepartmentEntity.getId() && inDepartmentDTO.getDepartmentName() == tmpExistDepartmentEntity.getDepartmentName()) {
         	tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("当前修改的部门名称与其它部门名称相同，发生冲突");
 		}
 		
-        DepartmentEntity tmpCuttentDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "DEPARTMENT_ID", inDepartmentDTO.getDepartmentId());
+        DepartmentEntity tmpCuttentDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "departmentId", inDepartmentDTO.getDepartmentId());
 		if (tmpCuttentDepartmentEntity != null) {
 			DepartmentDTO.dtoToEntity(inDepartmentDTO, tmpCuttentDepartmentEntity);
 			this.securityDAO.update(tmpCuttentDepartmentEntity);
@@ -254,7 +300,7 @@ public class SecurityService extends BaseService {
 	public ActionResult deleteDepartment(String inDepartmentId) throws Exception {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
-		DepartmentEntity tmpDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "DEPARTMENT_ID", inDepartmentId);
+		DepartmentEntity tmpDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "departmentId", inDepartmentId);
 		if (tmpDepartmentEntity == null) {
 			tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("没有部门可删除");
@@ -291,7 +337,7 @@ public class SecurityService extends BaseService {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
 		
-		RoleEntity tmpExistRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "ROLE_NAME", inRoleDTO.getRoleName());
+		RoleEntity tmpExistRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "roleName", inRoleDTO.getRoleName());
 
         if (inRoleDTO.getRoleId() != tmpExistRoleEntity.getId() && inRoleDTO.getRoleName() == tmpExistRoleEntity.getRoleName()) {
         	tmpActionResult.setIsSuccessful(false);
@@ -320,14 +366,14 @@ public class SecurityService extends BaseService {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
 		
-		RoleEntity tmpExistRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "ROLE_NAME", inRoleDTO.getRoleName());
+		RoleEntity tmpExistRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "roleName", inRoleDTO.getRoleName());
 
         if (inRoleDTO.getRoleId() != tmpExistRoleEntity.getId() && inRoleDTO.getRoleName() == tmpExistRoleEntity.getRoleName()) {
         	tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("当前修改的角色名称与其它角色名称相同，发生冲突");
 		}
 		
-        RoleEntity tmpCuttentRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "ROLE_ID", inRoleDTO.getRoleId());
+        RoleEntity tmpCuttentRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "roleId", inRoleDTO.getRoleId());
 		if (tmpCuttentRoleEntity != null) {
 			RoleDTO.dtoToEntity(inRoleDTO, tmpCuttentRoleEntity);
 			this.securityDAO.update(tmpCuttentRoleEntity);
@@ -350,7 +396,7 @@ public class SecurityService extends BaseService {
 	public ActionResult deleteRole(String inRoleId) throws Exception {
 		ActionResult tmpActionResult = new ActionResult();
 		tmpActionResult.setIsSuccessful(true);
-		RoleEntity tmpRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "ROLE_ID", inRoleId);
+		RoleEntity tmpRoleEntity = this.securityDAO.getEntity(RoleEntity.class, "roleId", inRoleId);
 		if (tmpRoleEntity == null) {
 			tmpActionResult.setIsSuccessful(false);
 			tmpActionResult.setActionResultMessage("没有角色可删除");
@@ -384,19 +430,21 @@ public class SecurityService extends BaseService {
 	 * @throws Exception
 	 */
 	public ActionResult insertPost(PostDTO inPostDTO) throws Exception {
+		ActionResult tmpActionResult = new ActionResult();
+		tmpActionResult.setIsSuccessful(true);
+		
 		PostEntity tmpExistPostEntity = this.securityDAO.getEntity(PostEntity.class, "postName", inPostDTO.getPostName());
 
-		if (tmpExistPostEntity != null) {
-			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "当前新建的岗位名称与其它岗位名称相同，发生冲突.";
-			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
-			throw new RuntimeException(exceptionMessage);
+        if (inPostDTO.getPostId() != tmpExistPostEntity.getId() && inPostDTO.getPostName() == tmpExistPostEntity.getPostName()) {
+        	tmpActionResult.setIsSuccessful(false);
+			tmpActionResult.setActionResultMessage("当前新建的岗位名称与其它岗位名称相同，发生冲突");
 		}
-		
+        
         PostEntity tmpNewPostEntity = new PostEntity();
         PostDTO.dtoToEntity(inPostDTO, tmpNewPostEntity);
 		this.securityDAO.insert(tmpNewPostEntity);
 		
-		return ActionResultUtil.getActionResult(tmpNewPostEntity.getPostId(), "新建岗位成功");
+		return tmpActionResult;
 	}
 	
 	/**
@@ -421,11 +469,6 @@ public class SecurityService extends BaseService {
 			tmpActionResult.setActionResultMessage("当前修改的岗位名称与其它岗位名称相同，发生冲突");
 		}
 		
-        if (!inPostDTO.getPostId().equals(tmpExistPostEntity.getId()) && inPostDTO.getPostName().equals(tmpExistPostEntity.getPostName())) {
-        	tmpActionResult.setIsSuccessful(false);
-			tmpActionResult.setActionResultMessage("当前修改的岗位名称与其它岗位名称相同，发生冲突");
-		}
-        
         PostEntity tmpCuttentPostEntity = this.securityDAO.getEntity(PostEntity.class, "postId", inPostDTO.getPostId());
 		if (tmpCuttentPostEntity != null) {
 			PostDTO.dtoToEntity(inPostDTO, tmpCuttentPostEntity);
@@ -531,7 +574,6 @@ public class SecurityService extends BaseService {
 	 *     指定用户ID的权限列表
 	 */
 	public List<SecurityDTO> getEmployeeSecurity(String inEmployeeId) {
-		EmployeeEntity TmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, inEmployeeId);
-		return this.getRoleSecurity(TmpEmployeeEntity.getRoleId());
+		return this.securityDAO.getRoleSecurityByEmployeeId(inEmployeeId);
 	}
 }

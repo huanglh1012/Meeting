@@ -1,9 +1,10 @@
 package mis.security.dto;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import ecp.bsp.system.core.BaseDTO;
-
 @Component
 public class EmployeeDTO extends BaseDTO {
 	
@@ -27,6 +28,8 @@ public class EmployeeDTO extends BaseDTO {
 	
 	private String identifyCardNumber;
 
+	private List<String> roleIdList;
+	
 	public String getEmployeeId() {
 		return employeeId;
 	}
@@ -101,5 +104,17 @@ public class EmployeeDTO extends BaseDTO {
 
 	public String getIdentifyCardNumber() {
 		return identifyCardNumber;
+	}
+
+	public void setIdentifyCardNumber(String identifyCardNumber) {
+		this.identifyCardNumber = identifyCardNumber;
+	}
+	
+	public List<String> getRoleIdList() {
+		return roleIdList;
+	}
+
+	public void setRoleIdList(List<String> roleIdList) {
+		this.roleIdList = roleIdList;
 	}
 }

@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="department")
+@Table(name="department",schema="meeting")
 public class DepartmentEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String departmentName;
@@ -22,7 +22,7 @@ public class DepartmentEntity extends ecp.bsp.system.core.BaseEntity implements 
 	}
 
 	public void setDepartmentId(String departmentId) {
-		this.setDepartmentId(departmentId);
+		this.setId(departmentId);
 	}
 
 	@Column(name="PARENT_DEPARTMENT_ID", length=128)
