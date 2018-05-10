@@ -1,5 +1,6 @@
 package mis.security.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.dto.AjaxResult;
+import ecp.bsp.system.commons.dto.TreeNodeDTO;
 
 @Controller
 public class SecurityController  {
@@ -218,6 +220,16 @@ public class SecurityController  {
 	 */
 	public Object getDepartmentList() {
 		return (List<DepartmentDTO>) this.securityService.getDepartmentList();
+	}
+	
+	/**
+	 * 获取部门信息列表
+	 * 
+	 * @return
+	 *     返回部门信息列表
+	 */
+	public Object getDepartmentTreeList() {
+		return (List<TreeNodeDTO>) this.securityService.getDepartmentTreeList();
 	}
 	
 	/**

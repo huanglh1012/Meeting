@@ -22,6 +22,7 @@ import mis.security.entity.RoleEntity;
 import mis.security.entity.RoleSecurityRfEntity;
 import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
+import ecp.bsp.system.commons.dto.TreeNodeDTO;
 import ecp.bsp.system.commons.utils.LoggerUtil;
 import ecp.bsp.system.commons.utils.StringUtils;
 import ecp.bsp.system.core.BaseService;
@@ -320,6 +321,27 @@ public class SecurityService extends BaseService {
 	 */
 	public List<DepartmentDTO> getDepartmentList() {
 		return this.securityDAO.getDepartmentList();
+	}
+	
+	/**
+	 * 获取部门信息列表
+	 * 
+	 * @return
+	 *     返回部门信息列表
+	 */
+	public List<TreeNodeDTO> getDepartmentTreeList() {
+		List<DepartmentDTO> tmpDepartmentDTOList = this.securityDAO.getDepartmentList();
+		List<TreeNodeDTO> tmpDepartmentTreeList = new ArrayList<TreeNodeDTO>();
+		TreeNodeDTO tmpTreeNodeDTO = null;
+		for (DepartmentDTO subDepartmentDTO : tmpDepartmentDTOList) {
+			tmpTreeNodeDTO = new TreeNodeDTO();
+			tmpTreeNodeDTO.setId(subDepartmentDTO.getDepartmentId()); 
+			tmpTreeNodeDTO.setPid(subDepartmentDTO.getParentDepartmentId());
+			tmpTreeNodeDTO.setName(subDepartmentDTO.getDepartmentName());
+			tmpTreeNodeDTO.setIsParent(subDepartmentDTO.isParent());
+			tmpDepartmentTreeList.add(tmpTreeNodeDTO);
+		}
+		return tmpDepartmentTreeList;
 	}
 	
 	/**
