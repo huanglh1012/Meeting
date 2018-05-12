@@ -38,6 +38,11 @@ public class SecurityDAO extends BaseDAO {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<SecurityDTO> getSecurityList() {
+		return (List<SecurityDTO>) this.query(SecurityConst.SQL_GET_SECURITY_LIST, SecurityDTO.class);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<EmployeeDTO> getEmployeeList() {
 		return (List<EmployeeDTO>) this.query(SecurityConst.SQL_GET_EMPLOYEE_LIST, EmployeeDTO.class);
 	}

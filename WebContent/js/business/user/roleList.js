@@ -12,6 +12,27 @@
  * @type {roleList}
  */
 var roleList = function () {
+    var handleCheckbox = function() {
+        var tmpCheckboxGroup =  $("#securityList");
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            async: false,
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getSecurityList',jsonString:null}),
+            success:function(result){
+                for (var item in result){
+                    var securityObj = result[item];
+                    var tmpCheckboxLabel = $("<label class='checkbox'>");
+                    var tmpInput = $(" <input id='"+securityObj.securityId+"' type='checkbox' value='"+securityObj.securityCode+"'/>");
+                    var tmpLabel = $(" <label>"+securityObj.securityName+"</label>");
+                    $(tmpCheckboxLabel).appendTo(tmpCheckboxGroup);
+                    $(tmpInput).appendTo(tmpCheckboxLabel);
+                    $(tmpLabel).appendTo(tmpCheckboxLabel);
+                }
+            }
+        });
+    }
 
     var handleTree = function() {
         var setting = {
@@ -63,6 +84,7 @@ var roleList = function () {
     return {
         init: function () {
             handleTree();
+            handleCheckbox();
         }
     };
 }();

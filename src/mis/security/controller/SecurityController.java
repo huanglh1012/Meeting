@@ -321,6 +321,16 @@ public class SecurityController  {
 	}
 	
 	/**
+	 * 获取权限列表
+	 * 
+	 * @return
+	 *     返回权限列表
+	 */
+	public Object getSecurityList() {
+		return (List<SecurityDTO>) this.securityService.getSecurityList();
+	}
+	
+	/**
 	 * 插入职务信息
 	 * 
 	 * @param inPostDTO

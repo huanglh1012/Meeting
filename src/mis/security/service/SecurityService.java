@@ -446,6 +446,16 @@ public class SecurityService extends BaseService {
 	}
 	
 	/**
+	 * 获取权限列表
+	 * 
+	 * @return
+	 *     返回权限列表
+	 */
+	public List<SecurityDTO> getSecurityList() {
+		return this.securityDAO.getSecurityList();
+	}
+	
+	/**
 	 * 插入职务信息
 	 * 
 	 * @param inPostDTO
