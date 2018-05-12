@@ -1,7 +1,10 @@
 package mis.security.dto;
 
+import org.springframework.stereotype.Component;
+
 import ecp.bsp.system.core.BaseDTO;
 
+@Component
 public class RoleDTO extends BaseDTO {
 	private String roleId;
 	private String roleName;

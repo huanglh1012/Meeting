@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="post",schema="meeting")
+@Table(name="POST",schema="meeting")
 public class PostEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String postId;

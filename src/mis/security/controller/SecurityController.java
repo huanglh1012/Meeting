@@ -1,6 +1,5 @@
 package mis.security.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,6 +10,7 @@ import mis.security.dto.LoginDTO;
 import mis.security.dto.PostDTO;
 import mis.security.dto.RoleDTO;
 import mis.security.dto.SecurityDTO;
+import mis.security.dto.ZtreeNode;
 import mis.security.service.SecurityService;
 
 import org.springframework.stereotype.Controller;
@@ -229,7 +229,7 @@ public class SecurityController  {
 	 *     返回部门信息列表
 	 */
 	public Object getDepartmentTreeList() {
-		return (List<TreeNodeDTO>) this.securityService.getDepartmentTreeList();
+		return (List<ZtreeNode>) this.securityService.getDepartmentTreeList();
 	}
 	
 	/**

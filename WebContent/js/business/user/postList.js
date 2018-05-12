@@ -228,14 +228,6 @@ var postList = function () {
                 });
             } else {
                 obj.push(StringUtil.decorateRequestData('PostDTO', addData));
-                var proxyClass = '';
-                var proxyMethod = '';
-                if (postId == '') {
-                    proxyClass = 'insertPost';
-                } else {
-                    proxyClass = 'insertPost';
-                }
-
                 //进度条
                 $('#progressBar').modal('show', true);
                 $.ajax({

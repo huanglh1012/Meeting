@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * 
  */
 @Entity
-@Table(name="sex")
+@Table(name="SEX",schema="meeting")
 public class SexEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String sexId;
@@ -24,11 +24,11 @@ public class SexEntity extends ecp.bsp.system.core.BaseEntity implements Seriali
 	@Id
 	@Column(name="SEX_ID", unique=true, nullable=false, length=32)
 	public String getSexId() {
-		return this.sexId;
+		return this.getId();
 	}
 
 	public void setSexId(String sexId) {
-		this.sexId = sexId;
+		this.setId(sexId);
 	}
 
 

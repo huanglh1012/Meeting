@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * 
  */
 @Entity
-@Table(name="attachment_category")
+@Table(name="attachment_category",schema="meeting")
 public class AttachmentCategoryEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String attachmentCategoryId;
@@ -24,11 +24,11 @@ public class AttachmentCategoryEntity extends ecp.bsp.system.core.BaseEntity imp
 	@Id
 	@Column(name="ATTACHMENT_CATEGORY_ID", unique=true, nullable=false, length=32)
 	public String getAttachmentCategoryId() {
-		return this.attachmentCategoryId;
+		return this.getId();
 	}
 
 	public void setAttachmentCategoryId(String attachmentCategoryId) {
-		this.attachmentCategoryId = attachmentCategoryId;
+		this.setId(attachmentCategoryId);
 	}
 
 

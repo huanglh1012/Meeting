@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="short_message_send_log")
+@Table(name="short_message_send_log",schema="meeting")
 public class ShortMessageSendLogEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String shortMessageSendLogId;
@@ -24,11 +24,11 @@ public class ShortMessageSendLogEntity extends ecp.bsp.system.core.BaseEntity im
 	@Id
 	@Column(name="SHORT_MESSAGE_SEND_LOG_ID", unique=true, nullable=false, length=32)
 	public String getShortMessageSendLogId() {
-		return this.shortMessageSendLogId;
+		return this.getId();
 	}
 
 	public void setShortMessageSendLogId(String shortMessageSendLogId) {
-		this.shortMessageSendLogId = shortMessageSendLogId;
+		this.setId(shortMessageSendLogId);
 	}
 
 

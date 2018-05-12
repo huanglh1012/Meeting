@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import ecp.bsp.system.core.BaseDTO;
+
 @Component
 public class EmployeeDTO extends BaseDTO {
 	

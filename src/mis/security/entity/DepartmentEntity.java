@@ -9,12 +9,11 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="department",schema="meeting")
+@Table(name="DEPARTMENT",schema="meeting")
 public class DepartmentEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String departmentName;
 	private String parentDepartmentId;
-	private int isParent;
 
 	@Id
 	@Column(name="DEPARTMENT_ID", unique=true, nullable=false, length=32)
@@ -44,14 +43,4 @@ public class DepartmentEntity extends ecp.bsp.system.core.BaseEntity implements 
 		this.departmentName = departmentName;
 	}
 
-	@Column(name="IS_PARENT", nullable=false, length=128)
-	public int isParent() {
-		return isParent;
-	}
-
-	public void setParent(int isParent) {
-		this.isParent = isParent;
-	}
-
-	
 }

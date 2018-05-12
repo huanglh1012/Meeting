@@ -3,6 +3,7 @@ package mis.security.dto;
 import org.springframework.stereotype.Component;
 
 import ecp.bsp.system.core.BaseDTO;
+
 @Component
 public class SecurityDTO extends BaseDTO {
 	private String securityId;
