@@ -23,7 +23,6 @@ import mis.security.entity.RoleEntity;
 import mis.security.entity.RoleSecurityRfEntity;
 import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
-import ecp.bsp.system.commons.dto.TreeNodeDTO;
 import ecp.bsp.system.commons.utils.ActionResultUtil;
 import ecp.bsp.system.commons.utils.LoggerUtil;
 import ecp.bsp.system.commons.utils.StringUtils;
@@ -82,7 +81,7 @@ public class SecurityService extends BaseService {
 		String exceptionMessage = "";
 		// 账号不能为空也不能重复
 		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "login", inEmployeeDTO.getLogin());
-		if (tmpEmployeeEntity == null) {
+		if (tmpEmployeeEntity != null) {
 			exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "'" + inEmployeeDTO.getLogin() + "'用户账号已经存在";
 		}
 		
@@ -110,10 +109,9 @@ public class SecurityService extends BaseService {
 		this.securityDAO.insert(tmpNewEmployeeEntity);
 		
 		EmployeeRoleRfEntity tmpEmployeeRoleRfEntity = null;
-		List<EmployeeRoleRfEntity> tmpEmployeeRoleRfEntityList = new ArrayList<EmployeeRoleRfEntity>();
 		List<String> tmpRoleIdList = inEmployeeDTO.getRoleIdList();
 		for (String tmpSubRoleId: tmpRoleIdList) {
-			if (StringUtils.isValidateString(tmpSubRoleId)) {
+			if (!StringUtils.isValidateString(tmpSubRoleId)) {
 				exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "未能获取用户权限数据，联系技术支持人员处理.";
 				LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 				throw new RuntimeException(exceptionMessage);
@@ -122,10 +120,8 @@ public class SecurityService extends BaseService {
 			tmpEmployeeRoleRfEntity = new EmployeeRoleRfEntity();
 			tmpEmployeeRoleRfEntity.setEmployeeId(tmpNewEmployeeEntity.getId());
 			tmpEmployeeRoleRfEntity.setRoleId(tmpSubRoleId);
+			this.securityDAO.insert(tmpEmployeeRoleRfEntity);
 		}
-		
-		this.securityDAO.deleteEmployeeRoleByEmployeeId(tmpNewEmployeeEntity.getId());
-		this.securityDAO.insert(tmpEmployeeRoleRfEntityList);
 		
 		return ActionResultUtil.getActionResult(tmpNewEmployeeEntity.getId(), "用户新建成功");
 	}
@@ -334,6 +330,35 @@ public class SecurityService extends BaseService {
 	 * @return
 	 *     返回部门信息列表
 	 */
+	public List<DepartmentDTO> getDepartmentGroupList() {
+		DepartmentEntity tmpDepartmentEntity = this.securityDAO.getEntity(DepartmentEntity.class, "-1");
+		DepartmentDTO tmpParentDepartmentDTO = new DepartmentDTO();
+		tmpParentDepartmentDTO.setId(tmpDepartmentEntity.getDepartmentId());
+		tmpParentDepartmentDTO.setText(tmpDepartmentEntity.getDepartmentName());
+		
+		List<DepartmentDTO> tmpDepartmentChildrenList = new ArrayList<DepartmentDTO>();
+		tmpDepartmentChildrenList.add(this.getDepartmentChildrenInfo(tmpParentDepartmentDTO));
+		
+		return tmpDepartmentChildrenList;
+	}
+	
+	public DepartmentDTO getDepartmentChildrenInfo(DepartmentDTO outDepartmentDTO) {
+		List<DepartmentDTO> tmpDepartmentChildrenList = this.securityDAO.getDepartmentChildrenList(outDepartmentDTO.getId());
+		for (DepartmentDTO subDepartmentDTO : tmpDepartmentChildrenList) {
+			this.getDepartmentChildrenInfo(subDepartmentDTO);
+		}
+		outDepartmentDTO.setChildren(tmpDepartmentChildrenList);
+		
+		return outDepartmentDTO;
+	}
+	
+	
+	/**
+	 * 获取部门信息列表
+	 * 
+	 * @return
+	 *     返回部门信息列表
+	 */
 	public List<ZtreeNode> getDepartmentTreeList() {
 		List<DepartmentDTO> tmpDepartmentDTOList = this.securityDAO.getDepartmentList();
 		List<ZtreeNode> tmpDepartmentTreeList = new ArrayList<ZtreeNode>();
@@ -443,6 +468,26 @@ public class SecurityService extends BaseService {
 	 */
 	public List<RoleDTO> getRoleList() {
 		return this.securityDAO.getRoleList();
+	}
+	
+	/**
+	 * 获取角色树形列表
+	 * 
+	 * @return
+	 *     返回角色树形列表
+	 */
+	public List<ZtreeNode> getRoleTreeList() {
+		List<RoleDTO> tmpRoleDTOList = this.securityDAO.getRoleList();
+		List<ZtreeNode> tmpRoleTreeList = new ArrayList<ZtreeNode>();
+		ZtreeNode tmpTreeNodeDTO = null;
+		for (RoleDTO subRoleDTO : tmpRoleDTOList) {
+			tmpTreeNodeDTO = new ZtreeNode();
+			tmpTreeNodeDTO.setId(subRoleDTO.getRoleId()); 
+			tmpTreeNodeDTO.setName(subRoleDTO.getRoleName());
+			tmpRoleTreeList.add(tmpTreeNodeDTO);
+		}
+		
+		return tmpRoleTreeList;
 	}
 	
 	/**
@@ -562,20 +607,18 @@ public class SecurityService extends BaseService {
 	 *     
 	 * @throws Exception
 	 */
-	public ActionResult SaveRoleSecurity(String inRoleId, List<SecurityDTO> inSecurutyList) throws Exception {
+	public ActionResult SaveRoleSecurity(String inRoleId, List<String> inSecurutyList) throws Exception {
 		// 删除角色原来权限
 		this.securityDAO.deleteRoleAllSecurity(inRoleId);
 		if (inSecurutyList != null && !inSecurutyList.isEmpty()) {
 			// 添加当前要求保存的权限
-			List<RoleSecurityRfEntity> tmpRoleSecurityRfEntityList = new ArrayList<RoleSecurityRfEntity>();
 			RoleSecurityRfEntity tmpNewRoleSecurityRfEntity = null;
-			for (SecurityDTO tmpSubSecurityDTO: inSecurutyList) {
+			for (String subSecurityId: inSecurutyList) {
 				tmpNewRoleSecurityRfEntity = new RoleSecurityRfEntity();
 				tmpNewRoleSecurityRfEntity.setRoleId(inRoleId);
-				tmpNewRoleSecurityRfEntity.setSecurityId(tmpSubSecurityDTO.getSecurityId());
+				tmpNewRoleSecurityRfEntity.setSecurityId(subSecurityId);
+				this.securityDAO.insert(tmpNewRoleSecurityRfEntity);
 			}
-			
-			this.securityDAO.insert(tmpRoleSecurityRfEntityList);
 		}
 		
 		return ActionResultUtil.getActionResult(inRoleId, "角色权限保存成功");

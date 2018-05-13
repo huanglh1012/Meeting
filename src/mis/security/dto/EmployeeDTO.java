@@ -2,20 +2,40 @@ package mis.security.dto;
 
 import java.util.List;
 
+import mis.security.constant.SecurityEntityRegister;
+
 import org.springframework.stereotype.Component;
 
 import ecp.bsp.system.core.BaseDTO;
+import ecp.bsp.system.framework.query.data.dto.ModelEntityAnnotation;
 
 @Component
+@ModelEntityAnnotation( propertiesFileName = "",
+refEntity = SecurityEntityRegister.EmployeeEntity +
+			SecurityEntityRegister.split +
+            SecurityEntityRegister.DepartmentEntity +
+            SecurityEntityRegister.split +
+            SecurityEntityRegister.PostEntity +
+            SecurityEntityRegister.split +
+            SecurityEntityRegister.RoleEntity +
+            SecurityEntityRegister.split +
+            SecurityEntityRegister.SexEntity
+            )
 public class EmployeeDTO extends BaseDTO {
 	
 	private String employeeId;
 	
     private String postId;
+    
+    private String postName;
 	
 	private String departmentId;
 	
+	private String departmentName;
+	
 	private String roleId;
+	
+	private String roleName;
 	
 	private String login;
 	
@@ -24,6 +44,8 @@ public class EmployeeDTO extends BaseDTO {
 	private String employeeName;
 	
 	private String sexId;
+	
+	private String sexName;
 	
 	private String telephone;
 	
@@ -118,4 +140,37 @@ public class EmployeeDTO extends BaseDTO {
 	public void setRoleIdList(List<String> roleIdList) {
 		this.roleIdList = roleIdList;
 	}
+
+	public String getPostName() {
+		return postName;
+	}
+
+	public void setPostName(String postName) {
+		this.postName = postName;
+	}
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public String getSexName() {
+		return sexName;
+	}
+
+	public void setSexName(String sexName) {
+		this.sexName = sexName;
+	}
+	
 }

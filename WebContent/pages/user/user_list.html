@@ -63,39 +63,38 @@
                                                             <a href="javascript:;" data-last-value="identifyCardNumber">身份证号</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="sexName" data-multi="false">性别</a>
+                                                            <a href="javascript:;" data-last-value="sexId" data-multi="false">性别</a>
                                                         </li>
                                                         <li>
                                                             <a href="javascript:;" data-last-value="login">账号</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="departmentName" data-multi="true">部门</a>
+                                                            <a href="javascript:;" data-last-value="departmentId" data-multi="false">部门</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="postName" data-multi="true">职务</a>
+                                                            <a href="javascript:;" data-last-value="postId" data-multi="false">职务</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="roleName" data-multi="true">角色</a>
+                                                            <a href="javascript:;" data-last-value="roleId" data-multi="true">角色</a>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <input class="form-control" type="text" placeholder="项目提示" name="allMatchers" data-keyup="true">
 
-                                                <input class="form-control hidden" type="text" placeholder="姓名"  name="employeeName" data-keyup="true">
+                                                <input class="form-control" type="text" placeholder="姓名"  name="employeeName" data-keyup="true">
 
                                                 <input class="form-control hidden" name="identifyCardNumber" type="text" placeholder="身份证号" data-keyup="true">
 
                                                 <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                <input class="hidden" name="sexName" type="hidden" placeholder="性别"  data-src="local">
+                                                <input class="hidden" name="sexId" type="hidden" placeholder="性别"  data-src="local">
 
                                                 <!--请保留name="severity"和data-src="local", data-src属性指示数据来源于本地-->
                                                 <input class="form-control hidden" name="login" type="text" placeholder="账号"  data-keyup="true">
 
-                                                <input class="hidden" name="departmentName" type="hidden" placeholder="部门" data-src="local">
+                                                <input class="hidden" name="departmentId" type="hidden" placeholder="部门" data-url="">
 
-                                                <input class="hidden" name="postName" type="hidden" placeholder="职务" data-src="local">
+                                                <input class="hidden" name="postId" type="hidden" placeholder="职务" data-url="">
 
-                                                <input class="hidden" name="roleName" type="hidden" placeholder="角色" data-src="local">
+                                                <input class="hidden" name="roleId" type="hidden" placeholder="角色" data-url="">
 
         	                                    <div class="input-group-btn">
         	                                      <button id="btn-simple-search" type="button" class="btn btn-primary">
@@ -126,7 +125,7 @@
         	                                            <div class="col-sm-6 col-md-4 col-lg-4">
         	                                                <div class="form-group">
         	                                                    <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                                    <input name="roleName" type="hidden" placeholder="分发类型" data-moda="combination" data-src="local" data-type="checkbox">
+        	                                                    <input name="sexId" type="hidden" placeholder="分发类型" data-moda="combination" data-src="local" data-type="checkbox">
         	                                                </div>
         	                                            </div>
                                                     </div>

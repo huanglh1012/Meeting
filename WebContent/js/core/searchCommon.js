@@ -30,73 +30,86 @@ var searchCommon = function () {
             for (var k in options) {
                 params[options[k]] = $selector.data(k);
             }
-            that._getRemoteItems($selector.data("url"), $selector, params);
+            _getRemoteItems($selector.data("url"), $selector, params);
         });
     }
 
     function _getRemoteItems (url, $select2Container, extraParams) {
-        $select2Container.select2($.extend({
-            allowClear: true,
-            width: "100%",
-            multiple: true,
-            minimumInputLength: 1,
-            query: function(options) {
-                var realParams = {};
-                $.extend(realParams, {
-                    pageSize: 5,
-                    pageNum: options.page
-                }); // 默认每次显示5条记录
-
-                for (var k in extraParams) {
-                    if (extraParams.hasOwnProperty(k)) {
-                        realParams[k] = (extraParams[k] || options.term);
-                    }
-                }
-
-                $.ajax({
-                    global: false,
-                    url: url,
-                    dataType: "json",
-                    type: "POST",
-                    data: realParams,
-                    quietMillis: 300,
-
-                    success: function(data) { // data format:
-                        // {"results":[{"id":"developer1","text":"developer1"}]}
-                        checkResult(data, {
-                            showBox: false,
-                            callback: function() {
-                                options.callback(data.json);
-                            }
-                        });
-                    }
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:url,
+            success:function(result){
+                $select2Container.select2({
+                    width: "100%",
+                    allowClear:true,
+                    multiple: true,
+                    data:result
                 });
-            },
-            dropdownCssClass: "bigdrop"
-        }, {
-            multiple: !$select2Container.data("single") ? true : false
-        }, {
-            minimumInputLength: $select2Container.data("minLimit") === false ? "" : 1
-        }, {
-            createSearchChoice: $select2Container.data("createsearchchoice") ? function(term, data) { // term为输入关键字，data为搜索总数据
-                var choice = {
-                    id: 0, // 约定，0代表创建新的标签组
-                    text: term
-                };
-                $.each(data, function(i, v) {
-                    if (term == v.text) {
-                        choice = {
-                            id: null,
-                            text: term
-                        };
-                        return false;
-                    }
-                });
-                return choice;
-            } : null
-        })).on("select2-selected", function(e) {
-                $(this).data("selectedtext", e.choice.text);
-            });
+            }
+        });
+//        $select2Container.select2($.extend({
+//            allowClear: true,
+//            width: "100%",
+//            multiple: true,
+//            minimumInputLength: 1,
+//            query: function(options) {
+//                var realParams = {};
+//                $.extend(realParams, {
+//                    pageSize: 5,
+//                    pageNum: options.page
+//                }); // 默认每次显示5条记录
+//
+//                for (var k in extraParams) {
+//                    if (extraParams.hasOwnProperty(k)) {
+//                        realParams[k] = (extraParams[k] || options.term);
+//                    }
+//                }
+//
+//                $.ajax({
+//                    global: false,
+//                    url: url,
+//                    dataType: "json",
+//                    type: "POST",
+//                    data: realParams,
+//                    quietMillis: 300,
+//
+//                    success: function(data) { // data format:
+//                        // {"results":[{"id":"developer1","text":"developer1"}]}
+//                        checkResult(data, {
+//                            showBox: false,
+//                            callback: function() {
+//                                options.callback(data.json);
+//                            }
+//                        });
+//                    }
+//                });
+//            },
+//            dropdownCssClass: "bigdrop"
+//        }, {
+//            multiple: !$select2Container.data("single") ? true : false
+//        }, {
+//            minimumInputLength: $select2Container.data("minLimit") === false ? "" : 1
+//        }, {
+//            createSearchChoice: $select2Container.data("createsearchchoice") ? function(term, data) { // term为输入关键字，data为搜索总数据
+//                var choice = {
+//                    id: 0, // 约定，0代表创建新的标签组
+//                    text: term
+//                };
+//                $.each(data, function(i, v) {
+//                    if (term == v.text) {
+//                        choice = {
+//                            id: null,
+//                            text: term
+//                        };
+//                        return false;
+//                    }
+//                });
+//                return choice;
+//            } : null
+//        })).on("select2-selected", function(e) {
+//                $(this).data("selectedtext", e.choice.text);
+//            });
     }
 
     // 初始化数据源非来自远程的select2插件，主要针对input[data-url]元素
@@ -276,16 +289,14 @@ var searchCommon = function () {
                     selectedComponentName = $selected.data("lastValue"),
                     inputValue = $.trim($("input[name=" + selectedComponentName + "]").val());
                 obj.fieldName = selectedComponentName;
-                if (inputValue) {
-                    if ($selected.data("multi")) {
-                        obj.type = "checkbox";
-                        obj.checkboxCondition = inputValue;
-                    } else {
-                        obj.type = "string";
-                        obj.stringCondition = inputValue;
-                    }
-
+                if ($selected.data("multi")) {
+                    obj.type = "checkbox";
+                    obj.checkboxCondition = inputValue;
+                } else {
+                    obj.type = "string";
+                    obj.stringCondition = inputValue;
                 }
+
                 queryConditions.push(obj);
             } else if ($("#query-mode").val() === that._const.searchType.combination) {
                 $("input[data-moda]").each(function(i, dom) {

@@ -53,7 +53,7 @@
 		<property name="dtoPaths" >
 		<list>
 		  <value>ecp.bsp.business.file.dto</value>
-		  <!-- <value>mis.security.dto</value> -->
+		  <value>mis.security.dto</value>
 	    </list>
 	    </property>
     </bean>

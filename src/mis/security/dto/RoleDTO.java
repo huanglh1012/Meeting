@@ -8,6 +8,8 @@ import ecp.bsp.system.core.BaseDTO;
 public class RoleDTO extends BaseDTO {
 	private String roleId;
 	private String roleName;
+	private String id;
+	private String text;
 	
 	public String getRoleId() {
 		return this.roleId;
@@ -24,4 +26,21 @@ public class RoleDTO extends BaseDTO {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+	
 }

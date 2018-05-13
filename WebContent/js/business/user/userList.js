@@ -13,6 +13,15 @@
  */
 var userList = function () {
 
+    var handleSelect2 = function () {
+        $('input[name="departmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+        $('input[name="postId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null});
+        $('input[name="roleId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getRoleList',jsonString:null});
+    }
+
     var handleDatePicker = function () {
         $("#startDate, #endDate").datepicker({
             format: "yyyy-mm-dd",
@@ -34,7 +43,7 @@ var userList = function () {
             { "sTitle": "用户ID", "mData": "employeeId","bVisible":false},
             { "sTitle": "姓名","mData": "employeeName","type" :"string" },
             { "sTitle": "身份证号", "mData": "identifyCardNumber","type":"string"},
-            { "sTitle": "性别", "mData": "employeeSex","type" :"string" },
+            { "sTitle": "性别", "mData": "sexName","type" :"string" },
             { "sTitle": "账号", "mData": "login","type" :"string"},
             { "sTitle": "部门", "mData": "departmentName","type" :"departmentCombo"},
             { "sTitle": "职务", "mData": "postName","type":"postCombo" },
@@ -91,51 +100,49 @@ var userList = function () {
 
     return {
         _select2InitValue: {
-            sexName: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
+            sexId: [{
+                "id": "0",
+                "text": "男"
             }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            departmentName: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            postName: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            roleName: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
+                "id": "1",
+                "text": "女"
             }]
+//            departmentName: [{
+//                "id": "B2BIC",
+//                "text": "B2BIC"
+//            }, {
+//                "id": "E-MAIL",
+//                "text": "E-MAIL"
+//            }, {
+//                "id": "FTP专线",
+//                "text": "FTP专线"
+//            }],
+//            postName: [{
+//                "id": "B2BIC",
+//                "text": "B2BIC"
+//            }, {
+//                "id": "E-MAIL",
+//                "text": "E-MAIL"
+//            }, {
+//                "id": "FTP专线",
+//                "text": "FTP专线"
+//            }],
+//            roleName: [{
+//                "id": "B2BIC",
+//                "text": "B2BIC"
+//            }, {
+//                "id": "E-MAIL",
+//                "text": "E-MAIL"
+//            }, {
+//                "id": "FTP专线",
+//                "text": "FTP专线"
+//            }]
         },
         init: function () {
+            handleSelect2();
             searchCommon.select2InitValue = this._select2InitValue;
-            searchCommon.tableAjaxParam.proxyClass = "fileController";
-            searchCommon.tableAjaxParam.proxyMethod = "getReportTaskListByCondition";
+            searchCommon.tableAjaxParam.proxyClass = "securityController";
+            searchCommon.tableAjaxParam.proxyMethod = "getEmployeeListByCondition";
             searchCommon.bindingSearchEvent();
             searchCommon.init();
             common.loadDatatableSettings();

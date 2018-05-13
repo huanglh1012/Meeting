@@ -33,6 +33,11 @@ public class SecurityDAO extends BaseDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<DepartmentDTO> getDepartmentChildrenList(String inParentDepartmentId) {
+		return (List<DepartmentDTO>) this.query(SecurityConst.SQL_GET_DEPARTMENT_CHILDREN_LIST_BY_ID, new Object[] { inParentDepartmentId }, DepartmentDTO.class);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<RoleDTO> getRoleList() {
 		return (List<RoleDTO>) this.query(SecurityConst.SQL_GET_ROLE_LIST, RoleDTO.class);
 	}
@@ -53,7 +58,7 @@ public class SecurityDAO extends BaseDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<SecurityDTO> getRoleSecurity(String inRoleId) {
-		return (List<SecurityDTO>) this.query(SecurityConst.SQL_GET_ROLE_SECURITY_LIST, SecurityDTO.class);
+		return (List<SecurityDTO>) this.query(SecurityConst.SQL_GET_ROLE_SECURITY_LIST, new Object[] { inRoleId },SecurityDTO.class);
 	}
 
 	public void deleteEmployeeRoleByEmployeeId(String employeeId) throws Exception {

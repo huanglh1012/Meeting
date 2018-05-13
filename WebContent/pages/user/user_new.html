@@ -27,7 +27,7 @@
         </ol>
     </div>
     <div id="content">
-        <form id="create-issue-form" method="post" class="form-horizontal">
+        <form id="userForm" method="post" class="form-horizontal">
             <div class="jarviswidget well">
                 <div class="widget-body widget-hide-overflow">
                     <div class="row">
@@ -44,14 +44,15 @@
                                 </label>
                                 <div class="col-sm-10">
                                     <input class="form-control required-validation"  name="employeeName">
+                                    <input name="employeeId" type="hidden">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" >性别</label>
                                 <div class="col-sm-10">
-                                    <input type="radio" name="optionsRadios2" value="option1" />
+                                    <input type="radio" name="sexId" value="0" checked/>
                                     男
-                                    <input type="radio" name="optionsRadios2" value="option2" checked />
+                                    <input type="radio" name="sexId" value="1" />
                                     女
                                 </div>
                             </div>
@@ -61,6 +62,14 @@
                                 </label>
                                 <div class="col-sm-10">
                                     <input class="form-control required-validation" name="identifyCardNumber" style="width: 100%">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    电话号码
+                                </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control required-validation" name="telephone" style="width: 100%">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -100,7 +109,7 @@
                                     密码
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="password" name="password"  class="form-control" data-validate="{required: true, messages:{required:'Please enter field password'}}" style="width: 100%" />
+                                    <input type="password" id="password" name="password" class="form-control" data-validate="{required: true, messages:{required:'Please enter field password'}}" style="width: 100%" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -123,8 +132,6 @@
                     </div>
                 </div>
             </div>
-            <input type="hidden" name="paaEmployeeId" id="paaEmployeeId"/>
-            <input type="hidden" name="paaUsername" id="paaUsername" />
         </form>
     </div>
 </div>

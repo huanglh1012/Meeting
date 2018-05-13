@@ -1,9 +1,11 @@
 package mis.security.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import mis.security.constant.SecurityConst;
 import mis.security.dto.DepartmentDTO;
 import mis.security.dto.EmployeeDTO;
 import mis.security.dto.LoginDTO;
@@ -15,12 +17,22 @@ import mis.security.service.SecurityService;
 
 import org.springframework.stereotype.Controller;
 
+import ecp.bsp.business.file.constant.TaskConst;
+import ecp.bsp.business.file.dto.QueryResultDTO;
+import ecp.bsp.business.file.dto.ReportTaskDTO;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.dto.AjaxResult;
-import ecp.bsp.system.commons.dto.TreeNodeDTO;
+import ecp.bsp.system.framework.query.PageQueryHepler;
+import ecp.bsp.system.framework.query.data.entity.DynamicGridQueryEntity;
+import ecp.bsp.system.framework.query.data.entity.QueryPager;
+import ecp.bsp.system.framework.query.impl.PageQueryService;
 
 @Controller
 public class SecurityController  {
+	
+	@Resource
+	private PageQueryService pageQueryService;
+	
 	@Resource
 	private SecurityService securityService;
 	
@@ -59,7 +71,8 @@ public class SecurityController  {
 	public AjaxResult insertEmployee(EmployeeDTO inEmployeeDTO) {
 		ActionResult result = null;	
 		AjaxResult ajaxResult = new AjaxResult();
-		
+		String[] tmpRoleIdArray = inEmployeeDTO.getRoleId().split(",");
+		inEmployeeDTO.setRoleIdList(Arrays.asList(tmpRoleIdArray));
 		try {
 			result = this.securityService.insertEmployee(inEmployeeDTO);
 			ajaxResult.setSuccess(result.getIsSuccessful());
@@ -132,6 +145,22 @@ public class SecurityController  {
 	 */
 	public Object getEmployeeList() {
 		return (List<EmployeeDTO>) this.securityService.getEmployeeList();
+	}
+	
+	/**
+	 * 获取用户信息列表（根据查询条件queryCondition）
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Object getEmployeeListByCondition(List queryCondition,Integer start,Integer limit){
+		String sql = SecurityConst.SQL_GET_EMPLOYEE_LIST_BY_CONDITION;
+		List<DynamicGridQueryEntity> filter = PageQueryHepler.createConditions(queryCondition);
+		QueryPager queryPager = this.pageQueryService.queryList(filter, sql, start, limit, EmployeeDTO.class);
+		QueryResultDTO queryResultDTO = new QueryResultDTO();
+		queryResultDTO.setRecordsTotal(queryPager.getTotalCount());
+		queryResultDTO.setRecordsFiltered((queryPager.getTotalCount()));
+		queryResultDTO.setData(queryPager.getResult());
+		return queryResultDTO;
 	}
 	
 	/**
@@ -233,6 +262,16 @@ public class SecurityController  {
 	}
 	
 	/**
+	 * 获取部门信息列表
+	 * 
+	 * @return
+	 *     返回部门信息列表
+	 */
+	public Object getDepartmentGroupList() {
+		return (List<DepartmentDTO>) this.securityService.getDepartmentGroupList();
+	}
+	
+	/**
 	 * 插入角色信息
 	 * 
 	 * @param inRoleDTO
@@ -318,6 +357,16 @@ public class SecurityController  {
 	 */
 	public Object getRoleList() {
 		return (List<RoleDTO>) this.securityService.getRoleList();
+	}
+	
+	/**
+	 * 获取角色列表
+	 * 
+	 * @return
+	 *     返回角色列表
+	 */
+	public Object getRoleTreeList() {
+		return (List<ZtreeNode>) this.securityService.getRoleTreeList();
 	}
 	
 	/**
@@ -423,19 +472,19 @@ public class SecurityController  {
 	 * @param inRoleId
 	 *     角色ID
 	 *     
-	 * @param inSecurutyList
+	 * @param inSecurutyIdList
 	 *     角色的权限列表
 	 *     
 	 * @return
 	 *     返回保存角色权限信息情况
 	 *     
 	 */
-	public AjaxResult SaveRoleSecurity(String inRoleId, List<SecurityDTO> inSecurutyList) {
+	public AjaxResult SaveRoleSecurity(String inRoleId, List<String> inSecurutyIdList) {
 		ActionResult result = null;	
 		AjaxResult ajaxResult = new AjaxResult();
 		
 		try {
-			result = this.securityService.SaveRoleSecurity(inRoleId, inSecurutyList);
+			result = this.securityService.SaveRoleSecurity(inRoleId, inSecurutyIdList);
 			ajaxResult.setSuccess(result.getIsSuccessful());
 			ajaxResult.setMsg(result.getActionResultMessage());
 		} catch (Exception e) {
@@ -471,4 +520,5 @@ public class SecurityController  {
 	public Object getEmployeeSecurity(String inEmployeeId) {
 		return (List<SecurityDTO>) this.securityService.getEmployeeSecurity(inEmployeeId);
 	}
+	
 }
