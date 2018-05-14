@@ -59,8 +59,10 @@ public class SecurityDAO extends BaseDAO {
 	 * @return
 	 * 		用户信息
 	 */
+	@SuppressWarnings("unchecked")
 	public EmployeeDTO getEmployeeInfoById(String inEmployeeId) {
-		List<EmployeeDTO> tmpEmployeeDTOList = (List<EmployeeDTO>) this.query(SecurityConst.SQL_GET_ROLE_SECURITY_LIST_BY_EMPLOEE_ID, new Object[] { inEmployeeId }, EmployeeDTO.class);
+		List<EmployeeDTO> tmpEmployeeDTOList = (List<EmployeeDTO>) this.query(SecurityConst.SQL_GET_EMPLOYEE_INFO_BY_EMPLOYEE_ID,
+				new Object[] { inEmployeeId }, EmployeeDTO.class);
 		return tmpEmployeeDTOList.size() > 0 ? tmpEmployeeDTOList.get(0) : null;
 	}
 	

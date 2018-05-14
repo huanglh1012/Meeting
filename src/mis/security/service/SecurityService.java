@@ -142,13 +142,15 @@ public class SecurityService extends BaseService {
 		EmployeeEntity tmpOtherEmployeeEntityTwo = this.securityDAO.getEntity(EmployeeEntity.class, "login", inEmployeeDTO.getLogin());
 		
 		String exceptionMessage = "";
-		if (!tmpOtherEmployeeEntityTwo.getId().equals(inEmployeeDTO.getEmployeeId()) && tmpOtherEmployeeEntityTwo.getLogin().equals(inEmployeeDTO.getLogin())) {		
-			exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "当前修改的用户账号与其他用户账号发生冲突";
+		if (tmpOtherEmployeeEntityTwo != null) {
+			if (!tmpOtherEmployeeEntityTwo.getId().equals(inEmployeeDTO.getEmployeeId()) && tmpOtherEmployeeEntityTwo.getLogin().equals(inEmployeeDTO.getLogin())) {		
+				exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "当前修改的用户账号与其他用户账号发生冲突";
+			}
 		}
 		
 		// 身份证可以为空，如果身份证不为空则不能重复
 		String tmpIdentifyCardNumber = inEmployeeDTO.getIdentifyCardNumber();
-		if (StringUtils.isValidateString(tmpIdentifyCardNumber)) {
+		if (tmpOtherEmployeeEntityOne != null) {
 			if (!tmpOtherEmployeeEntityOne.getId().equals(inEmployeeDTO.getEmployeeId()) && tmpOtherEmployeeEntityOne.getIdentifyCardNumber().equals(tmpIdentifyCardNumber)) {
 				if (StringUtils.isValidateString(exceptionMessage)) {
 					exceptionMessage += "\n\r";
@@ -173,11 +175,12 @@ public class SecurityService extends BaseService {
 		EmployeeDTO.dtoToEntity(inEmployeeDTO, tmpCuttentEmployeeEntity);
 		this.securityDAO.update(tmpCuttentEmployeeEntity);
 		
+		this.securityDAO.deleteEmployeeRoleByEmployeeId(tmpCuttentEmployeeEntity.getId());
+		
 		EmployeeRoleRfEntity tmpEmployeeRoleRfEntity = null;
-		List<EmployeeRoleRfEntity> tmpEmployeeRoleRfEntityList = new ArrayList<EmployeeRoleRfEntity>();
 		List<String> tmpRoleIdList = inEmployeeDTO.getRoleIdList();
 		for (String tmpSubRoleId: tmpRoleIdList) {
-			if (StringUtils.isValidateString(tmpSubRoleId)) {
+			if (!StringUtils.isValidateString(tmpSubRoleId)) {
 				exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "未能获取用户权限数据，联系技术支持人员处理.";
 				LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 				throw new RuntimeException(exceptionMessage);
@@ -186,10 +189,8 @@ public class SecurityService extends BaseService {
 			tmpEmployeeRoleRfEntity = new EmployeeRoleRfEntity();
 			tmpEmployeeRoleRfEntity.setEmployeeId(tmpCuttentEmployeeEntity.getId());
 			tmpEmployeeRoleRfEntity.setRoleId(tmpSubRoleId);
+			this.securityDAO.insert(tmpEmployeeRoleRfEntity);
 		}
-		
-		this.securityDAO.deleteEmployeeRoleByEmployeeId(tmpCuttentEmployeeEntity.getId());
-		this.securityDAO.insert(tmpEmployeeRoleRfEntityList);
 		
 		return ActionResultUtil.getActionResult(tmpCuttentEmployeeEntity.getId(), "用户修改成功");
 	}

@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="MESSAGE_SEND_CENTER")
+@Table(name="message_send_center",schema="meeting")
 public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String messageSendCenterId;
@@ -26,11 +26,11 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 	@Id
 	@Column(name="MESSAGE_SEND_CENTER_ID", unique=true, nullable=false, length=32)
 	public String getMessageSendCenterId() {
-		return this.messageSendCenterId;
+		return this.getId();
 	}
 
 	public void setMessageSendCenterId(String messageSendCenterId) {
-		this.messageSendCenterId = messageSendCenterId;
+		this.setId(messageSendCenterId);
 	}
 
 

@@ -17,9 +17,7 @@ import mis.security.service.SecurityService;
 
 import org.springframework.stereotype.Controller;
 
-import ecp.bsp.business.file.constant.TaskConst;
 import ecp.bsp.business.file.dto.QueryResultDTO;
-import ecp.bsp.business.file.dto.ReportTaskDTO;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.dto.AjaxResult;
 import ecp.bsp.system.framework.query.PageQueryHepler;
@@ -73,6 +71,7 @@ public class SecurityController  {
 		AjaxResult ajaxResult = new AjaxResult();
 		String[] tmpRoleIdArray = inEmployeeDTO.getRoleId().split(",");
 		inEmployeeDTO.setRoleIdList(Arrays.asList(tmpRoleIdArray));
+		
 		try {
 			result = this.securityService.insertEmployee(inEmployeeDTO);
 			ajaxResult.setSuccess(result.getIsSuccessful());
@@ -98,6 +97,8 @@ public class SecurityController  {
 	public AjaxResult updateEmployee(EmployeeDTO inEmployeeDTO) {
 		ActionResult result = null;	
 		AjaxResult ajaxResult = new AjaxResult();
+		String[] tmpRoleIdArray = inEmployeeDTO.getRoleId().split(",");
+		inEmployeeDTO.setRoleIdList(Arrays.asList(tmpRoleIdArray));
 		
 		try {
 			result = this.securityService.updateEmployee(inEmployeeDTO);

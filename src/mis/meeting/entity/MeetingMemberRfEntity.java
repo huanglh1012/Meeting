@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="MEETING_MEMBER_RF")
+@Table(name="MEETING_MEMBER_RF",schema="meeting")
 public class MeetingMemberRfEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String meetingMemberRfId;
@@ -24,11 +24,11 @@ public class MeetingMemberRfEntity extends ecp.bsp.system.core.BaseEntity implem
 	@Id
 	@Column(name="MEETING_MEMBER_RF_ID", unique=true, nullable=false, length=32)
 	public String getMeetingMemberRfId() {
-		return this.meetingMemberRfId;
+		return this.getId();
 	}
 
 	public void setMeetingMemberRfId(String meetingMemberRfId) {
-		this.meetingMemberRfId = meetingMemberRfId;
+		this.setId(meetingMemberRfId);
 	}
 
 

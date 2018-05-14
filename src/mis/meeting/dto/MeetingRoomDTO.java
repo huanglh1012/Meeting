@@ -1,7 +1,10 @@
 package mis.meeting.dto;
 
+import org.springframework.stereotype.Component;
+
 import ecp.bsp.system.core.BaseDTO;
 
+@Component
 public class MeetingRoomDTO extends BaseDTO {
 	private String meetingRoomId;
 	private String meetingRoomAddress;

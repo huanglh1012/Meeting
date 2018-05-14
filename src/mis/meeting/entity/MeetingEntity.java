@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@Table(name="MEETING")
+@Table(name="MEETING",schema="meeting")
 public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String meetingId;
@@ -29,11 +29,11 @@ public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Ser
 	@Id
 	@Column(name="MEETING_ID", unique=true, nullable=false, length=32)
 	public String getMeetingId() {
-		return this.meetingId;
+		return this.getId();
 	}
 
 	public void setMeetingId(String meetingId) {
-		this.meetingId = meetingId;
+		this.setId(meetingId);
 	}
 
 

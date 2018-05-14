@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * 
  */
 @Entity
-@Table(name="MEETING_STATE")
+@Table(name="MEETING_STATE",schema="meeting")
 public class MeetingStateEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String meetingStateId;
@@ -20,11 +20,11 @@ public class MeetingStateEntity extends ecp.bsp.system.core.BaseEntity implement
 	@Id
 	@Column(name="MEETING_STATE_ID", unique=true, nullable=false, length=32)
 	public String getMeetingStateId() {
-		return this.meetingStateId;
+		return this.getId();
 	}
 
 	public void setMeetingStateId(String meetingStateId) {
-		this.meetingStateId = meetingStateId;
+		this.setId(meetingStateId);
 	}
 
 

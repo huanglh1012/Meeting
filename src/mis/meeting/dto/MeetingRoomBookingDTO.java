@@ -2,8 +2,11 @@ package mis.meeting.dto;
 
 import java.sql.Timestamp;
 
+import org.springframework.stereotype.Component;
+
 import ecp.bsp.system.core.BaseDTO;
 
+@Component
 public class MeetingRoomBookingDTO extends BaseDTO {
 	private String meetingRoomId;
 	private String meetingRoomAddress;

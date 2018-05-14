@@ -19,6 +19,7 @@
 	<context:component-scan base-package="ecp.bsp.business" />
 	<context:component-scan base-package="ecp.bsp.system" />
 	<context:component-scan base-package="mis.security" />
+	<context:component-scan base-package="mis.meeting" />
 	 
 	<!-- 定位多个properties 配置文件 -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -54,6 +55,7 @@
 		<list>
 		  <value>ecp.bsp.business.file.dto</value>
 		  <value>mis.security.dto</value>
+		  <value>mis.meeting.dto</value>
 	    </list>
 	    </property>
     </bean>
@@ -66,6 +68,7 @@
 	         	<value>ecp.bsp.business</value> 
 	         	<value>ecp.bsp.system</value> 
 	         	<value>mis.security.entity</value> 
+	         	<value>mis.meeting.entity</value> 
 	     	</list> 
 		</property>
 		

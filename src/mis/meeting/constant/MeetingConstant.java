@@ -1,7 +1,8 @@
 package mis.meeting.constant;
 
 public class MeetingConstant {
-
+	public static final String SQL_GET_MEETING_ROOM_LIST = "SELECT * FROM MEETING_ROOM";
+	
 	public static final String SQL_GET_MEETING_BY_PAN_DATETIME_RANG = 
 			"SELECT * FROM MEETING A WHERE (A.MEETING_START_TIME > ? AND A.MEETING_START_TIME < ?) "
 			+ " OR (A.MEETING_END_TIME > ? AND A.MEETING_END_TIME < ?)";
@@ -17,5 +18,16 @@ public class MeetingConstant {
 			    + " WHERE A.MEETING_ROOM_ID = B.MEETING_ROOM_ID AND B.MEETING_ID = C.MEETING_ID AND C.EMPLOYEE_ID = D.EMPLOYEE_ID "
 			    + " AND D.DEPARTMENT_ID = E.DEPARTMENT_ID AND C.MEETING_MEMBER_ROLE_ID = F.MEETING_MEMBER_ROLE_ID "
 			    + " AND A.MEETING_ROOM_ID = ? AND F.MEETING_MEMBER_ROLE_CODE = ? ";
+	
+	public static final String SQL_GET_MEETING_ATTACHMENT_LIST_BY_CONDITION = new StringBuilder("")
+	.toString();
+	
+	public static final String SQL_GET_MEETING_LIST_BY_CONDITION = new StringBuilder("")
+	.toString();
+	
+	public static final String SQL_GET_MEETING_INFO_BY_EMPLOYEE_ID = new StringBuilder("SELECT * FROM (")
+	.append(SQL_GET_MEETING_LIST_BY_CONDITION)
+	.append(") A WHERE A.MEETING_ID = ?")
+	.toString();
 
 }

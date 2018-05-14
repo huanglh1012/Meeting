@@ -29,7 +29,7 @@ var userEdit = function () {
                         ,proxyClass:'securityController',proxyMethod:'getEmployeeInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
                         console.log(result);
-//                        DomUtil.setFormElementsValueViaJSONObject('userForm',JSON.parse(result));
+                        DomUtil.setFormElementsValueViaJSONObject('userForm',JSON.parse(result));
                     }
                 });
             }

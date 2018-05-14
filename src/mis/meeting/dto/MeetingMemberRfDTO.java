@@ -1,7 +1,10 @@
 package mis.meeting.dto;
 
+import org.springframework.stereotype.Component;
+
 import ecp.bsp.system.core.BaseDTO;
 
+@Component
 public class MeetingMemberRfDTO extends BaseDTO {
 	private String employeeId;
 	private String employeeName;

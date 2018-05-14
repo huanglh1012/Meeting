@@ -3,8 +3,11 @@ package mis.meeting.dto;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import ecp.bsp.system.core.BaseDTO;
 
+@Component
 public class MeetingDTO extends BaseDTO {
 	private String meetingId;
 	private String meetStateId;

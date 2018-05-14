@@ -109,7 +109,7 @@ public class MeetingService extends BaseService {
 		return ActionResultUtil.getActionResult(tmpMeetingEntity.getId(), "会议删除成功");
 	}
 	
-	public ActionResult CloseMeeting(String inMeetingId) throws Exception {
+	public ActionResult closeMeeting(String inMeetingId) throws Exception {
 		MeetingEntity tmpMeetingEntity = this.meetingDAO.getEntity(MeetingEntity.class, "meetingId", inMeetingId);
 		if (tmpMeetingEntity == null) {
 			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "没有找到对应的会议，会议ID：" + inMeetingId;
@@ -120,6 +120,19 @@ public class MeetingService extends BaseService {
 		this.meetingDAO.CloseMeeting(inMeetingId);
 		
 		return ActionResultUtil.getActionResult(tmpMeetingEntity.getId(), "会议关闭成功");
+	}
+	
+	/**
+	 * 根据会议ID获取会议信息
+	 * 
+	 * @param inMeetingId
+	 *     会议ID
+	 * @return
+	 *     返回会议信息
+	 * @throws Exception 
+	 */
+	public MeetingDTO getMeetingInfoById(String inMeetingId) throws Exception {
+		return this.meetingDAO.getMeetingInfoById(inMeetingId);
 	}
 	
 	public ActionResult insertMeetingRoom(MeetingRoomDTO inMeetingRoomDTO) throws Exception {
@@ -169,6 +182,17 @@ public class MeetingService extends BaseService {
 		this.meetingDAO.delete(tmpMeetingRoomEntity);
 		
 		return ActionResultUtil.getActionResult(tmpMeetingRoomEntity.getId(), "会议室删除成功");
+	}
+	
+	/**
+	 * 获取会议室信息列表
+	 * 
+	 * @return
+	 *     返回会议室信息列表
+	 * @throws Exception 
+	 */
+	public Object getMeetingRoomList() throws Exception {
+		return (List<MeetingRoomDTO>) this.meetingDAO.getMeetingRoomList();
 	}
 	
 	public List<MeetingRoomBookingDTO> getMeetingRoomBookingListByRoomId(String inMeetingRoomId) {
