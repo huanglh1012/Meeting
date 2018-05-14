@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class MeetingRoomEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String meetingRoomId;
+	private String meetingRoomName;
 	private String meetingRoomAddress;
 
 	public MeetingRoomEntity() {
@@ -29,7 +30,15 @@ public class MeetingRoomEntity extends ecp.bsp.system.core.BaseEntity implements
 		this.setId(meetingRoomId);
 	}
 
+	@Column(name="MEETING_ROOM_NAME", nullable=false, length=64)
+	public String getMeetingRoomName() {
+		return this.meetingRoomName;
+	}
 
+	public void setMeetingRoomName(String meetingRoomName) {
+		this.meetingRoomName = meetingRoomName;
+	}
+	
 	@Column(name="MEETING_ROOM_ADDRESS", nullable=false, length=1024)
 	public String getMeetingRoomAddress() {
 		return this.meetingRoomAddress;

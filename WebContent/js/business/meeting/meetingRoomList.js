@@ -22,13 +22,15 @@ var meetingRoomList = function () {
         // 表头定义
         var tableHead = [
             { "sTitle": "会议室ID", "mData": "meetingRoomId","bVisible":false},
-            { "sTitle": "会议室","mData": "meetingSubject","type" :"string" },
+            { "sTitle": "会议室","mData": "meetingRoomName","type" :"string" },
             { "sTitle": "会议室地址", "mData": "meetingRoomAddress","type":"string"}
         ];
         var tableHead2 = [
             { "sTitle": "会议室ID", "mData": "meetingRoomId","bVisible":false},
             { "sTitle": "开始时间","mData": "meetingSubject","type" :"string" },
-            { "sTitle": "结束时间", "mData": "meetingRoomAddress","type":"string"}
+            { "sTitle": "结束时间", "mData": "meetingRoomAddress","type":"string"},
+            { "sTitle": "发起人","mData": "proposer","type" :"string" },
+            { "sTitle": "发起部门", "mData": "proposeDepartment","type":"string"}
         ];
         var oTable =  $('#meetingRoomList').dataTable({
             "aoColumns": tableHead,
