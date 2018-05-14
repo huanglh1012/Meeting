@@ -148,6 +148,16 @@ public class SecurityController  {
 	}
 	
 	/**
+	 * 根据用户ID获取用户信息
+	 * 
+	 * @return
+	 *     用户列表
+	 */
+	public Object getEmployeeInfoById(String inEmployeeId) {
+		return this.securityService.getEmployeeInfoById(inEmployeeId);
+	}
+	
+	/**
 	 * 获取用户信息列表（根据查询条件queryCondition）
 	 * @return
 	 */

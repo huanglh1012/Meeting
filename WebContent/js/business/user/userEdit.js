@@ -13,6 +13,31 @@
  */
 var userEdit = function () {
 
+    var handlePageInfo = function () {
+        var tmpUrl = document.URL;
+        var tmpUrlParam = tmpUrl.split('?')[1];
+        if (tmpUrlParam != undefined) {
+            var tmpUrlParamValue= tmpUrlParam.split("=")[1];
+            if (tmpUrlParamValue != undefined && tmpUrlParamValue != null) {
+                var obj = [];
+                obj.push(StringUtil.decorateRequestData('String',tmpUrlParamValue));
+                $.ajax({
+                    type:'post',
+                    Type:"json",
+                    async:false,
+                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'securityController',proxyMethod:'getEmployeeInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
+                    success:function(result){
+                        console.log(result);
+//                        DomUtil.setFormElementsValueViaJSONObject('userForm',JSON.parse(result));
+                    }
+                });
+            }
+        }
+
+
+    }
+
     var handleSelect2 = function () {
         $.ajax({
             type:'post',
@@ -125,8 +150,7 @@ var userEdit = function () {
                 var employeeId = $('input[name="employeeId"]').val();
                 var obj = [];
                 var addData = DomUtil.getJSONObjectFromForm('userForm', null);
-                addData.roleId.spl
-                console.log(addData);
+                addData.sexId =  $("input[name='sexId']:checked").val();
                 if ( addData.password != addData.confirmPassword) {
                     bootbox.alert({
                         className: 'span4 alert-error',
@@ -144,51 +168,51 @@ var userEdit = function () {
                     });
                 } else {
                     obj.push(StringUtil.decorateRequestData('EmployeeDTO', addData));
-//                    $.ajax({
-//                        type: "POST",
-//                        url: SMController.getUrl({
-//                            controller: 'controllerProxy',
-//                            method: 'callBack',
-//                            proxyClass: 'securityController',
-//                            proxyMethod: employeeId == '' ? 'insertEmployee' : 'updateEmployee',
-//                            jsonString: MyJsonUtil.obj2str(obj)
-//                        }),
-//                        dataType: "json",
-//                        beforeSend: function(jqXHR, settings) {
-//                            $.blockUI({
-//                                message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
-//                                    '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
-//                                    '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请稍后...</span></div>' +
-//                                    '</div>'
-//                            });
-//                        },
-//                        success: function (result) {
-//                            if (result.success) {
-//                                $("#processStatus").text("提交成功，正在返回上一页面...");
-//                                setTimeout(function(){
-//                                    $.unblockUI();
-//                                    history.back();
-//                                }, 1500);
-//
-//                            } else {
-//                                $.unblockUI();
-//                                bootbox.alert({
-//                                    title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
-//                                    message:result.msg,
-//                                    className:'span4 alert-error',
-//                                    buttons: {
-//                                        ok: {
-//                                            label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
-//                                            className: 'btn blue'
-//                                        }
-//                                    },
-//                                    callback: function() {
-//
-//                                    }
-//                                });
-//                            }
-//                        }
-//                    });
+                    $.ajax({
+                        type: "POST",
+                        url: SMController.getUrl({
+                            controller: 'controllerProxy',
+                            method: 'callBack',
+                            proxyClass: 'securityController',
+                            proxyMethod: employeeId == '' ? 'insertEmployee' : 'updateEmployee',
+                            jsonString: MyJsonUtil.obj2str(obj)
+                        }),
+                        dataType: "json",
+                        beforeSend: function(jqXHR, settings) {
+                            $.blockUI({
+                                message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                    '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                    '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请稍后...</span></div>' +
+                                    '</div>'
+                            });
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                                $("#processStatus").text("提交成功，正在返回上一页面...");
+                                setTimeout(function(){
+                                    $.unblockUI();
+                                    history.back();
+                                }, 1500);
+
+                            } else {
+                                $.unblockUI();
+                                bootbox.alert({
+                                    title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
+                                    message:result.msg,
+                                    className:'span4 alert-error',
+                                    buttons: {
+                                        ok: {
+                                            label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
+                                            className: 'btn blue'
+                                        }
+                                    },
+                                    callback: function() {
+
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }, // Do not change code below
 
@@ -200,6 +224,7 @@ var userEdit = function () {
 
     return {
         init: function () {
+            handlePageInfo();
             handleSelect2();
             handleForm();
         }

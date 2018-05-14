@@ -230,6 +230,17 @@ public class SecurityService extends BaseService {
 	}
 	
 	/**
+	 * 根据用户ID获取用户信息
+	 * 
+	 * @param inEmployeeId
+	 * @return
+	 * 		用户信息
+	 */
+	public EmployeeDTO getEmployeeInfoById(String inEmployeeId) {
+		return this.securityDAO.getEmployeeInfoById(inEmployeeId);
+	}
+	
+	/**
 	 * 插入部门信息
 	 * 
 	 * @param inDepartmentDTO

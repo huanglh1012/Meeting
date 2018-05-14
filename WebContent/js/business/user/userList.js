@@ -12,14 +12,16 @@
  * @type {userList}
  */
 var userList = function () {
+    var oTable = null;
+    var selectTr = null;
 
     var handleSelect2 = function () {
         $('input[name="departmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
             ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
         $('input[name="postId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
             ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null});
-        $('input[name="roleId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getRoleList',jsonString:null});
+//        $('input[name="roleId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getRoleList',jsonString:null});
     }
 
     var handleDatePicker = function () {
@@ -37,6 +39,87 @@ var userList = function () {
             });
     }
 
+    var handleButton = function () {
+        $('#modifyUserBtn').on('click', function (e) {
+            if (selectTr == null) {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请选择需要修改的用户信息',
+                    callback: function() {
+                    },
+                    title: "错误提示"
+                });
+            }else{
+                window.location.href='user_new.html?employeeId='+ selectTr.employeeId;
+            }
+        });
+
+        $('#deleteUserBtn').on('click', function (e) {
+            if(zTreeObj.getSelectedNodes()[0] != null){
+                bootbox.confirm({
+                    buttons: {
+                        confirm: {
+                            label: '确认',
+                            className: 'btn green'
+                        },
+                        cancel: {
+                            label: '取消',
+                            className: 'btn'
+                        }
+                    },
+                    message: '确定删除这一行吗 ?',
+                    title: "消息提示",
+                    callback: function(result) {
+                        if(result) {
+                            var obj = [];
+                            obj.push(StringUtil.decorateRequestData('String',zTreeObj.getSelectedNodes()[0].id));
+                            $.ajax({
+                                type:'post',
+                                dataType:"json",
+                                async: false,
+                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                    ,proxyClass:'securityController',proxyMethod:'deleteDepartment',jsonString:MyJsonUtil.obj2str(obj)}),
+                                success:function(result){
+                                    if(result.success){
+                                        $.ajax({
+                                            type: "POST",
+                                            url: SMController.getUrl({
+                                                controller: 'controllerProxy',
+                                                method: 'callBack',
+                                                proxyClass: 'securityController',
+                                                proxyMethod: 'getDepartmentTreeList',
+                                                jsonString: null
+                                            }),
+                                            dataType: "json",
+                                            success: function (result) {
+                                                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, result);
+                                            }
+                                        });
+                                        $.pnotify({
+                                            text: '删除成功'
+                                        });
+                                    }else{
+                                        $.pnotify({
+                                            type:'error',
+                                            text: result.msg,
+                                            delay: 8000
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     var handleTable = function () {
         // 表头定义
         var tableHead = [
@@ -50,7 +133,8 @@ var userList = function () {
             { "sTitle": "角色", "mData": "roleName" ,"type" :"roleCombo"},
             { "sTitle": "联系电话", "mData": "telephone","type" :"string"}
         ];
-        var oTable =  $('#dt_issues').dataTable({
+
+        oTable =  $('#dt_issues').dataTable({
             "aoColumns": tableHead,
             "serverSide": true,
             "bAutoWidth": false,
@@ -86,16 +170,27 @@ var userList = function () {
             }]
         });
 
-        var table = $('#dt_issues').DataTable(),
-            colvis = new $.fn.dataTable.ColVis(table, {
-                buttonText: "显示 / 隐藏 列",
-                bRestore: true,
-                sRestore: "显示全部"
-            });
-
-        $("#dt_issues").resizableColumns({
-            store: window.store
+        $('#dt_issues tbody').on('click','tr', function () {
+            if ($(this).hasClass("highlight")){
+                $(this).removeClass("highlight");
+                selectTr = null;
+            } else {
+                oTable.$('tr.highlight').removeClass("highlight");
+                $(this).addClass("highlight");
+                selectTr = oTable.fnGetData(this);
+            }
         });
+
+//        var table = $('#dt_issues').DataTable(),
+//            colvis = new $.fn.dataTable.ColVis(table, {
+//                buttonText: "显示 / 隐藏 列",
+//                bRestore: true,
+//                sRestore: "显示全部"
+//            });
+//
+//        $("#dt_issues").resizableColumns({
+//            store: window.store
+//        });
     }
 
     return {
@@ -107,38 +202,9 @@ var userList = function () {
                 "id": "1",
                 "text": "女"
             }]
-//            departmentName: [{
-//                "id": "B2BIC",
-//                "text": "B2BIC"
-//            }, {
-//                "id": "E-MAIL",
-//                "text": "E-MAIL"
-//            }, {
-//                "id": "FTP专线",
-//                "text": "FTP专线"
-//            }],
-//            postName: [{
-//                "id": "B2BIC",
-//                "text": "B2BIC"
-//            }, {
-//                "id": "E-MAIL",
-//                "text": "E-MAIL"
-//            }, {
-//                "id": "FTP专线",
-//                "text": "FTP专线"
-//            }],
-//            roleName: [{
-//                "id": "B2BIC",
-//                "text": "B2BIC"
-//            }, {
-//                "id": "E-MAIL",
-//                "text": "E-MAIL"
-//            }, {
-//                "id": "FTP专线",
-//                "text": "FTP专线"
-//            }]
         },
         init: function () {
+            handleButton();
             handleSelect2();
             searchCommon.select2InitValue = this._select2InitValue;
             searchCommon.tableAjaxParam.proxyClass = "securityController";

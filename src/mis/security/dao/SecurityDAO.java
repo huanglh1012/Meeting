@@ -52,6 +52,18 @@ public class SecurityDAO extends BaseDAO {
 		return (List<EmployeeDTO>) this.query(SecurityConst.SQL_GET_EMPLOYEE_LIST, EmployeeDTO.class);
 	}
 
+	/**
+	 * 根据用户ID获取用户信息
+	 * 
+	 * @param inEmployeeId
+	 * @return
+	 * 		用户信息
+	 */
+	public EmployeeDTO getEmployeeInfoById(String inEmployeeId) {
+		List<EmployeeDTO> tmpEmployeeDTOList = (List<EmployeeDTO>) this.query(SecurityConst.SQL_GET_ROLE_SECURITY_LIST_BY_EMPLOEE_ID, new Object[] { inEmployeeId }, EmployeeDTO.class);
+		return tmpEmployeeDTOList.size() > 0 ? tmpEmployeeDTOList.get(0) : null;
+	}
+	
 	public void deleteRoleAllSecurity(String inRoleId) throws Exception {		
 		this.excuteSQL(SecurityConst.SQL_DELETE_ROLE_ALL_SECURITY, new Object[] {inRoleId});
 	}
