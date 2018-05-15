@@ -9,6 +9,9 @@ public class MeetingRoomDTO extends BaseDTO {
 	private String meetingRoomId;
 	private String meetingRoomName;
 	private String meetingRoomAddress;
+	private String id;
+	private String text;
+	
 	public String getMeetingRoomId() {
 		return this.meetingRoomId;
 	}
@@ -27,5 +30,16 @@ public class MeetingRoomDTO extends BaseDTO {
 	public void setMeetingRoomAddress(String meetingRoomAddress) {
 		this.meetingRoomAddress = meetingRoomAddress;
 	}
-	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
 }

@@ -273,6 +273,16 @@ public class SecurityController  {
 	}
 	
 	/**
+	 * 获取部门用户信息列表
+	 * 
+	 * @return
+	 *     返回部门信息列表
+	 */
+	public Object getDepartmentEmployeeTreeList() {
+		return (List<ZtreeNode>) this.securityService.getDepartmentEmployeeTreeList();
+	}
+	
+	/**
 	 * 获取部门信息列表
 	 * 
 	 * @return

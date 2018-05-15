@@ -56,15 +56,15 @@ public class ZtreeNode {
         this.id = id;
     }
 
-    public String getPId() {
-        return pId;
-    }
+    public String getpId() {
+		return pId;
+	}
 
-    public void setPId(String pId) {
-        this.pId = pId;
-    }
+	public void setpId(String pId) {
+		this.pId = pId;
+	}
 
-    public String getName() {
+	public String getName() {
         return name;
     }
 

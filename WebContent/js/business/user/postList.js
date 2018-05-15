@@ -22,7 +22,6 @@ var postList = function () {
             { "sTitle": "职务描述", "mData": "postSummary","type":"string"}
         ];
 
-        //算法配置
         oTable = $('#postList').dataTable({
             //表头设置
             "aoColumns": tableHead,

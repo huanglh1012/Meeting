@@ -378,13 +378,35 @@ public class SecurityService extends BaseService {
 		for (DepartmentDTO subDepartmentDTO : tmpDepartmentDTOList) {
 			tmpTreeNodeDTO = new ZtreeNode();
 			tmpTreeNodeDTO.setId(subDepartmentDTO.getDepartmentId()); 
-			tmpTreeNodeDTO.setPId(subDepartmentDTO.getParentDepartmentId());
+			tmpTreeNodeDTO.setpId(subDepartmentDTO.getParentDepartmentId());
 			tmpTreeNodeDTO.setName(subDepartmentDTO.getDepartmentName());
 			tmpTreeNodeDTO.setOpen(true);
 			tmpDepartmentTreeList.add(tmpTreeNodeDTO);
 		}
 		
 		return tmpDepartmentTreeList;
+	}
+	
+	/**
+	 * 获取部门用户信息列表
+	 * 
+	 * @return
+	 *     返回部门用户信息列表
+	 */
+	public List<ZtreeNode> getDepartmentEmployeeTreeList() {
+		List<ZtreeNode> tmpDepartmentDTOList = this.securityDAO.getDepartmentEmployeeTreeList();
+//		List<ZtreeNode> tmpDepartmentTreeList = new ArrayList<ZtreeNode>();
+//		ZtreeNode tmpTreeNodeDTO = null;
+//		for (DepartmentDTO subDepartmentDTO : tmpDepartmentDTOList) {
+//			tmpTreeNodeDTO = new ZtreeNode();
+//			tmpTreeNodeDTO.setId(subDepartmentDTO.getDepartmentId()); 
+//			tmpTreeNodeDTO.setPId(subDepartmentDTO.getParentDepartmentId());
+//			tmpTreeNodeDTO.setName(subDepartmentDTO.getDepartmentName());
+//			tmpTreeNodeDTO.setOpen(true);
+//			tmpDepartmentTreeList.add(tmpTreeNodeDTO);
+//		}
+		
+		return tmpDepartmentDTOList;
 	}
 	
 	/**

@@ -99,22 +99,15 @@
                                         会议状态
                                     </label>
                                     <div class="col-sm-4">
-                                        <input class="form-control required-validation" name="meetingStatusName" style="width: 100%"  data-max="200">
+                                        <input class="form-control required-validation" name="meetingStatusName" style="width: 100%"  data-max="200" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">
-                                        提醒时间
+                                        短信提醒&nbsp<input type="checkbox">
                                     </label>
                                     <div class="col-sm-4">
-                                        <input id="messageNoticeTime" type="text" class="form-control" name="messageNoticeTime">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"> 短信提醒
-                                            </label>
-                                        </div>
+                                        <input id="messageNoticeTime" type="text" class="form-control" name="messageNoticeTime" placeholder="提醒时间">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -226,7 +219,7 @@
                                     <a title="取消提交" href="../user/user_list.html" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp; 取消</a>
                                 </div>
                             </div>
-                            <div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div  class="modal fade" id="meetingJoinerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -235,24 +228,19 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="row">
-                                                <div class="form-group">
-                                                    <div class="col-sm-6">
-                                                        <input class="form-control required-validation" name="parentDepartmentName" style="width: 100%">
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <button type="button" class="btn btn-primary">查找</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div id="treeDemo" class="ztree" style="min-height: 100px">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="searchEmployeeText">
+                                                    <div class="input-group-btn">
+                                                        <button id="searchEmployeeBtn" type="button" class="btn btn-primary">
+                                                            <i class="fa fa-fw fa-search "></i>搜索
+                                                        </button>
                                                     </div>
                                                 </div>
+                                                <div id="departmentEmployeeTree" class="ztree" style="min-height: 100px"></div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary">确定</button>
+                                            <button type="button" class="btn btn-primary" id="departmentEmployeeConfirmBtn">确定</button>
                                             <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
                                         </div>
                                     </div><!-- /.modal-content -->

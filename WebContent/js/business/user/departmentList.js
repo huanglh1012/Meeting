@@ -44,7 +44,7 @@ var departmentList = function () {
 
             $('input[name="parentDepartmentId"]').val(treeId);
             $('input[name="parentDepartmentName"]').val(treeName);
-            $('#myModal').modal('show',true);
+            $('#departmentModal').modal('show',true);
         });
 
         $('#modify_department').on('click', function (e) {
@@ -63,7 +63,7 @@ var departmentList = function () {
             $('input[name="parentDepartmentId"]').val(treePid);
             $('input[name="departmentName"]').val(treeName);
             $('input[name="isParent"]').val(isParent);
-            $('#myModal').modal('show',true);
+            $('#departmentModal').modal('show',true);
         });
 
         $('#delete_department').on('click', function (e) {
@@ -104,7 +104,7 @@ var departmentList = function () {
                                             }),
                                             dataType: "json",
                                             success: function (result) {
-                                                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, result);
+                                                zTreeObj = $.fn.zTree.init($("#departmentTree"), setting, result);
                                             }
                                         });
                                         $.pnotify({
@@ -190,7 +190,7 @@ var departmentList = function () {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
-                                $('#myModal').modal('hide');
+                                $('#departmentModal').modal('hide');
                                 $.ajax({
                                     type: "POST",
                                     url: SMController.getUrl({
@@ -202,7 +202,7 @@ var departmentList = function () {
                                     }),
                                     dataType: "json",
                                     success: function (result) {
-                                        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, result);
+                                        zTreeObj = $.fn.zTree.init($("#departmentTree"), setting, result);
                                     }
                                 });
                             }, 1500);
@@ -231,27 +231,6 @@ var departmentList = function () {
     }
 
     var handleTree = function() {
-
-
-        // 树的单击事件
-        function zTreeOnClickRight(event, treeId, treeNode) {
-            clearModalData();
-//            var treeId = zTreeObj.getSelectedNodes()[0].id;
-//            var treePid = zTreeObj.getSelectedNodes()[0].pId;
-//            var treeName = zTreeObj.getSelectedNodes()[0].name;
-//            var isParent = zTreeObj.getSelectedNodes()[0].isParent;
-//
-//            var parentNode = zTreeObj.getSelectedNodes()[0].getParentNode();
-//            if (parentNode != null){
-//                $('input[name="parentDepartmentName"]').val(parentNode.name);
-//            }
-//
-//            $('input[name="departmentId"]').val(treeId);
-//            $('input[name="parentDepartmentId"]').val(treePid);
-//            $('input[name="departmentName"]').val(treeName);
-//            $('input[name="isParent"]').val(isParent);
-        }
-
         function clearModalData(){
             $('input[name="departmentId"]').val('');
             $('input[name="parentDepartmentId"]').val('');
@@ -271,7 +250,7 @@ var departmentList = function () {
             }),
             dataType: "json",
             success: function (result) {
-                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, result);
+                zTreeObj = $.fn.zTree.init($("#departmentTree"), setting, result);
             }
         });
     }

@@ -10,6 +10,7 @@ import mis.security.dto.EmployeeDTO;
 import mis.security.dto.PostDTO;
 import mis.security.dto.RoleDTO;
 import mis.security.dto.SecurityDTO;
+import mis.security.dto.ZtreeNode;
 
 import ecp.bsp.system.core.BaseDAO;
 
@@ -30,6 +31,11 @@ public class SecurityDAO extends BaseDAO {
 	@SuppressWarnings("unchecked")
 	public List<DepartmentDTO> getDepartmentList() {
 		return (List<DepartmentDTO>) this.query(SecurityConst.SQL_GET_DEPARTMENT_LIST, DepartmentDTO.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ZtreeNode> getDepartmentEmployeeTreeList() {
+		return (List<ZtreeNode>) this.query(SecurityConst.SQL_GET_DEPARTMENT_EMPLOYEE_LIST, ZtreeNode.class);
 	}
 	
 	@SuppressWarnings("unchecked")

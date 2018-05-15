@@ -136,8 +136,8 @@ public class MeetingService extends BaseService {
 	}
 	
 	public ActionResult insertMeetingRoom(MeetingRoomDTO inMeetingRoomDTO) throws Exception {
-		MeetingRoomEntity tmpExistMeetingRoomEntity = this.meetingDAO.getEntity(MeetingRoomEntity.class, "meetingRoomAddress", inMeetingRoomDTO.getMeetingRoomAddress());
-        if (tmpExistMeetingRoomEntity.getMeetingRoomAddress().equals(inMeetingRoomDTO.getMeetingRoomAddress())) {
+		MeetingRoomEntity tmpExistMeetingRoomEntity = this.meetingDAO.getEntity(MeetingRoomEntity.class, "meetingRoomName", inMeetingRoomDTO.getMeetingRoomName());
+        if (tmpExistMeetingRoomEntity != null) {
 			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "当前新建的会议室地址与其它会议室地址相同，发生冲突";
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 			throw new RuntimeException(exceptionMessage);
@@ -151,24 +151,26 @@ public class MeetingService extends BaseService {
 	}
 	
 	public ActionResult updateMeetingRoom(MeetingRoomDTO inMeetingRoomDTO) throws Exception {
-		MeetingRoomEntity tmpExistMeetingRoomEntity = this.meetingDAO.getEntity(MeetingRoomEntity.class, "meetingRoomName", inMeetingRoomDTO.getMeetingRoomAddress());
-        if (!tmpExistMeetingRoomEntity.getId().equals(inMeetingRoomDTO.getMeetingRoomId()) && tmpExistMeetingRoomEntity.getMeetingRoomAddress().equals(inMeetingRoomDTO.getMeetingRoomAddress())) {
-			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "当前修改的会议室地址与其它会议室地址相同，发生冲突";
-			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
-			throw new RuntimeException(exceptionMessage);
-		}
+		MeetingRoomEntity tmpExistMeetingRoomEntity = this.meetingDAO.getEntity(MeetingRoomEntity.class, "meetingRoomName", inMeetingRoomDTO.getMeetingRoomName());
+        if (tmpExistMeetingRoomEntity != null) {
+        	if (!tmpExistMeetingRoomEntity.getId().equals(inMeetingRoomDTO.getMeetingRoomId()) && tmpExistMeetingRoomEntity.getMeetingRoomName().equals(inMeetingRoomDTO.getMeetingRoomName())) {
+    			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "当前修改的会议室名称与其它会议室名称相同，发生冲突";
+    			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+    			throw new RuntimeException(exceptionMessage);
+    		}
+        }
 		
-        MeetingRoomEntity tmpCuttentMeetingRoomEntity = this.meetingDAO.getEntity(MeetingRoomEntity.class, "meetingRoomId", inMeetingRoomDTO.getMeetingRoomId());
-		if (tmpCuttentMeetingRoomEntity == null) {
+        MeetingRoomEntity tmpCurrentMeetingRoomEntity = this.meetingDAO.getEntity(MeetingRoomEntity.class, "meetingRoomId", inMeetingRoomDTO.getMeetingRoomId());
+		if (tmpCurrentMeetingRoomEntity == null) {
 			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "没有会议室可修改";
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 			throw new RuntimeException(exceptionMessage);
 		}
 
-		MeetingRoomDTO.dtoToEntity(inMeetingRoomDTO, tmpCuttentMeetingRoomEntity);
-		this.meetingDAO.update(tmpCuttentMeetingRoomEntity);
+		MeetingRoomDTO.dtoToEntity(inMeetingRoomDTO, tmpCurrentMeetingRoomEntity);
+		this.meetingDAO.update(tmpCurrentMeetingRoomEntity);
 		
-		return ActionResultUtil.getActionResult(tmpCuttentMeetingRoomEntity.getId(), "会议室修改成功");
+		return ActionResultUtil.getActionResult(tmpCurrentMeetingRoomEntity.getId(), "会议室修改成功");
 	}
 	
 	public ActionResult deleteMeetingRoom(String inMeetingRoomId) throws Exception {

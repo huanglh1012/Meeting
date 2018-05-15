@@ -55,6 +55,10 @@ public class EmployeeDTO extends BaseDTO {
 
 	private List<String> roleIdList;
 	
+	private String id;
+	
+	private String text;
+	
 	public String getEmployeeId() {
 		return employeeId;
 	}
@@ -183,4 +187,19 @@ public class EmployeeDTO extends BaseDTO {
 		this.sexName = sexName;
 	}
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 }

@@ -12,9 +12,19 @@
  * @type {meetingEdit}
  */
 var meetingEdit = function () {
+    var zTreeObj = null;
+    var selectedTreeNode = null;
     var handleButton = function() {
         $('#meetingJoiner').on('click', function (e) {
-            $('#myModal').modal('show',true);
+            $('#meetingJoinerModal').modal('show',true);
+        });
+
+        $('#searchEmployeeBtn').on('click', function (e) {
+            console.log($('input[name=searchEmployeeText]').val());
+        });
+
+        $('#departmentEmployeeConfirmBtn').on('click', function (e) {
+            
         });
     }
 
@@ -49,265 +59,52 @@ var meetingEdit = function () {
     }
 
     var handleSelect2 = function () {
-        $("#chargerId").select2({
-            placeholder: "请选择主持人",
-            allowClear: true,
-            maximumInputLength: 200,
-
-            formatInputTooLong: function (input, max) {
-                var n = input.length - max;
-                return "项目名称过长，至多允许200个字符，" + "请删掉" + n + "个字符";
-            },
-
-            query: function(options) { //search
-                var realParams = {
-                    pageSize: 5,  //默认每次显示5条记录
-                    pageNum: options.page,
-                    "projectQueryCondition.type" : "card",
-                    "projectQueryCondition.name" : options.term
-                };
-
-                var queryConditions = [];
-                var putObj = [];
-                var obj = {};
-                obj.isLike = true;
-                obj.isRaw = false;
-                obj.isEntityField = false;
-                obj.isCaseSensitive = false;
-                obj.fieldName = "TEXT";
-                obj.type = "string";
-                obj.stringCondition = options.term;
-                queryConditions.push(obj);
-
-                putObj.push(StringUtil.decorateRequestData('List',queryConditions));
-                putObj.push(StringUtil.decorateRequestData('Integer',(options.page-1)*5 + 1));
-                putObj.push(StringUtil.decorateRequestData('Integer',5));
-
-                var proxyObj = new Object();
-                proxyObj.proxyClass = "fileController";
-                proxyObj.proxyMethod = "getUsedTaskStrategyListByCondition";
-                proxyObj.jsonString = MyJsonUtil.obj2str(putObj);
-
-                $.ajax({
-                    url : $.url_root + "/controllerProxy.do?method=callBack",
-                    dataType : "json",
-                    type: "POST",
-                    data : proxyObj,
-
-                    success : function(data) {
-                        checkResult(data, {
-                            showBox: false,
-                            callback: function() {
-                                options.callback(data.json);
-                            }
-                        });
-                    }
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null}),
+            success:function(result){
+                $('#chargerId').select2({
+                    placeholder: "请选择主持人",
+                    allowClear:true,
+                    data:result
+                });
+                $('#proposerId').select2({
+                    placeholder: "请选择发起人",
+                    allowClear:true,
+                    data:result
                 });
             }
-        }).on('select2-selected', function(e) { //fire when selected the option
-                console.log('select2-selected');
-                var taskStrategyId = e.choice.id;
-                $("#taskStrategyId").val(taskStrategyId);  // empty the value first
-//                $("#create-issue-form").valid();
-            }).on('select2-clearing', function(e) {
-                $(".changed-form").find("input.changed").val("");
-                validator.cleanValidation();
-            });
+        });
 
-        $("#meetingRoomId").select2({
-            placeholder: "请选择会议室",
-            allowClear: true,
-            maximumInputLength: 200,
-
-            formatInputTooLong: function (input, max) {
-                var n = input.length - max;
-                return "项目名称过长，至多允许200个字符，" + "请删掉" + n + "个字符";
-            },
-
-            query: function(options) { //search
-                var realParams = {
-                    pageSize: 5,  //默认每次显示5条记录
-                    pageNum: options.page,
-                    "projectQueryCondition.type" : "card",
-                    "projectQueryCondition.name" : options.term
-                };
-
-                var queryConditions = [];
-                var putObj = [];
-                var obj = {};
-                obj.isLike = true;
-                obj.isRaw = false;
-                obj.isEntityField = false;
-                obj.isCaseSensitive = false;
-                obj.fieldName = "TEXT";
-                obj.type = "string";
-                obj.stringCondition = options.term;
-                queryConditions.push(obj);
-
-                putObj.push(StringUtil.decorateRequestData('List',queryConditions));
-                putObj.push(StringUtil.decorateRequestData('Integer',(options.page-1)*5 + 1));
-                putObj.push(StringUtil.decorateRequestData('Integer',5));
-
-                var proxyObj = new Object();
-                proxyObj.proxyClass = "fileController";
-                proxyObj.proxyMethod = "getUsedTaskStrategyListByCondition";
-                proxyObj.jsonString = MyJsonUtil.obj2str(putObj);
-
-                $.ajax({
-                    url : $.url_root + "/controllerProxy.do?method=callBack",
-                    dataType : "json",
-                    type: "POST",
-                    data : proxyObj,
-
-                    success : function(data) {
-                        checkResult(data, {
-                            showBox: false,
-                            callback: function() {
-                                options.callback(data.json);
-                            }
-                        });
-                    }
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'meetingController',proxyMethod:'getMeetingRoomList',jsonString:null}),
+            success:function(result){
+                $('#meetingRoomId').select2({
+                    placeholder: "请选择会议室",
+                    allowClear:true,
+                    data:result
                 });
             }
-        }).on('select2-selected', function(e) { //fire when selected the option
-                console.log('select2-selected');
-                var taskStrategyId = e.choice.id;
-                $("#taskStrategyId").val(taskStrategyId);  // empty the value first
-//                $("#create-issue-form").valid();
-            }).on('select2-clearing', function(e) {
-                $(".changed-form").find("input.changed").val("");
-                validator.cleanValidation();
-            });
+        });
 
-        $("#proposerId").select2({
-            placeholder: "请选择发起人",
-            allowClear: true,
-            maximumInputLength: 200,
-
-            formatInputTooLong: function (input, max) {
-                var n = input.length - max;
-                return "项目名称过长，至多允许200个字符，" + "请删掉" + n + "个字符";
-            },
-
-            query: function(options) { //search
-                var realParams = {
-                    pageSize: 5,  //默认每次显示5条记录
-                    pageNum: options.page,
-                    "projectQueryCondition.type" : "card",
-                    "projectQueryCondition.name" : options.term
-                };
-
-                var queryConditions = [];
-                var putObj = [];
-                var obj = {};
-                obj.isLike = true;
-                obj.isRaw = false;
-                obj.isEntityField = false;
-                obj.isCaseSensitive = false;
-                obj.fieldName = "TEXT";
-                obj.type = "string";
-                obj.stringCondition = options.term;
-                queryConditions.push(obj);
-
-                putObj.push(StringUtil.decorateRequestData('List',queryConditions));
-                putObj.push(StringUtil.decorateRequestData('Integer',(options.page-1)*5 + 1));
-                putObj.push(StringUtil.decorateRequestData('Integer',5));
-
-                var proxyObj = new Object();
-                proxyObj.proxyClass = "fileController";
-                proxyObj.proxyMethod = "getUsedTaskStrategyListByCondition";
-                proxyObj.jsonString = MyJsonUtil.obj2str(putObj);
-
-                $.ajax({
-                    url : $.url_root + "/controllerProxy.do?method=callBack",
-                    dataType : "json",
-                    type: "POST",
-                    data : proxyObj,
-
-                    success : function(data) {
-                        checkResult(data, {
-                            showBox: false,
-                            callback: function() {
-                                options.callback(data.json);
-                            }
-                        });
-                    }
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null}),
+            success:function(result){
+                $('#proposeDepartmentId').select2({
+                    placeholder: "请选择部门",
+                    allowClear:true,
+                    data:result
                 });
             }
-        }).on('select2-selected', function(e) { //fire when selected the option
-                console.log('select2-selected');
-                var taskStrategyId = e.choice.id;
-                $("#taskStrategyId").val(taskStrategyId);  // empty the value first
-//                $("#create-issue-form").valid();
-            }).on('select2-clearing', function(e) {
-                $(".changed-form").find("input.changed").val("");
-                validator.cleanValidation();
-            });
-
-        $("#proposeDepartmentId").select2({
-            placeholder: "请选择发起部门",
-            allowClear: true,
-            maximumInputLength: 200,
-
-            formatInputTooLong: function (input, max) {
-                var n = input.length - max;
-                return "项目名称过长，至多允许200个字符，" + "请删掉" + n + "个字符";
-            },
-
-            query: function(options) { //search
-                var realParams = {
-                    pageSize: 5,  //默认每次显示5条记录
-                    pageNum: options.page,
-                    "projectQueryCondition.type" : "card",
-                    "projectQueryCondition.name" : options.term
-                };
-
-                var queryConditions = [];
-                var putObj = [];
-                var obj = {};
-                obj.isLike = true;
-                obj.isRaw = false;
-                obj.isEntityField = false;
-                obj.isCaseSensitive = false;
-                obj.fieldName = "TEXT";
-                obj.type = "string";
-                obj.stringCondition = options.term;
-                queryConditions.push(obj);
-
-                putObj.push(StringUtil.decorateRequestData('List',queryConditions));
-                putObj.push(StringUtil.decorateRequestData('Integer',(options.page-1)*5 + 1));
-                putObj.push(StringUtil.decorateRequestData('Integer',5));
-
-                var proxyObj = new Object();
-                proxyObj.proxyClass = "fileController";
-                proxyObj.proxyMethod = "getUsedTaskStrategyListByCondition";
-                proxyObj.jsonString = MyJsonUtil.obj2str(putObj);
-
-                $.ajax({
-                    url : $.url_root + "/controllerProxy.do?method=callBack",
-                    dataType : "json",
-                    type: "POST",
-                    data : proxyObj,
-
-                    success : function(data) {
-                        checkResult(data, {
-                            showBox: false,
-                            callback: function() {
-                                options.callback(data.json);
-                            }
-                        });
-                    }
-                });
-            }
-        }).on('select2-selected', function(e) { //fire when selected the option
-                console.log('select2-selected');
-                var taskStrategyId = e.choice.id;
-                $("#taskStrategyId").val(taskStrategyId);  // empty the value first
-//                $("#create-issue-form").valid();
-            }).on('select2-clearing', function(e) {
-                $(".changed-form").find("input.changed").val("");
-                validator.cleanValidation();
-            });
+        });
     }
 
     var handleTree = function() {
@@ -328,59 +125,25 @@ var meetingEdit = function () {
             edit: {
                 enable: false
             }
+//            callback : {
+//                onClick : zTreeOnClickRight
+//            }
         };
 
-        var zNodes =[
-            { id:1, pId:0, name:"父节点1", open:true},
-            { id:11, pId:1, name:"父节点11"},
-            { id:111, pId:11, name:"叶子节点111"},
-            { id:112, pId:11, name:"叶子节点112"},
-            { id:113, pId:11, name:"叶子节点113"},
-            { id:114, pId:11, name:"叶子节点114"},
-            { id:12, pId:1, name:"父节点12"},
-            { id:121, pId:12, name:"叶子节点121"},
-            { id:122, pId:12, name:"叶子节点122"},
-            { id:123, pId:12, name:"叶子节点123"},
-            { id:124, pId:12, name:"叶子节点124"},
-            { id:13, pId:1, name:"父节点13", isParent:true},
-            { id:2, pId:0, name:"父节点2"},
-            { id:21, pId:2, name:"父节点21", open:true},
-            { id:211, pId:21, name:"叶子节点211"},
-            { id:212, pId:21, name:"叶子节点212"},
-            { id:213, pId:21, name:"叶子节点213"},
-            { id:214, pId:21, name:"叶子节点214"},
-            { id:22, pId:2, name:"父节点22"},
-            { id:221, pId:22, name:"叶子节点221"},
-            { id:222, pId:22, name:"叶子节点222"},
-            { id:223, pId:22, name:"叶子节点223"},
-            { id:224, pId:22, name:"叶子节点224"},
-            { id:23, pId:2, name:"父节点23"},
-            { id:231, pId:23, name:"叶子节点231"},
-            { id:232, pId:23, name:"叶子节点232"},
-            { id:233, pId:23, name:"叶子节点233"},
-            { id:234, pId:23, name:"叶子节点234"},
-            { id:3, pId:0, name:"父节点3", isParent:true}
-        ];
-
-        var newCount = 1;
-        function addHoverDom(treeId, treeNode) {
-            var sObj = $("#" + treeNode.tId + "_span");
-            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                + "' title='add node' onfocus='this.blur();'></span>";
-            sObj.after(addStr);
-            var btn = $("#addBtn_"+treeNode.tId);
-            if (btn) btn.bind("click", function(){
-                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-                return false;
-            });
-        };
-        function removeHoverDom(treeId, treeNode) {
-            $("#addBtn_"+treeNode.tId).unbind().remove();
-        };
-
-        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        $.ajax({
+            type: "POST",
+            url: SMController.getUrl({
+                controller: 'controllerProxy',
+                method: 'callBack',
+                proxyClass: 'securityController',
+                proxyMethod: 'getDepartmentEmployeeTreeList',
+                jsonString: null
+            }),
+            dataType: "json",
+            success: function (result) {
+                zTreeObj = $.fn.zTree.init($("#departmentEmployeeTree"), setting, result);
+            }
+        });
     }
 
     var handleForm = function () {
