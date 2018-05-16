@@ -17,7 +17,7 @@ var meetingEdit = function () {
     var searchLocationIndex = 0;
 
     var handleDatePickers = function () {
-        $("#messageNoticeTime,#meetingStartTime").datetimepicker({
+        $("#messageNoticeTime,#meetingStartTime,#meetingEndTime").datetimepicker({
             language:'zh-CN',
             format: "yyyy-mm-dd hh:ii"
         });
@@ -138,21 +138,68 @@ var meetingEdit = function () {
     }
 
     var handleForm = function () {
-        $("#create-issue-form").validate({
-            // 指定验证时要忽略哪些元素，默认是hidden，支持jQuery的伪类选择器，需要为应用该验证器的元素加上.required-validation
+        $("#createMeetingForm").validate({
             errorElement: "strong",
             ignore: ":not('.required-validation')",
             errorClass: "note_error text-danger",
             focusCleanup: true,
             focusInvalid: false,
             rules: {
-                taskStrategyId: {
+                meetingSubject:{
+                    required: true
+                },
+                meetingRoomId:{
+                    required: true
+                },
+                meetingStartTime:{
+                    required: true
+                },
+                meetingEndTime:{
+                    required: true
+                },
+                chargerId:{
+                    required: true
+                },
+                meetingProposeTime:{
+                    required: true
+                },
+                proposerId:{
+                    required: true
+                },
+                proposeDepartmentId:{
+                    required: true
+                },
+                meetingJoinerNames:{
                     required: true
                 }
             }, // Messages for form
             messages: {
-                taskStrategyId:{
-                    required:"策略不能为空！！！"
+                meetingSubject:{
+                    required:"会议主题不能为空！！！"
+                },
+                meetingRoomId:{
+                    required:"会议地点不能为空！！！"
+                },
+                meetingStartTime:{
+                    required:"会议开始时间不能为空！！！"
+                },
+                meetingEndTime:{
+                    required:"会议结束时间不能为空！！！"
+                },
+                chargerId:{
+                    required:"主持人不能为空！！！"
+                },
+                meetingProposeTime:{
+                    required:"发起时间不能为空！！！"
+                },
+                proposerId:{
+                    required:"发起人不能为空！！！"
+                },
+                proposeDepartmentId:{
+                    required:"发起部门不能为空！！！"
+                },
+                meetingJoinerNames:{
+                    required:"参会部门或人员不能为空！！！"
                 }
             },
 
@@ -248,12 +295,12 @@ var meetingEdit = function () {
     }
 
     var handleFileUpload = function () {
-        $('#file-upload').fileupload({
+        $('#meetingRecordFileUploadBtn').fileupload({
             myUrl: SMController.getUrl({controller:'controllerProxy',method:'callBackByRequest'
                 ,proxyClass:'attachmentController',proxyMethod:'upload',jsonString:''}),
             dataType: 'json',
             autoUpload: true,
-            maxFileSize: 10000000// <1 MB
+            maxFileSize: 1000000000// <1000 MB
         }).on('fileuploadprocessalways', function (e, data) {
                 console.log("fileuploadprocessalways");
                 if(data.files.error){
@@ -276,7 +323,8 @@ var meetingEdit = function () {
                 var createTime =date.getFullYear()+"年"+(date.getMonth()+1)+"月"+date.getDate()+"日 " +date.getHours()+":"+date.getMinutes();
                 var fileContent ="<tr>"
                     +"<td><a href='"+$.url_root+"/issue/fileAttachementDownload.jspa?filePath="+url+"&fileName="+file.name+"'>"+file.name+"</a></td>"
-                    +"<td width='100'>"+file.size+" B</td>"
+                    +"<td width='100'>" + "曾庆越" + "</td>"
+                    +"<td width='100'>" + "科技部" + "</td>"
                     +"<td width='160'>"+createTime+"</td>"
                     +"<td width='60' ><a class='deleteFile' data-fileId='"+file.id+"' data-fileName='"+file.name+"' href='javascript:void(0);'><i class='fa fa-trash-o'></i>"
                     +"</a></td>"
@@ -285,17 +333,77 @@ var meetingEdit = function () {
                     +"<input type='hidden' name='fileName' value='"+file.name+"'>"
                     +"<input type='hidden' name='mimeType' value="+file.type+">"
                     +"</tr>";
-                $('#fileAttachements tbody').append(fileContent);
+                $('#meetingRecordFiles tbody').append(fileContent);
             });
 
-        $('#file-upload').change(function(e) {
-            console.log("upload_change");
-            $(this).parent().next().val($(this).val());
-            e.preventDefault();
+//        $('#meetingRecordFileUploadBtn').change(function(e) {
+//            console.log("upload_change");
+//            $(this).parent().next().val($(this).val());
+//            e.preventDefault();
+//        });
+
+        $('#meetingRecordFiles').on("click", ".deleteFile", function(e) {
+            var obj = [];
+            obj.push(StringUtil.decorateRequestData('String',$(this).data("fileid")));
+            var $that = $(this);
+            $.ajax({
+                type:'post',
+                dataType:"json",
+                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                    ,proxyClass:'attachmentController',proxyMethod:'deleteTempAttachmentFileById',
+                    jsonString:MyJsonUtil.obj2str(obj)}),
+                success :function(result)
+                {
+                    if(result) {
+                        $that.closest("tr").remove();
+                    }else {
+                    }
+                }
+            });
         });
 
-        $('#fileAttachements').on("click", ".deleteFile", function(e) {
-            console.log($(this).data("fileid"));
+        $('#meetingFileUploadBtn').fileupload({
+            myUrl: SMController.getUrl({controller:'controllerProxy',method:'callBackByRequest'
+                ,proxyClass:'attachmentController',proxyMethod:'upload',jsonString:''}),
+            dataType: 'json',
+            autoUpload: true,
+            maxFileSize: 1000000000// <1000 MB
+        }).on('fileuploadprocessalways', function (e, data) {
+                console.log("fileuploadprocessalways");
+                if(data.files.error){
+                    $('#imageError').find("label").empty();
+                    if(data.files[0].error=="File is too large"){
+                        $('#imageError').removeClass('hidden').find("label").append("最大上传文件大小为 10.00 MB！");
+                    }
+                    if(data.files[0].error=="File type not allowed"){
+                        $('#imageError').removeClass('hidden').find("label").append("上传文件类型不对！");
+                    }
+                }
+            }).on('fileuploaddone',function (e, data) {
+                var that = $(this).data('blueimp-fileupload') ||
+                    $(this).data('fileupload');
+                var file=data.result.files[0];
+                that.options.uploadCreateIds.push(file['createId']);
+                $('#imageError').addClass('hidden');
+                var url =file.url;
+                var date = new Date();
+                var createTime =date.getFullYear()+"年"+(date.getMonth()+1)+"月"+date.getDate()+"日 " +date.getHours()+":"+date.getMinutes();
+                var fileContent ="<tr>"
+                    +"<td><a href='"+$.url_root+"/issue/fileAttachementDownload.jspa?filePath="+url+"&fileName="+file.name+"'>"+file.name+"</a></td>"
+                    +"<td width='100'>" + "曾庆越" + "</td>"
+                    +"<td width='100'>" + "科技部" + "</td>"
+                    +"<td width='160'>"+createTime+"</td>"
+                    +"<td width='60' ><a class='deleteFile' data-fileId='"+file.id+"' data-fileName='"+file.name+"' href='javascript:void(0);'><i class='fa fa-trash-o'></i>"
+                    +"</a></td>"
+                    +"<input type='hidden' name='fileId' value='"+file.id+"'>"
+                    +"<input type='hidden' name='createId' value='"+file.createId+"'>"
+                    +"<input type='hidden' name='fileName' value='"+file.name+"'>"
+                    +"<input type='hidden' name='mimeType' value="+file.type+">"
+                    +"</tr>";
+                $('#meetingFiles tbody').append(fileContent);
+            });
+
+        $('#meetingFiles').on("click", ".deleteFile", function(e) {
             var obj = [];
             obj.push(StringUtil.decorateRequestData('String',$(this).data("fileid")));
             var $that = $(this);
