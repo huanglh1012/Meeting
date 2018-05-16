@@ -14,19 +14,7 @@
 var meetingEdit = function () {
     var zTreeObj = null;
     var selectedTreeNode = null;
-    var handleButton = function() {
-        $('#meetingJoiner').on('click', function (e) {
-            $('#meetingJoinerModal').modal('show',true);
-        });
-
-        $('#searchEmployeeBtn').on('click', function (e) {
-            console.log($('input[name=searchEmployeeText]').val());
-        });
-
-        $('#departmentEmployeeConfirmBtn').on('click', function (e) {
-            
-        });
-    }
+    var searchLocationIndex = 0;
 
     var handleDatePickers = function () {
         $("#messageNoticeTime,#meetingStartTime").datetimepicker({
@@ -112,7 +100,10 @@ var meetingEdit = function () {
             view: {
 //                addHoverDom: addHoverDom,
 //                removeHoverDom: removeHoverDom,
-                selectedMulti: false
+                selectedMulti: false,
+                fontCss: function (treeId, treeNode) {
+                    return treeNode.highlight == true ? {color:"red", "font-weight": "bold"} : {color:"#000", "font-weight": "normal"};
+                }
             },
             check: {
                 enable: true
@@ -322,6 +313,85 @@ var meetingEdit = function () {
                     }
                 }
             });
+        });
+    }
+
+    var handleButton = function() {
+        $('#meetingJoiner').on('click', function (e) {
+            $('input[name="searchEmployeeText"]').val('');
+            $('#meetingJoinerModal').modal('show',true);
+        });
+
+        $('#searchEmployeeBtn').on('click', function (e) {
+            var tmpKeywords = $('input[name="searchEmployeeText"]').val();
+            if (tmpKeywords != '')
+            {
+                var tmpNodeList = zTreeObj.getNodesByParamFuzzy("name", tmpKeywords, null);
+                if (searchLocationIndex > tmpNodeList.length -1)
+                    searchLocationIndex = 0;
+                if (tmpNodeList.length > 0)
+                    zTreeObj.selectNode(tmpNodeList[searchLocationIndex]);
+            }
+            searchLocationIndex++;
+        });
+
+        $('input[name="searchEmployeeText"]').bind('input propertychange', function() {
+            searchLocationIndex = 0;
+            // 先把全部节点更新为普通样式
+            var tmpTreeAllNodes = zTreeObj.transformToArray(zTreeObj.getNodes());
+            for(var i = 0; i < tmpTreeAllNodes.length; i++) {
+                tmpTreeAllNodes[i].highlight = false;
+                zTreeObj.updateNode(tmpTreeAllNodes[i]);
+            }
+            // 指定节点的样式更新为高亮显示，并展开
+            var tmpKeywords = $('input[name="searchEmployeeText"]').val();
+            if (tmpKeywords != '')
+            {
+                var tmpNodeList = zTreeObj.getNodesByParamFuzzy("name", tmpKeywords, null);
+                for( var i = 0; i < tmpNodeList.length; i++) {
+//                zTreeObj.selectNode(tmpNodeList[i]);
+                    tmpNodeList[i].highlight = true;
+                    zTreeObj.updateNode(tmpNodeList[i]);
+                }
+            }
+            zTreeObj.expandAll(true);
+        });
+
+        $('#departmentEmployeeConfirmBtn').on('click', function (e) {
+            var tmpMeetingJoinerIds = '';
+            var tmpMeetingJoinerNames = '';
+            var tmpDepartmentEmployeeMap = new Map();
+            var tmpTreeCheckedNodes = zTreeObj.getCheckedNodes(true);
+            for( var i = 0; i < tmpTreeCheckedNodes.length; i++) {
+                if (!tmpTreeCheckedNodes[i].isParent) {
+                    var tmpParentNode = tmpTreeCheckedNodes[i].getParentNode();
+                    // 拼接用户名称
+                    if (tmpDepartmentEmployeeMap.containsKey(tmpParentNode.name)) {
+                        var tmpEmployeeNames = tmpDepartmentEmployeeMap.get(tmpParentNode.name);
+                        tmpDepartmentEmployeeMap.remove(tmpParentNode.name);
+                        tmpDepartmentEmployeeMap.put(tmpParentNode.name, tmpEmployeeNames + ',' + tmpTreeCheckedNodes[i].name);
+                    } else {
+                        tmpDepartmentEmployeeMap.put(tmpParentNode.name, tmpTreeCheckedNodes[i].name);
+                    }
+                    // 拼接用户ID
+                    if (tmpMeetingJoinerIds != '')
+                        tmpMeetingJoinerIds += ',' + tmpTreeCheckedNodes[i].id;
+                    else
+                        tmpMeetingJoinerIds = tmpTreeCheckedNodes[i].id;
+                }
+            }
+
+            var tmpMeetingJoinerNames = '';
+            var tmpDepartmentEmployeeMapKeys = tmpDepartmentEmployeeMap.keys();
+            for( var i = 0; i < tmpDepartmentEmployeeMapKeys.length; i++) {
+                tmpMeetingJoinerNames += tmpDepartmentEmployeeMapKeys[i] + ":" + tmpDepartmentEmployeeMap.get(tmpDepartmentEmployeeMapKeys[i]) + "\n";
+            }
+
+            console.log(tmpMeetingJoinerNames);
+            $('input[name="meetingJoinerIds"]').val(tmpMeetingJoinerIds);
+            $('textarea[name="meetingJoinerNames"]').val(tmpMeetingJoinerNames);
+
+            $('#meetingJoinerModal').modal('hide');
         });
     }
 
