@@ -390,8 +390,18 @@ var meetingEdit = function () {
 
     var handleTable = function () {
         // 表头定义
-        var tableHead = [
-            { "sTitle": '<input type="checkbox" id="checkAll"/>',"bSortable":false,"sWidth": "12px" },
+        var meetingFilesTableHead = [
+            { "sTitle": '<input type="checkbox" id="meetingFilesCheckAll"/>',"bSortable":false,"sWidth": "12px" },
+            { "sTitle": "附件ID", "mData": "attachmentId","bVisible":false},
+            { "sTitle": "材料名称","mData": "attachmentName"},
+            { "sTitle": "上传人", "mData": "employeeName"},
+            { "sTitle": "上传部门", "mData": "employeeDepartmentName"},
+            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}//,
+//            { "sTitle": "操作"}
+        ];
+
+        var meetingRecordFilesTableHead = [
+            { "sTitle": '<input type="checkbox" id="meetingRecordFilesCheckAll"/>',"bSortable":false,"sWidth": "12px" },
             { "sTitle": "附件ID", "mData": "attachmentId","bVisible":false},
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
@@ -402,7 +412,7 @@ var meetingEdit = function () {
 
         meetingFilesTable = $('#meetingFiles').dataTable({
             //表头设置
-            "aoColumns": tableHead,
+            "aoColumns": meetingFilesTableHead,
             "bAutoWidth" : true,
             "paging": false,
             "info": false,
@@ -438,7 +448,7 @@ var meetingEdit = function () {
 
         meetingRecordFilesTable = $('#meetingRecordFiles').dataTable({
             //表头设置
-            "aoColumns": tableHead,
+            "aoColumns": meetingRecordFilesTableHead,
             "bAutoWidth" : true,
             "paging": false,
             "info": false,
@@ -472,37 +482,61 @@ var meetingEdit = function () {
 //            }
         });
 
-        // 初始化表格内超链接点击事件
-//        $('#meetingFiles a.delete').on('click', function (e) {
-//            //获取当前行的数据
-//            var nRow = $(this).parents('tr')[0];
-//            var data = meetingFilesTable.fnGetData(nRow);
-//        });
         //复选框全选
-        $('#checkAll').on('click', function (e) {
-            var isCheck = $('#checkAll').prop('checked');
+        $('#meetingFilesCheckAll').on('click', function (e) {
+            var isCheck = $('#meetingFilesCheckAll').prop('checked');
             if(isCheck){
                 //先清空之前的选项
                 selectFile = [];
-                $(':checkbox').each(function(){
-                    $(this).attr('checked',true);
+                $('#meetingFiles :checkbox').each(function(){
+                    $(this).prop("checked","true");
                 });
                 var tmpTableNodes = meetingFilesTable.fnGetNodes();
                 for(var i = 0; i < tmpTableNodes.length; i++)
                     selectFile.push(meetingFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
-                $(':checkbox').each(function(){
-                    $(this).attr('checked',false);
+                $('#meetingFiles :checkbox').each(function(){
+                    $(this).removeAttr("checked");
+                });
+                selectFile = [];
+            }
+        });
+
+        //复选框全选
+        $('#meetingRecordFilesCheckAll').on('click', function (e) {
+            var isCheck = $('#meetingRecordFilesCheckAll').prop('checked');
+            if(isCheck){
+                //先清空之前的选项
+                selectFile = [];
+                $('#meetingRecordFiles :checkbox').each(function(){
+                    $(this).prop("checked","true");
+                });
+                var tmpTableNodes = meetingRecordFilesTable.fnGetNodes();
+                for(var i = 0; i < tmpTableNodes.length; i++)
+                    selectFile.push(meetingRecordFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
+            }else{
+                $('#meetingRecordFiles :checkbox').each(function(){
+                    $(this).removeAttr("checked");
                 });
                 selectFile = [];
             }
         });
 
         //根据复选框的值来获得行数据
-        $('#attachmentList tbody').on('click','tr', function () {
+        $('#meetingFiles tbody').on('click','tr', function () {
             var isCheck = this.getElementsByTagName('input').item(0).checked ;
             if(isCheck)
-                selectFile.push(meetingFilesTable.fnGetData(this).attachmentId)
+                selectFile.push(meetingFilesTable.fnGetData(this).attachmentId);
+            else
+                selectFile.remove(meetingFilesTable.fnGetData(this).attachmentId);
+        });
+
+        $('#meetingRecordFiles tbody').on('click','tr', function () {
+            var isCheck = this.getElementsByTagName('input').item(0).checked ;
+            if(isCheck)
+                selectFile.push(meetingRecordFilesTable.fnGetData(this).attachmentId);
+            else
+                selectFile.remove(meetingRecordFilesTable.fnGetData(this).attachmentId);
         });
     }
 
@@ -623,7 +657,29 @@ var meetingEdit = function () {
         });
 
         $('#meetingFileDeleteBtn').on('click', function (e) {
-            console.log(selectFile);
+            $('#meetingFiles :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "" ) {
+                    $(this).closest("tr").remove();
+                    selectFile = [];
+                }
+            });
+            var obj = [];
+            obj.push(StringUtil.decorateRequestData('String',selectFile[0]));
+            var $that = $(this);
+//            $.ajax({
+//                type:'post',
+//                dataType:"json",
+//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//                    ,proxyClass:'attachmentController',proxyMethod:'deleteTempAttachmentFileById',
+//                    jsonString:MyJsonUtil.obj2str(obj)}),
+//                success :function(result)
+//                {
+//                    if(result) {
+//                        $that.closest("tr").remove();
+//                    }else {
+//                    }
+//                }
+//            });
         });
     }
 
