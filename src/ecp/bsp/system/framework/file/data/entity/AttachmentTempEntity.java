@@ -71,8 +71,8 @@ public class AttachmentTempEntity extends BaseEntity {
 	 * @return 闄勪欢ID.
 	 */
 	@Id
-	@Column(name = "ATTACHMENT_TEMP_ID", unique = true, nullable = false, length = 32)
-	public String getAttachmentTempId() {
+	@Column(name = "ATTACHMENT_ID", unique = true, nullable = false, length = 32)
+	public String getAttachmentId() {
 		return this.getId();
 	}
 
@@ -82,8 +82,8 @@ public class AttachmentTempEntity extends BaseEntity {
 	 * @param attachmentId
 	 *             闄勪欢ID.
 	 */
-	public void setAttachmentTempId(String attachmentTempId) {
-		this.setId(attachmentTempId);
+	public void setAttachmentId(String attachmentId) {
+		this.setId(attachmentId);
 	}
 
 	/**

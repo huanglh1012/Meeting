@@ -50,7 +50,7 @@ public class AttachmentService  extends BaseService {
 		AttachmentTempEntity attachmentTempEntity = new AttachmentTempEntity();
 		attachmentTempEntity.setAttachmentName(fileEntity.getName());
 		attachmentTempEntity.setAttachmentCreateId(fileEntity.getCreateId());
-		attachmentTempEntity.setAttachmentPath(this.generateFilePath(attachmentTempEntity.getAttachmentTempId()));
+		attachmentTempEntity.setAttachmentPath(this.generateFilePath(attachmentTempEntity.getAttachmentId()));
 		attachmentTempEntity.setAttachmentTempPath(fileEntity.getPath());
 		attachmentTempEntity.setAttachmentCreateTime(new Date());
 		attachmentTempEntity.setAttachmentSize(fileEntity.getSize());
@@ -60,7 +60,7 @@ public class AttachmentService  extends BaseService {
 		//杩斿洖澶勭悊缁撴灉(Jquery File Upload鎺т欢杩斿洖鏁版嵁鏍煎紡)
 		FileEntity result = new FileEntity();
         List<FileEntity> fileList = new ArrayList<FileEntity>();
-        fileEntity.setId(attachmentTempEntity.getAttachmentTempId());
+        fileEntity.setId(attachmentTempEntity.getAttachmentId());
         fileList.add(fileEntity);
         result.setFiles(fileList);
 		return result;

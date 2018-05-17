@@ -58,7 +58,7 @@ create table ATTACHMENT
    ATTACHMENT_PATH      varchar(1024) not null,
    ATTACHMENT_TEMP_PATH varchar(1024),
    ATTACHMENT_CREATE_TIME timestamp not null,
-   ATTACHMENT_TYPE      varchar(64),
+   ATTACHMENT_TYPE      varchar(128),
    ATTACHMENT_CREATE_ID varchar(128) not null,
    ATTACHMENT_STATUS_ID varchar(32) not null comment '0,已删除
             1.存在',
@@ -85,14 +85,14 @@ alter table ATTACHMENT_CATEGORY comment '0：普通附件
 /*==============================================================*/
 create table ATTACHMENT_TEMP
 (
-   ATTACHMENT_TEMP_ID   varchar(32) not null,
+   ATTACHMENT_ID   varchar(32) not null,
    EMPLOYEE_ID          varchar(32),
    ATTACHMENT_NAME      varchar(256) not null,
    ATTACHMENT_RENAME    varchar(256),
    ATTACHMENT_PATH      varchar(1024) not null,
    ATTACHMENT_TEMP_PATH varchar(1024),
    ATTACHMENT_CREATE_TIME timestamp not null,
-   ATTACHMENT_TYPE      varchar(64),
+   ATTACHMENT_TYPE      varchar(128),
    ATTACHMENT_CREATE_ID varchar(128) not null,
    ATTACHMENT_STATUS_ID varchar(32) comment '0,已删除
             1.存在',
