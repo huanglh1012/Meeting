@@ -69,6 +69,7 @@
 	         	<value>ecp.bsp.system</value> 
 	         	<value>mis.security.entity</value> 
 	         	<value>mis.meeting.entity</value> 
+	         	<value>mis.shortmessage.entity</value> 
 	     	</list> 
 		</property>
 		

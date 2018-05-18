@@ -12,6 +12,139 @@
  * @type {meetingList}
  */
 var meetingList = function () {
+    var oTable = null;
+    var selectTr = null;
+
+    var handleSelect2 = function () {
+        $('input[name="meetingCreator"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
+        $('input[name="meetingParticipant"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
+        $('input[name="meetingPresenter"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
+
+        $('input[name="meetingCreatorDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+        $('input[name="meetingParticipantDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+
+        $('input[name="meetingRoomId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'meetingController',proxyMethod:'getMeetingRoomList',jsonString:null});
+    }
+
+    var handleButton = function () {
+        $('#modifyMeetingBtn').on('click', function (e) {
+            if (selectTr == null) {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请选择需要修改的会议信息',
+                    callback: function() {
+                    },
+                    title: "错误提示"
+                });
+            }else{
+                window.location.href='meeting_new.html?meetingId='+ selectTr.meetingId;
+            }
+        });
+
+        $('#closeMeetingBtn').on('click', function (e) {
+            if(selectTr != null){
+                bootbox.confirm({
+                    buttons: {
+                        confirm: {
+                            label: '确认',
+                            className: 'btn green'
+                        },
+                        cancel: {
+                            label: '取消',
+                            className: 'btn'
+                        }
+                    },
+                    message: '确定关闭该会议信息吗 ?',
+                    title: "消息提示",
+                    callback: function(result) {
+                        if(result) {
+                            var obj = [];
+                            obj.push(StringUtil.decorateRequestData('String',selectTr.meetingId));
+                            $.ajax({
+                                type:'post',
+                                dataType:"json",
+                                async: false,
+                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                    ,proxyClass:'meetingController',proxyMethod:'closeMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
+                                success:function(result){
+                                    if(result.success){
+                                        oTable.api().ajax.reload();
+                                        $.pnotify({
+                                            text: '关闭成功'
+                                        });
+                                    }else{
+                                        $.pnotify({
+                                            type:'error',
+                                            text: result.msg,
+                                            delay: 8000
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#deleteMeetingBtn').on('click', function (e) {
+            if(selectTr != null){
+                bootbox.confirm({
+                    buttons: {
+                        confirm: {
+                            label: '确认',
+                            className: 'btn green'
+                        },
+                        cancel: {
+                            label: '取消',
+                            className: 'btn'
+                        }
+                    },
+                    message: '确定删除该会议信息吗 ?',
+                    title: "消息提示",
+                    callback: function(result) {
+                        if(result) {
+                            var obj = [];
+                            obj.push(StringUtil.decorateRequestData('String',selectTr.meetingId));
+                            $.ajax({
+                                type:'post',
+                                dataType:"json",
+                                async: false,
+                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                    ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
+                                success:function(result){
+                                    if(result.success){
+                                        oTable.api().ajax.reload();
+                                        $.pnotify({
+                                            text: '删除成功'
+                                        });
+                                    }else{
+                                        $.pnotify({
+                                            type:'error',
+                                            text: result.msg,
+                                            delay: 8000
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     var handleDatePicker = function () {
         $("#meetingStartTime, #meetingEndTime").datepicker({
@@ -32,14 +165,15 @@ var meetingList = function () {
         // 表头定义
         var tableHead = [
             { "sTitle": "会议ID", "mData": "meetingId","bVisible":false},
-            { "sTitle": "会议主题","mData": "meetingSubject","type" :"string" },
-            { "sTitle": "会议时间", "mData": "meetingStartTime","type":"date"},
-            { "sTitle": "会议地点", "mData": "meetingRoomAddress","type" :"string" },
-            { "sTitle": "发起人", "mData": "proposer","type" :"proposerCombo"},
-            { "sTitle": "发起部门", "mData": "proposeDepartment","type" :"proposeDepartmentCombo"},
-            { "sTitle": "会议状态", "mData": "meetingStatus","type" :"meetingStatusCombo"}
+            { "sTitle": "会议主题","mData": "meetingSubject"},
+            { "sTitle": "会议时间", "mData": "meetingStartTime"},
+            { "sTitle": "会议地点", "mData": "meetingRoomName"},
+            { "sTitle": "发起人", "mData": "meetingCreatorName"},
+            { "sTitle": "发起部门", "mData": "meetingCreatorDepartmentName"},
+            { "sTitle": "会议状态", "mData": "meetingStateName"}
         ];
-        var oTable =  $('#meetingList').dataTable({
+
+        oTable =  $('#dt_issues').dataTable({
             "aoColumns": tableHead,
             "serverSide": true,
             "bAutoWidth": false,
@@ -55,115 +189,26 @@ var meetingList = function () {
                 type: "POST",
                 dataSrc: "data",
                 data: $.proxy(searchCommon.setDatatableData, searchCommon)
-            },
-            "columnDefs": [{
-                "targets": [0],
-                "render": function(data, type, full) {
-                    return '<a title="' + data + '" target="_blank" href="' + $.url_root + '/issue/viewIssueOfCard.jspa?issueId=' + full.issueId + '">' + data + '</a>';
-                }
-            }, {
-                "targets": [1],
-                "render": function(data, type, full) {
-                    return '<a class="without-decoration font-default" title="' + data + '" href="javascript:;">' + data + '</a>';
-                }
-            }, {
-                "targets": [2],
-                "render": function(data, type, full) {
-                    data = data || "";
-                    return '<a class="without-decoration font-default" title="' + data + '" href="javascript:;">' + data + '</a>';
-                }
-            }]
-        });
-
-        var table = $('#dt_issues').DataTable(),
-            colvis = new $.fn.dataTable.ColVis(table, {
-                buttonText: "显示 / 隐藏 列",
-                bRestore: true,
-                sRestore: "显示全部"
-            });
-
-        $("#dt_issues").resizableColumns({
-            store: window.store
+            }
         });
     }
 
     return {
         _select2InitValue: {
-            proposeDepartment: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
+            meetingStatusId: [{
+                "id": "0",
+                "text": "已发起"
             }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            proposeEmployee: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            joinDepartment: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            joinEmployee: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            charger: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            meetingRoomAddress: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
-            }],
-            meetingStatus: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
-            }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
+                "id": "1",
+                "text": "已结束"
             }]
         },
         init: function () {
+            handleButton();
+            handleSelect2();
             searchCommon.select2InitValue = this._select2InitValue;
-            searchCommon.tableAjaxParam.proxyClass = "fileController";
-            searchCommon.tableAjaxParam.proxyMethod = "getReportTaskListByCondition";
+            searchCommon.tableAjaxParam.proxyClass = "meetingController";
+            searchCommon.tableAjaxParam.proxyMethod = "getMeetingListByCondition";
             searchCommon.bindingSearchEvent();
             searchCommon.init();
             common.loadDatatableSettings();

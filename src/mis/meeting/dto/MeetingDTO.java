@@ -1,23 +1,77 @@
 package mis.meeting.dto;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
+import mis.meeting.constant.MeetingEntityRegister;
+
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.stereotype.Component;
 
+import ecp.bsp.system.commons.utils.jackson.deserilizer.JsonDateDeSerializer;
+import ecp.bsp.system.commons.utils.jackson.serializer.JsonDateSerializer;
 import ecp.bsp.system.core.BaseDTO;
+import ecp.bsp.system.framework.query.data.dto.DtoField2QueryField;
+import ecp.bsp.system.framework.query.data.dto.ModelEntityAnnotation;
 
 @Component
+@ModelEntityAnnotation( propertiesFileName = "",
+refEntity = MeetingEntityRegister.AttachmentCategoryEntity +
+			MeetingEntityRegister.split +
+            MeetingEntityRegister.MeetingAttachmentEntity +
+            MeetingEntityRegister.split +
+            MeetingEntityRegister.MeetingEntity +
+            MeetingEntityRegister.split +
+            MeetingEntityRegister.MeetingMemberRfEntity +
+            MeetingEntityRegister.split +
+            MeetingEntityRegister.MeetingMemberRoleEntity +
+            MeetingEntityRegister.split +
+            MeetingEntityRegister.MeetingRoomEntity +
+            MeetingEntityRegister.split +
+            MeetingEntityRegister.MeetingStateEntity
+            )
+@DtoField2QueryField
 public class MeetingDTO extends BaseDTO {
 	private String meetingId;
-	private String meetStateId;
-	private String meetingAttentions;
-	private Timestamp meetingEndTime;
-	private Timestamp meetingProposeTime;
-	private String meetingRoomId;
-	private Timestamp meetingStartTime;
+	private String meetingStateId;
 	private String meetingSubject;
-	private List<List<MeetingMemberRfDTO>> meetingMemberList;
+	private String meetingStateName;
+	private String meetingAttentions;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date meetingStartTime;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date meetingEndTime;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date meetingProposeTime;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date messageNoticeTime;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date meetingUploadEndTime;
+	private String meetingRoomId;
+	private String meetingRoomName;
+	private String employeeId;
+	private String meetingCreator;
+	private String meetingCreatorName;
+	private String meetingCreatorDepartmentId;
+	private String meetingCreatorDepartmentName;
+	private String meetingPresenter;
+	private String meetingPresenterName;
+	private String meetingPresenterDepartmentId;
+	private String meetingPresenterDepartmentName;
+	private String meetingParticipant;
+	private String meetingParticipantName;
+	private String meetingParticipantDepartmentId;
+	private String meetingParticipantDepartmentName;
+	private String meetingParticipants;
+	private List<String> meetingRecordFileList;
+	private List<String> meetingFileList;
+	private List<MeetingMemberRfDTO> meetingMemberList;
 
 	public String getMeetingId() {
 		return this.meetingId;
@@ -27,12 +81,12 @@ public class MeetingDTO extends BaseDTO {
 		this.meetingId = meetingId;
 	}
 
-	public String getMeetStateId() {
-		return this.meetStateId;
+	public String getMeetingStateId() {
+		return this.meetingStateId;
 	}
 
-	public void setMeetStateId(String meetStateId) {
-		this.meetStateId = meetStateId;
+	public void setMeetingStateId(String meetingStateId) {
+		this.meetingStateId = meetingStateId;
 	}
 
 	public String getMeetingAttentions() {
@@ -43,19 +97,19 @@ public class MeetingDTO extends BaseDTO {
 		this.meetingAttentions = meetingAttentions;
 	}
 
-	public Timestamp getMeetingEndTime() {
+	public Date getMeetingEndTime() {
 		return this.meetingEndTime;
 	}
 
-	public void setMeetingEndTime(Timestamp meetingEndTime) {
+	public void setMeetingEndTime(Date meetingEndTime) {
 		this.meetingEndTime = meetingEndTime;
 	}
 
-	public Timestamp getMeetingProposeTime() {
+	public Date getMeetingProposeTime() {
 		return this.meetingProposeTime;
 	}
 
-	public void setMeetingProposeTime(Timestamp meetingProposeTime) {
+	public void setMeetingProposeTime(Date meetingProposeTime) {
 		this.meetingProposeTime = meetingProposeTime;
 	}
 
@@ -67,11 +121,11 @@ public class MeetingDTO extends BaseDTO {
 		this.meetingRoomId = meetingRoomId;
 	}
 
-	public Timestamp getMeetingStartTime() {
+	public Date getMeetingStartTime() {
 		return this.meetingStartTime;
 	}
 
-	public void setMeetingStartTime(Timestamp meetingStartTime) {
+	public void setMeetingStartTime(Date meetingStartTime) {
 		this.meetingStartTime = meetingStartTime;
 	}
 
@@ -83,11 +137,189 @@ public class MeetingDTO extends BaseDTO {
 		this.meetingSubject = meetingSubject;
 	}
 	
-	public List<List<MeetingMemberRfDTO>> getMeetingMemberList() {
+	public List<MeetingMemberRfDTO> getMeetingMemberList() {
 		return this.meetingMemberList;
 	}
 
-	public void setMeetingMemberList(List<List<MeetingMemberRfDTO>> meetingMemberList) {
+	public void setMeetingMemberList(List<MeetingMemberRfDTO> meetingMemberList) {
 		this.meetingMemberList = meetingMemberList;
 	}
+
+	public String getMeetStateName() {
+		return meetingStateName;
+	}
+
+	public void setMeetStateName(String meetStateName) {
+		this.meetingStateName = meetStateName;
+	}
+
+	public Date getMessageNoticeTime() {
+		return messageNoticeTime;
+	}
+
+	public void setMessageNoticeTime(Date messageNoticeTime) {
+		this.messageNoticeTime = messageNoticeTime;
+	}
+
+	public Date getMeetingUploadEndTime() {
+		return meetingUploadEndTime;
+	}
+
+	public void setMeetingUploadEndTime(Date meetingUploadEndTime) {
+		this.meetingUploadEndTime = meetingUploadEndTime;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	@DtoField2QueryField(field="MEETING_CREATOR")
+	public String getMeetingCreator() {
+		return meetingCreator;
+	}
+
+	public void setMeetingCreator(String meetingCreator) {
+		this.meetingCreator = meetingCreator;
+	}
+
+	@DtoField2QueryField(field="MEETING_PRESENTER")
+	public String getMeetingPresenter() {
+		return meetingPresenter;
+	}
+
+	public void setMeetingPresenter(String meetingPresenter) {
+		this.meetingPresenter = meetingPresenter;
+	}
+
+	public String getMeetingParticipants() {
+		return meetingParticipants;
+	}
+
+	public void setMeetingParticipants(String meetingParticipants) {
+		this.meetingParticipants = meetingParticipants;
+	}
+
+	public List<String> getMeetingRecordFileList() {
+		return meetingRecordFileList;
+	}
+
+	public void setMeetingRecordFileList(List<String> meetingRecordFileList) {
+		this.meetingRecordFileList = meetingRecordFileList;
+	}
+
+	public List<String> getMeetingFileList() {
+		return meetingFileList;
+	}
+
+	public void setMeetingFileList(List<String> meetingFileList) {
+		this.meetingFileList = meetingFileList;
+	}
+
+	public String getMeetingStateName() {
+		return meetingStateName;
+	}
+
+	public void setMeetingStateName(String meetingStateName) {
+		this.meetingStateName = meetingStateName;
+	}
+
+	@DtoField2QueryField(field="MEETING_CREATOR_DEPARTMENT_ID")
+	public String getMeetingCreatorDepartmentId() {
+		return meetingCreatorDepartmentId;
+	}
+
+	public void setMeetingCreatorDepartmentId(String meetingCreatorDepartmentId) {
+		this.meetingCreatorDepartmentId = meetingCreatorDepartmentId;
+	}
+
+	@DtoField2QueryField(field="MEETING_PRESENTER_DEPARTMENT_ID")
+	public String getMeetingPresenterDepartmentId() {
+		return meetingPresenterDepartmentId;
+	}
+
+	public void setMeetingPresenterDepartmentId(String meetingPresenterDepartmentId) {
+		this.meetingPresenterDepartmentId = meetingPresenterDepartmentId;
+	}
+
+	@DtoField2QueryField(field="MEETING_PARTICIPANT")
+	public String getMeetingParticipant() {
+		return meetingParticipant;
+	}
+
+	public void setMeetingParticipant(String meetingParticipant) {
+		this.meetingParticipant = meetingParticipant;
+	}
+
+	public String getMeetingParticipantDepartmentId() {
+		return meetingParticipantDepartmentId;
+	}
+
+	@DtoField2QueryField(field="MEETING_PARTICIPANT_DEPARTMENT_ID")
+	public void setMeetingParticipantDepartmentId(
+			String meetingParticipantDepartmentId) {
+		this.meetingParticipantDepartmentId = meetingParticipantDepartmentId;
+	}
+
+	public String getMeetingCreatorName() {
+		return meetingCreatorName;
+	}
+
+	public void setMeetingCreatorName(String meetingCreatorName) {
+		this.meetingCreatorName = meetingCreatorName;
+	}
+
+	public String getMeetingCreatorDepartmentName() {
+		return meetingCreatorDepartmentName;
+	}
+
+	public void setMeetingCreatorDepartmentName(String meetingCreatorDepartmentName) {
+		this.meetingCreatorDepartmentName = meetingCreatorDepartmentName;
+	}
+
+	public String getMeetingPresenterName() {
+		return meetingPresenterName;
+	}
+
+	public void setMeetingPresenterName(String meetingPresenterName) {
+		this.meetingPresenterName = meetingPresenterName;
+	}
+
+	public String getMeetingPresenterDepartmentName() {
+		return meetingPresenterDepartmentName;
+	}
+
+	public void setMeetingPresenterDepartmentName(
+			String meetingPresenterDepartmentName) {
+		this.meetingPresenterDepartmentName = meetingPresenterDepartmentName;
+	}
+
+	public String getMeetingParticipantName() {
+		return meetingParticipantName;
+	}
+
+	public void setMeetingParticipantName(String meetingParticipantName) {
+		this.meetingParticipantName = meetingParticipantName;
+	}
+
+	public String getMeetingParticipantDepartmentName() {
+		return meetingParticipantDepartmentName;
+	}
+
+	public void setMeetingParticipantDepartmentName(
+			String meetingParticipantDepartmentName) {
+		this.meetingParticipantDepartmentName = meetingParticipantDepartmentName;
+	}
+
+	public String getMeetingRoomName() {
+		return meetingRoomName;
+	}
+
+	public void setMeetingRoomName(String meetingRoomName) {
+		this.meetingRoomName = meetingRoomName;
+	}
+	
 }

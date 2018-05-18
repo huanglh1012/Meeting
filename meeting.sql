@@ -60,7 +60,7 @@ create table ATTACHMENT
    ATTACHMENT_CREATE_TIME timestamp not null,
    ATTACHMENT_TYPE      varchar(128),
    ATTACHMENT_CREATE_ID varchar(128) not null,
-   ATTACHMENT_STATUS_ID varchar(32) not null comment '0,ÒÑÉ¾³ý
+   ATTACHMENT_STATUS_ID varchar(32) comment '0,ÒÑÉ¾³ý
             1.´æÔÚ',
    ATTACHMENT_SIZE      integer,
    primary key (ATTACHMENT_ID)
@@ -146,7 +146,7 @@ create table MEETING
 (
    MEETING_ID           varchar(32) not null,
    MEETING_ROOM_ID      varchar(32) not null,
-   MEET_STATE_ID        varchar(32) not null,
+   MEETING_STATE_ID        varchar(32) not null,
    MEETING_PROPOSE_TIME timestamp not null,
    MEETING_START_TIME   timestamp not null,
    MEETING_END_TIME     timestamp not null,
@@ -349,7 +349,7 @@ alter table EMPLOYEE_ROLE_RF add constraint FK_Reference_21 foreign key (EMPLOYE
 alter table EMPLOYEE_ROLE_RF add constraint FK_Reference_22 foreign key (ROLE_ID)
       references ROLE (ROLE_ID) on delete restrict on update restrict;
 
-alter table MEETING add constraint FK_MEETING_1 foreign key (MEET_STATE_ID)
+alter table MEETING add constraint FK_MEETING_1 foreign key (MEETING_STATE_ID)
       references MEETING_STATE (MEETING_STATE_ID) on delete restrict on update restrict;
 
 alter table MEETING add constraint FK_MEETING_2 foreign key (MEETING_ROOM_ID)

@@ -61,7 +61,7 @@ var userList = function () {
         });
 
         $('#deleteUserBtn').on('click', function (e) {
-            if(zTreeObj.getSelectedNodes()[0] != null){
+            if(selectTr != null){
                 bootbox.confirm({
                     buttons: {
                         confirm: {
@@ -73,34 +73,21 @@ var userList = function () {
                             className: 'btn'
                         }
                     },
-                    message: '确定删除这一行吗 ?',
+                    message: '确定删除该用户信息吗 ?',
                     title: "消息提示",
                     callback: function(result) {
                         if(result) {
                             var obj = [];
-                            obj.push(StringUtil.decorateRequestData('String',zTreeObj.getSelectedNodes()[0].id));
+                            obj.push(StringUtil.decorateRequestData('String',selectTr.employeeId));
                             $.ajax({
                                 type:'post',
                                 dataType:"json",
                                 async: false,
                                 url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                                    ,proxyClass:'securityController',proxyMethod:'deleteDepartment',jsonString:MyJsonUtil.obj2str(obj)}),
+                                    ,proxyClass:'securityController',proxyMethod:'deleteEmployee',jsonString:MyJsonUtil.obj2str(obj)}),
                                 success:function(result){
                                     if(result.success){
-                                        $.ajax({
-                                            type: "POST",
-                                            url: SMController.getUrl({
-                                                controller: 'controllerProxy',
-                                                method: 'callBack',
-                                                proxyClass: 'securityController',
-                                                proxyMethod: 'getDepartmentTreeList',
-                                                jsonString: null
-                                            }),
-                                            dataType: "json",
-                                            success: function (result) {
-                                                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, result);
-                                            }
-                                        });
+                                        oTable.api().ajax.reload();
                                         $.pnotify({
                                             text: '删除成功'
                                         });

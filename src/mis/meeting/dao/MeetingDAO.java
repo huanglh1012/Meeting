@@ -1,6 +1,7 @@
 package mis.meeting.dao;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ import ecp.bsp.system.core.BaseDAO;
 public class MeetingDAO extends BaseDAO {
 
 	@SuppressWarnings("unchecked")
-	public MeetingEntity getMeetingByPlanDatetimeRang(String inMeetingRoomId, Timestamp inMeetingStartTime, Timestamp inMeetingEndTime) {
+	public MeetingEntity getMeetingByPlanDatetimeRang(String inMeetingRoomId, Date inMeetingStartTime, Date inMeetingEndTime) {
 		List<MeetingEntity> tmpMeetingEntityList = (List<MeetingEntity>) this.query(MeetingConstant.SQL_GET_MEETING_BY_PAN_DATETIME_RANG, 
 				new Object[] {inMeetingRoomId, inMeetingStartTime, inMeetingStartTime, inMeetingEndTime, inMeetingEndTime}, MeetingEntity.class);
 		if (tmpMeetingEntityList == null || tmpMeetingEntityList.isEmpty()) {

@@ -1,8 +1,9 @@
 package mis.meeting.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 
 /**
@@ -14,14 +15,15 @@ import java.sql.Timestamp;
 public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String meetingId;
-	private String meetStateId;
+	private String meetingStateId;
 	private String meetingAttentions;
-	private Timestamp meetingEndTime;
-	private Timestamp meetingProposeTime;
+	private Date meetingEndTime;
+	private Date meetingProposeTime;
 	private String meetingRoomId;
-	private Timestamp meetingStartTime;
+	private Date meetingStartTime;
 	private String meetingSubject;
-
+	private Date meetingUploadEndTime;
+	
 	public MeetingEntity() {
 	}
 
@@ -37,13 +39,13 @@ public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Ser
 	}
 
 
-	@Column(name="MEET_STATE_ID", nullable=false, length=32)
-	public String getMeetStateId() {
-		return this.meetStateId;
+	@Column(name="MEETING_STATE_ID", nullable=false, length=32)
+	public String getMeetingStateId() {
+		return this.meetingStateId;
 	}
 
-	public void setMeetStateId(String meetStateId) {
-		this.meetStateId = meetStateId;
+	public void setMeetingStateId(String meetingStateId) {
+		this.meetingStateId = meetingStateId;
 	}
 
 
@@ -59,21 +61,21 @@ public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Ser
 
 
 	@Column(name="MEETING_END_TIME", nullable=false)
-	public Timestamp getMeetingEndTime() {
+	public Date getMeetingEndTime() {
 		return this.meetingEndTime;
 	}
 
-	public void setMeetingEndTime(Timestamp meetingEndTime) {
+	public void setMeetingEndTime(Date meetingEndTime) {
 		this.meetingEndTime = meetingEndTime;
 	}
 
 
 	@Column(name="MEETING_PROPOSE_TIME", nullable=false)
-	public Timestamp getMeetingProposeTime() {
+	public Date getMeetingProposeTime() {
 		return this.meetingProposeTime;
 	}
 
-	public void setMeetingProposeTime(Timestamp meetingProposeTime) {
+	public void setMeetingProposeTime(Date meetingProposeTime) {
 		this.meetingProposeTime = meetingProposeTime;
 	}
 
@@ -89,11 +91,11 @@ public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Ser
 
 
 	@Column(name="MEETING_START_TIME", nullable=false)
-	public Timestamp getMeetingStartTime() {
+	public Date getMeetingStartTime() {
 		return this.meetingStartTime;
 	}
 
-	public void setMeetingStartTime(Timestamp meetingStartTime) {
+	public void setMeetingStartTime(Date meetingStartTime) {
 		this.meetingStartTime = meetingStartTime;
 	}
 
@@ -105,6 +107,15 @@ public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Ser
 
 	public void setMeetingSubject(String meetingSubject) {
 		this.meetingSubject = meetingSubject;
+	}
+
+	@Column(name="MEETING_UPLOAD_END_TIME", nullable=false)
+	public Date getMeetingUploadEndTime() {
+		return meetingUploadEndTime;
+	}
+
+	public void setMeetingUploadEndTime(Date meetingUploadEndTime) {
+		this.meetingUploadEndTime = meetingUploadEndTime;
 	}
 
 }

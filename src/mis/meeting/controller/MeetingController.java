@@ -34,15 +34,10 @@ public class MeetingController  {
 	 * 
 	 * @param inMeetingDTO
 	 * 			会议信息
-	 * @param inMeetingSummaryFiles
-	 * 			会议纪要文件信息
-	 * @param inMeetingFiles
-	 * 			会议附件信息
 	 * @return
 	 * 			返回会议插入情况
 	 */
-	@SuppressWarnings("rawtypes")
-	public Object insertMeeting(MeetingDTO inMeetingDTO, List inMeetingSummaryFiles, List inMeetingFiles) {
+	public Object insertMeeting(MeetingDTO inMeetingDTO) {
 		ActionResult result = null;	
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
@@ -56,7 +51,6 @@ public class MeetingController  {
 		
 		return ajaxResult;
 	}
-	
 
 	/**
 	 * 更改会议信息
@@ -76,6 +70,29 @@ public class MeetingController  {
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
 			result = this.meetingService.updateMeeting(inMeetingDTO);
+			ajaxResult.setSuccess(true);
+			ajaxResult.setMsg(result);
+		} catch (Exception e) {
+			ajaxResult.setSuccess(false);
+			ajaxResult.setMsg(e.getMessage());
+		}	
+		
+		return ajaxResult;
+	}
+	
+	
+	/**
+	 * 会议时间是否冲突
+	 * 
+	 * @param inMeetingDTO
+	 * 			会议信息
+	 * @return
+	 */
+	public Object isMeetingExistByPlanDatetimeRang(MeetingDTO inMeetingDTO) {
+		ActionResult result = null;	
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			result = this.meetingService.isMeetingExistByPlanDatetimeRang(inMeetingDTO);
 			ajaxResult.setSuccess(true);
 			ajaxResult.setMsg(result);
 		} catch (Exception e) {
