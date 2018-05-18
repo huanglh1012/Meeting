@@ -2,6 +2,7 @@ package mis.meeting.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -139,7 +140,9 @@ public class MeetingService extends BaseService {
 			throw new RuntimeException(exceptionMessage);
 		}
 		
-		this.meetingDAO.CloseMeeting(inMeetingId);
+		tmpMeetingEntity.setMeetingStateId(String.valueOf(MeetingStateEnum.MEETING_CLOSE.ordinal()));
+		tmpMeetingEntity.setMeetingUploadEndTime(new Date());
+		this.meetingDAO.update(tmpMeetingEntity);
 		
 		return ActionResultUtil.getActionResult(tmpMeetingEntity.getId(), "会议关闭成功");
 	}
