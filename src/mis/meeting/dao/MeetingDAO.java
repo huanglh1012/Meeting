@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import mis.meeting.constant.MeetingConstant;
 import mis.meeting.dto.MeetingDTO;
+import mis.meeting.dto.MeetingMemberRfDTO;
 import mis.meeting.dto.MeetingRoomBookingDTO;
 import mis.meeting.dto.MeetingRoomDTO;
 import mis.meeting.entity.MeetingEntity;
@@ -15,6 +16,7 @@ import mis.meeting.entity.MeetingStateEntity;
 import mis.meeting.myenum.MeetingMemberRoleEnum;
 import mis.meeting.myenum.MeetingStateEnum;
 import ecp.bsp.system.core.BaseDAO;
+import ecp.bsp.system.framework.file.data.dto.AttachmentDTO;
 
 @Repository
 public class MeetingDAO extends BaseDAO {
@@ -51,6 +53,34 @@ public class MeetingDAO extends BaseDAO {
 	}
 	
 	/**
+	 * 根据会议ID获取会议信息
+	 * 
+	 * @param inMeetingId
+	 *     会议ID
+	 * @return
+	 *     返回会议信息
+	 */
+	@SuppressWarnings("unchecked")
+	public List<MeetingMemberRfDTO> getMeetingMemberRfInfoByMeetingId(String inMeetingId) throws Exception {
+		return (List<MeetingMemberRfDTO>) this.query(MeetingConstant.SQL_GET_MEETING_MEMBER_RF_LIST, 
+				new Object[] {inMeetingId}, MeetingMemberRfDTO.class);
+	}
+	
+	/**
+	 * 根据会议ID获取会议附件信息
+	 * 
+	 * @param inMeetingId
+	 *     会议ID
+	 * @return
+	 *     返回会议信息
+	 */
+	@SuppressWarnings("unchecked")
+	public List<AttachmentDTO> getMeetingAttachmentInfoByMeetingId(String inMeetingId, String inAttachmentCategoryId) throws Exception {
+		return (List<AttachmentDTO>) this.query(MeetingConstant.SQL_GET_MEETING_ATTACHMENT_LIST_BY_MEETING_ID, 
+				new Object[] {inMeetingId,inAttachmentCategoryId}, AttachmentDTO.class);
+	}
+	
+	/**
 	 * 获取会议室信息列表
 	 * 
 	 * @return
@@ -68,7 +98,7 @@ public class MeetingDAO extends BaseDAO {
 	@SuppressWarnings("unchecked")
 	public List<MeetingRoomBookingDTO> getMeetingRoomBookingListByRoomId(String inMeetingRoomId) {
 		return (List<MeetingRoomBookingDTO>) this.query(MeetingConstant.SQL_GET_MEETING_ROOM_BOOKING_LIST_BY_ROOM_ID, new Object[] { 
-				inMeetingRoomId, MeetingMemberRoleEnum.MEETING_CREATOR.ordinal() }, MeetingRoomBookingDTO.class);
+				inMeetingRoomId}, MeetingRoomBookingDTO.class);
 	}
 
 }

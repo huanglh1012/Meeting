@@ -23,7 +23,10 @@ public class AttachmentEntity extends BaseEntity {
 	 * 鐗堟湰鍙�
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	/**
+	 * 闄勪欢鍚嶇О.
+	 */
+	private String attachmentId;
 	/**
 	 * 闄勪欢鍚嶇О.
 	 */

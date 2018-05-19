@@ -3,7 +3,9 @@ package mis.meeting.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -32,9 +34,11 @@ import ecp.bsp.system.commons.utils.LoggerUtil;
 import ecp.bsp.system.commons.utils.StringUtils;
 import ecp.bsp.system.core.BaseDTO;
 import ecp.bsp.system.core.BaseService;
+import ecp.bsp.system.framework.file.data.dto.AttachmentDTO;
 import ecp.bsp.system.framework.file.data.entity.AttachmentEntity;
 import ecp.bsp.system.framework.file.data.entity.AttachmentTempEntity;
 import ecp.bsp.system.framework.file.impl.AttachmentDAO;
+import ecp.bsp.system.framework.file.impl.AttachmentService;
 
 @Service
 public class MeetingService extends BaseService {
@@ -43,6 +47,9 @@ public class MeetingService extends BaseService {
 	
 	@Resource
 	private AttachmentDAO attachmentDAO;
+	
+	@Resource
+	private AttachmentService attachmentService;
 	
 	public ActionResult isMeetingExistByPlanDatetimeRang(MeetingDTO inMeetingDTO) {
 		MeetingEntity tmpMeetingEntity = this.meetingDAO.getMeetingByPlanDatetimeRang(inMeetingDTO.getMeetingRoomId(), 
@@ -96,9 +103,14 @@ public class MeetingService extends BaseService {
 		
 		// 清空与会人员信息
 		this.meetingDAO.deleteMeetingMember(tmpCurrentMeetingEntity.getMeetingId());
+		
+		// 清空短信通知信息
+		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingDTO.getMeetingId());
+		this.meetingDAO.delete(tmpMessageSendCenterEntity);
 			
 		// 更新会议信息
 		MeetingDTO.dtoToEntity(inMeetingDTO, tmpCurrentMeetingEntity);
+		tmpCurrentMeetingEntity.setMeetingStateId(String.valueOf(MeetingStateEnum.MEETING_OPEN.ordinal()));
 		this.meetingDAO.update(tmpCurrentMeetingEntity);
 		
 		// 插入与会人员信息
@@ -107,11 +119,14 @@ public class MeetingService extends BaseService {
 		for(MeetingMemberRfDTO tmpSubMeetingMember: tmpMeetingMemberList) {
 			tmpMeetingMemberRfEntity = new MeetingMemberRfEntity();
 			MeetingMemberRfDTO.dtoToEntity(tmpSubMeetingMember, tmpMeetingMemberRfEntity);
-			tmpMeetingMemberRfEntity.setMeetingId(tmpCurrentMeetingEntity.getMeetingId());
 			this.meetingDAO.insert(tmpMeetingMemberRfEntity);
 		}
 			
-		// 插入会议附件
+		// 插入会议附件信息
+		this.saveMeetingFile(inMeetingDTO);
+				
+		// 插入短信通知信息
+		this.saveMessageSendInfo(inMeetingDTO);
 		
 		return ActionResultUtil.getActionResult(tmpCurrentMeetingEntity.getId(), "会议更新成功");
 	}
@@ -126,6 +141,18 @@ public class MeetingService extends BaseService {
 		
 		// 清空与会人员信息
 		this.meetingDAO.deleteMeetingMember(tmpMeetingEntity.getMeetingId());
+		
+		// 删除会议附件信息
+		List<MeetingAttachmentEntity> tmpMeetingAttachmentEntity = this.meetingDAO.getEntityList(MeetingAttachmentEntity.class, 
+				"meetingId", inMeetingId, null);
+		for (MeetingAttachmentEntity subMeetingAttachmentEntity : tmpMeetingAttachmentEntity)
+			this.deleteAttachmentByAttachmentId(subMeetingAttachmentEntity.getAttachmentId());
+		
+		// 更新短信通知信息
+		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingId);
+		tmpMessageSendCenterEntity.setMeetingId(null);
+		this.meetingDAO.update(tmpMessageSendCenterEntity);
+		
 		// 删除会议信息
 		this.meetingDAO.delete(tmpMeetingEntity);
 		
@@ -181,10 +208,10 @@ public class MeetingService extends BaseService {
 	public void saveMeetingFile(MeetingDTO inMeetingDTO) throws Exception {
 		List<AttachmentEntity> tmpSaveMeetingAttachmentEntityList = new ArrayList<AttachmentEntity>();
 		// 保存会议记录附件信息		
-		this.saveAttachment(inMeetingDTO.getMeetingRecordFileList(), inMeetingDTO.getMeetingId(), 
+		this.saveAttachment(inMeetingDTO.getMeetingRecordFileList(), inMeetingDTO, 
 				AttachmentCategoryEnum.MEETING_RECORD_ATTACHMENT, tmpSaveMeetingAttachmentEntityList);
 		// 保存普通附件信息		
-		this.saveAttachment(inMeetingDTO.getMeetingFileList(), inMeetingDTO.getMeetingId(), 
+		this.saveAttachment(inMeetingDTO.getMeetingFileList(), inMeetingDTO, 
 				AttachmentCategoryEnum.NORMAL_ATTACHMENT, tmpSaveMeetingAttachmentEntityList);
 		// 保存文件物理信息
 		for(AttachmentEntity subAttachmentEntity : tmpSaveMeetingAttachmentEntityList){
@@ -194,25 +221,43 @@ public class MeetingService extends BaseService {
 		}
 	}
 	
-	public void saveAttachment(List<String> inAttachmentList, String inMeetingId, AttachmentCategoryEnum inAttachmentCategoryEnum,
+	public ActionResult deleteAttachmentByAttachmentId(String inAttachmentId) throws Exception {
+		MeetingAttachmentEntity tmpMeetingAttachmentEntity = this.meetingDAO.getEntity(MeetingAttachmentEntity.class, "attachmentId", inAttachmentId);
+		if (tmpMeetingAttachmentEntity != null) {
+			// 删除会议附件信息及物理信息
+			this.meetingDAO.delete(tmpMeetingAttachmentEntity);
+			this.attachmentService.deleteAttachmentByAttachmentId(inAttachmentId);
+		}
+		// 删除临时附件信息
+		this.attachmentService.deleteTempAttachmentByAttachmentId(inAttachmentId);
+		
+		return ActionResultUtil.getActionResult(inAttachmentId, "会议删除成功");
+	}
+	
+	public void saveAttachment(List<AttachmentDTO> inAttachmentList, MeetingDTO inMeetingDTO, AttachmentCategoryEnum inAttachmentCategoryEnum,
 			List<AttachmentEntity> outSaveMeetingAttachmentEntityList) throws Exception {
 		AttachmentEntity tmpAttachmentEntity = null;
 		MeetingAttachmentEntity tmpMeetingAttachmentEntity = null;
-		for (String subAttachmentId : inAttachmentList) {
-			AttachmentTempEntity tmpAttachmentTempEntity = this.attachmentDAO.getEntity(AttachmentTempEntity.class, subAttachmentId);
-			// 保存附件信息
-			tmpAttachmentEntity = new AttachmentEntity();    
-			BaseDTO.copyObjectPropertys(tmpAttachmentTempEntity, tmpAttachmentEntity);
-			tmpAttachmentEntity.setAttachmentRename(tmpAttachmentTempEntity.getAttachmentCreateId());
-			this.attachmentDAO.insert(tmpAttachmentEntity);
-			outSaveMeetingAttachmentEntityList.add(tmpAttachmentEntity);
-			
-			// 保存附件信息
-			tmpMeetingAttachmentEntity = new MeetingAttachmentEntity();
-			tmpMeetingAttachmentEntity.setAttachmentId(tmpAttachmentEntity.getAttachmentId());
-			tmpMeetingAttachmentEntity.setMeetingId(inMeetingId);
-			tmpMeetingAttachmentEntity.setAttachmentCategoryId(String.valueOf(inAttachmentCategoryEnum.ordinal()));
-			this.attachmentDAO.insert(tmpMeetingAttachmentEntity);
+		for (AttachmentDTO subAttachmentDTO : inAttachmentList) {
+			AttachmentTempEntity tmpAttachmentTempEntity = this.attachmentDAO.getEntity(AttachmentTempEntity.class, subAttachmentDTO.getAttachmentId());
+			tmpMeetingAttachmentEntity = this.meetingDAO.getEntity(MeetingAttachmentEntity.class, "attachmentId",subAttachmentDTO.getAttachmentId());
+			// 如果会议附件已存在，则无需保存
+			if (tmpMeetingAttachmentEntity == null) {
+				// 保存附件信息
+				tmpAttachmentEntity = new AttachmentEntity();    
+				BaseDTO.copyObjectPropertys(tmpAttachmentTempEntity, tmpAttachmentEntity);
+				tmpAttachmentEntity.setAttachmentRename(tmpAttachmentTempEntity.getAttachmentCreateId());
+				tmpAttachmentEntity.setEmployeeId(inMeetingDTO.getEmployeeId());
+				this.attachmentDAO.insert(tmpAttachmentEntity);
+				outSaveMeetingAttachmentEntityList.add(tmpAttachmentEntity);
+				
+				// 保存会议附件信息
+				tmpMeetingAttachmentEntity = new MeetingAttachmentEntity();
+				tmpMeetingAttachmentEntity.setAttachmentId(tmpAttachmentEntity.getAttachmentId());
+				tmpMeetingAttachmentEntity.setMeetingId(inMeetingDTO.getMeetingId());
+				tmpMeetingAttachmentEntity.setAttachmentCategoryId(String.valueOf(inAttachmentCategoryEnum.ordinal()));
+				this.attachmentDAO.insert(tmpMeetingAttachmentEntity);
+			}
 		}
 	}
 	
@@ -237,7 +282,55 @@ public class MeetingService extends BaseService {
 	 * @throws Exception 
 	 */
 	public MeetingDTO getMeetingInfoById(String inMeetingId) throws Exception {
-		return this.meetingDAO.getMeetingInfoById(inMeetingId);
+		MeetingDTO tmpMeetingDTO = this.meetingDAO.getMeetingInfoById(inMeetingId);
+		
+		// 获取参会人员或部门
+		String meetingParticipants = StringUtils.EMPTY_STRING;
+		String meetingParticipantNames = StringUtils.EMPTY_STRING;
+		Map<String,String> tmpEmployeeDepartmentMap = new HashMap<String,String>();
+		List<MeetingMemberRfDTO> tmpMeetingMemberRfDTOList = this.meetingDAO.getMeetingMemberRfInfoByMeetingId(inMeetingId);
+		for (MeetingMemberRfDTO subMeetingMemberRfDTO : tmpMeetingMemberRfDTOList) {
+			if (subMeetingMemberRfDTO.getMeetingMemberRoleId().equals(String.valueOf(MeetingMemberRoleEnum.MEETING_PRESENTER.ordinal()))) {
+				tmpMeetingDTO.setMeetingPresenter(subMeetingMemberRfDTO.getEmployeeId());
+			} else if (subMeetingMemberRfDTO.getMeetingMemberRoleId().equals(String.valueOf(MeetingMemberRoleEnum.MEETING_PARTICIPANT.ordinal()))) {
+				if (!StringUtils.isValidateString(meetingParticipants)) {
+					meetingParticipants += "," + subMeetingMemberRfDTO.getEmployeeId();
+				} else {
+					meetingParticipants = subMeetingMemberRfDTO.getEmployeeId();
+				}
+				if (tmpEmployeeDepartmentMap.containsKey(subMeetingMemberRfDTO.getDepartmentName())) {
+					String tmpNewEmployeeNames = tmpEmployeeDepartmentMap.get(subMeetingMemberRfDTO.getDepartmentName()) + "," + subMeetingMemberRfDTO.getEmployeeName();
+					tmpEmployeeDepartmentMap.remove(subMeetingMemberRfDTO.getDepartmentName());
+					tmpEmployeeDepartmentMap.put(subMeetingMemberRfDTO.getDepartmentName(), tmpNewEmployeeNames);
+				}
+				else {
+					tmpEmployeeDepartmentMap.put(subMeetingMemberRfDTO.getDepartmentName(), subMeetingMemberRfDTO.getEmployeeName());
+				}
+			}
+		}
+		for (Map.Entry<String, String> subEntry : tmpEmployeeDepartmentMap.entrySet()) { 
+			meetingParticipantNames += subEntry.getKey() + ": " + subEntry.getValue() + "\n"; 
+		}
+		tmpMeetingDTO.setMeetingParticipants(meetingParticipants);
+		tmpMeetingDTO.setMeetingParticipantNames(meetingParticipantNames);
+		
+		// 获取短信提醒信息
+		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingId);
+		tmpMeetingDTO.setMessageNoticeTime(tmpMessageSendCenterEntity.getSendDatetime());
+		
+		// 获取附件信息
+		List<AttachmentDTO> tmpMeetingRecordFileList = this.meetingDAO.getMeetingAttachmentInfoByMeetingId(inMeetingId,
+				String.valueOf(AttachmentCategoryEnum.MEETING_RECORD_ATTACHMENT.ordinal()));
+		List<AttachmentDTO> tmpMeetingFileList = this.meetingDAO.getMeetingAttachmentInfoByMeetingId(inMeetingId,
+				String.valueOf(AttachmentCategoryEnum.NORMAL_ATTACHMENT.ordinal()));
+		tmpMeetingDTO.setMeetingRecordFileList(tmpMeetingRecordFileList);
+		tmpMeetingDTO.setMeetingFileList(tmpMeetingFileList);
+		
+		return tmpMeetingDTO;
+	}
+	
+	public List<AttachmentDTO> getMeetingAttachmentInfoByMeetingId(String inMeetingId, String inAttachmentCategoryId) throws Exception {
+		return this.meetingDAO.getMeetingAttachmentInfoByMeetingId(inMeetingId,inAttachmentCategoryId);
 	}
 	
 	public ActionResult insertMeetingRoom(MeetingRoomDTO inMeetingRoomDTO) throws Exception {

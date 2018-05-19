@@ -84,7 +84,7 @@ public class PageQueryConditionBuilder extends BaseQueryConditionBuilder {
 						dynamicGridQueryEntity.getEndDate().setMinutes(59);
 						conditionMap.put(key+"endDate", dynamicGridQueryEntity.getEndDate());
 					}
-					if(dynamicGridQueryEntity.getType().equals("checkbox")){
+					if(dynamicGridQueryEntity.getType().equals("checkbox") && dynamicGridQueryEntity.getCheckboxCondition() != null){
 						String param = " IN ( ";
 						String[] checkboxValueArray = dynamicGridQueryEntity.getCheckboxCondition().split(",");
 						for (int i = 0; i < checkboxValueArray.length; i++) {

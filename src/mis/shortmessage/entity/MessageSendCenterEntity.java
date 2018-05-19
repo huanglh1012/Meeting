@@ -53,8 +53,6 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 		this.messageSendStateId = messageSendStateId;
 	}
 
-
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="SEND_DATETIME", nullable=false)
 	public Date getSendDatetime() {
 		return this.sendDatetime;

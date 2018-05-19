@@ -12,6 +12,7 @@
  * @type {meetingEdit}
  */
 var meetingEdit = function () {
+    var meetingId = null;
     var zTreeObj = null;
     var selectedTreeNode = null;
     var searchLocationIndex = 0;
@@ -19,6 +20,37 @@ var meetingEdit = function () {
     var meetingFilesTable = null;
     var selectMeetingRecordFiles = [];
     var selectMeetingFiles = [];
+
+    var handlePageInfo = function () {
+        var tmpUrl = document.URL;
+        var tmpUrlParam = tmpUrl.split('?')[1];
+        if (tmpUrlParam != undefined) {
+            var tmpUrlParamValue= tmpUrlParam.split("=")[1];
+            if (tmpUrlParamValue != undefined && tmpUrlParamValue != null) {
+                var obj = [];
+                obj.push(StringUtil.decorateRequestData('String',tmpUrlParamValue));
+                $.ajax({
+                    type:'post',
+                    Type:"json",
+                    async:false,
+                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
+                    success:function(result){
+                        var tmpJsonObject = JSON.parse(result);
+                        DomUtil.setFormElementsValueViaJSONObject('createMeetingForm',tmpJsonObject);
+                        $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
+                        $('#meetingCreator').select2('val',tmpJsonObject.meetingCreator);
+                        $('#meetingRoomId').select2('val',tmpJsonObject.meetingRoomId);
+                        $('#meetingCreatorDepartmentId').select2('val',tmpJsonObject.meetingCreatorDepartmentId);
+                        if (tmpJsonObject.meetingFileList.length > 0)
+                            meetingFilesTable.fnAddData(tmpJsonObject.meetingFileList);
+                        if (tmpJsonObject.meetingRecordFileList.length > 0)
+                            meetingRecordFilesTable.fnAddData(tmpJsonObject.meetingRecordFileList);
+                    }
+                });
+            }
+        }
+    }
 
     var handleDatePickers = function () {
         $("#messageNoticeTime,#meetingStartTime,#meetingEndTime,#meetingProposeTime").datetimepicker({
@@ -219,21 +251,25 @@ var meetingEdit = function () {
                 var meetingId = $('input[name="meetingId"]').val();
                 var obj = [];
                 // 隐藏域赋值
-                $('input[name="employeeId"]').val("B1B573CA788041688384814FFD286D3F");
+                $('input[name="employeeId"]').val("AFB8BA86F3394642939F3FF6848CA85D");
                 var addData = DomUtil.getJSONObjectFromForm('createMeetingForm', null);
                 // 添加会议记录附件表格记录
                 var tmpMeetingRecordFileList = [];
                 var tmpMeetingRecordFilesTableNodes = meetingRecordFilesTable.fnGetNodes();
                 for(var i = 0; i < tmpMeetingRecordFilesTableNodes.length; i++) {
                     var tmpAttachmentId = meetingRecordFilesTable.fnGetData(tmpMeetingRecordFilesTableNodes[i]).attachmentId;
-                    tmpMeetingRecordFileList.push(tmpAttachmentId);
+                    var tmpAttachmentDTO = {};
+                    tmpAttachmentDTO.attachmentId = tmpAttachmentId;
+                    tmpMeetingRecordFileList.push(tmpAttachmentDTO);
                 }
                 // 添加会议附件表格记录
                 var tmpMeetingFileList = [];
                 var tmpMeetingFilesTableNodes = meetingFilesTable.fnGetNodes();
                 for(var i = 0; i < tmpMeetingFilesTableNodes.length; i++) {
                     var tmpAttachmentId = meetingFilesTable.fnGetData(tmpMeetingFilesTableNodes[i]).attachmentId;
-                    tmpMeetingFileList.push(tmpAttachmentId);
+                    var tmpAttachmentDTO = {};
+                    tmpAttachmentDTO.attachmentId = tmpAttachmentId;
+                    tmpMeetingFileList.push(tmpAttachmentDTO);
                 }
                 addData.meetingRecordFileList = tmpMeetingRecordFileList;
                 addData.meetingFileList = tmpMeetingFileList;
@@ -337,7 +373,7 @@ var meetingEdit = function () {
             { "sTitle": "附件ID", "mData": "attachmentId","bVisible":false},
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
-            { "sTitle": "上传部门", "mData": "employeeDepartmentName"},
+            { "sTitle": "上传部门", "mData": "departmentName"},
             { "sTitle": "上传时间", "mData": "attachmentCreateTime"}//,
 //            { "sTitle": "操作"}
         ];
@@ -347,7 +383,7 @@ var meetingEdit = function () {
             { "sTitle": "附件ID", "mData": "attachmentId","bVisible":false},
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
-            { "sTitle": "上传部门", "mData": "employeeDepartmentName"},
+            { "sTitle": "上传部门", "mData": "departmentName"},
             { "sTitle": "上传时间", "mData": "attachmentCreateTime"}//,
 //            { "sTitle": "操作"}
         ];
@@ -375,11 +411,10 @@ var meetingEdit = function () {
                     }
                 }*/
             ]
-            //,
 //            "ajax": {
 //                type:"POST",
 //                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                    ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
+//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingAttachmentInfoByMeetingId',jsonString:MyJsonUtil.obj2str(meetingFilesTableObj)}),
 //                dataType:"json",
 //                success:function(data) {
 //                    meetingFilesTable.fnClearTable();
@@ -411,11 +446,10 @@ var meetingEdit = function () {
                  }
                  }*/
             ]
-            //,
 //            "ajax": {
 //                type:"POST",
 //                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                    ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
+//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingAttachmentInfoByMeetingId',jsonString:null}),
 //                dataType:"json",
 //                success:function(data) {
 //                    meetingFilesTable.fnClearTable();
@@ -578,15 +612,13 @@ var meetingEdit = function () {
                     }
                 }
             }).on('fileuploaddone',function (e, data) {
-                var date = new Date();
-                var createTime =date.getFullYear()+"年"+(date.getMonth()+1)+"月"+date.getDate()+"日 " +date.getHours()+":"+date.getMinutes();
                 var tmpFileData = data.result.files[0];
                 var tempAttachmentObject = {};
                 tempAttachmentObject.attachmentId = tmpFileData.id;
                 tempAttachmentObject.attachmentName = tmpFileData.name;
                 tempAttachmentObject.employeeName = "曾庆越";
-                tempAttachmentObject.employeeDepartmentName = "科技部";
-                tempAttachmentObject.attachmentCreateTime = createTime;
+                tempAttachmentObject.departmentName = "科技部";
+                tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");
                 tempAttachmentObject.attachmentId = tmpFileData.id;
                 meetingRecordFilesTable.fnAddData(tempAttachmentObject);
             });
@@ -602,7 +634,7 @@ var meetingEdit = function () {
                         type:'post',
                         dataType:"json",
                         url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                            ,proxyClass:'attachmentController',proxyMethod:'deleteTempAttachmentFileById',
+                            ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
                             jsonString:MyJsonUtil.obj2str(obj)}),
                         success :function(result)
                         {
@@ -635,20 +667,15 @@ var meetingEdit = function () {
                 }
             }
         }).on('fileuploaddone',function (e, data) {
-            var date = new Date();
-            var createTime =date.getFullYear()+"年"+(date.getMonth()+1)+"月"+date.getDate()+"日 " +date.getHours()+":"+date.getMinutes();
             var tmpFileData = data.result.files[0];
             var tempAttachmentObject = {};
             tempAttachmentObject.attachmentId = tmpFileData.id;
             tempAttachmentObject.attachmentName = tmpFileData.name;
             tempAttachmentObject.employeeName = "曾庆越";
-            tempAttachmentObject.employeeDepartmentName = "科技部";
-            tempAttachmentObject.attachmentCreateTime = createTime;
+            tempAttachmentObject.departmentName = "科技部";
+            tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");;
             tempAttachmentObject.attachmentId = tmpFileData.id;
             meetingFilesTable.fnAddData(tempAttachmentObject);
-//            var tmpTableNodes = meetingFilesTable.fnGetNodes();
-//            for(var i = 0; i < tmpTableNodes.length; i++)
-//                console.log(meetingFilesTable.fnGetData(tmpTableNodes[i]));//fnGetData获取一行的数据
         });
 
         $('#meetingFileDeleteBtn').on('click', function (e) {
@@ -662,7 +689,7 @@ var meetingEdit = function () {
                         type:'post',
                         dataType:"json",
                         url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                            ,proxyClass:'attachmentController',proxyMethod:'deleteTempAttachmentFileById',
+                            ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
                             jsonString:MyJsonUtil.obj2str(obj)}),
                         success :function(result)
                         {
@@ -680,6 +707,7 @@ var meetingEdit = function () {
 
     return {
         init: function () {
+
             handleSelect2();
             handleTree();
             handleForm();
@@ -687,6 +715,7 @@ var meetingEdit = function () {
 //            handleTimePickers();
             handleTable();
             handleButton();
+            handlePageInfo();
         }
     };
 }();

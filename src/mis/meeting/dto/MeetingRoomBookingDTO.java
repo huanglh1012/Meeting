@@ -1,9 +1,13 @@
 package mis.meeting.dto;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.stereotype.Component;
 
+import ecp.bsp.system.commons.utils.jackson.deserilizer.JsonDateDeSerializer;
+import ecp.bsp.system.commons.utils.jackson.serializer.JsonDateSerializer;
 import ecp.bsp.system.core.BaseDTO;
 
 @Component
@@ -12,8 +16,12 @@ public class MeetingRoomBookingDTO extends BaseDTO {
 	private String meetingRoomAddress;
 	private String meetingId;
 	private String meetingSubject;
-	private Timestamp meetingStartTime;
-	private Timestamp meetingEndTime;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date meetingStartTime;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date meetingEndTime;
 	private String employeeId;
 	private String employeeName;
 	private String departmentId;
@@ -42,16 +50,16 @@ public class MeetingRoomBookingDTO extends BaseDTO {
 	public void setMeetingSubject(String meetingSubject) {
 		this.meetingSubject = meetingSubject;
 	}
-	public Timestamp getMeetingStartTime() {
+	public Date getMeetingStartTime() {
 		return meetingStartTime;
 	}
-	public void setMeetingStartTime(Timestamp meetingStartTime) {
+	public void setMeetingStartTime(Date meetingStartTime) {
 		this.meetingStartTime = meetingStartTime;
 	}
-	public Timestamp getMeetingEndTime() {
+	public Date getMeetingEndTime() {
 		return meetingEndTime;
 	}
-	public void setMeetingEndTime(Timestamp meetingEndTime) {
+	public void setMeetingEndTime(Date meetingEndTime) {
 		this.meetingEndTime = meetingEndTime;
 	}
 	public String getEmployeeId() {

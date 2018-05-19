@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import ecp.bsp.system.commons.utils.jackson.deserilizer.JsonDateDeSerializer;
 import ecp.bsp.system.commons.utils.jackson.serializer.JsonDateSerializer;
 import ecp.bsp.system.core.BaseDTO;
+import ecp.bsp.system.framework.file.data.dto.AttachmentDTO;
 import ecp.bsp.system.framework.query.data.dto.DtoField2QueryField;
 import ecp.bsp.system.framework.query.data.dto.ModelEntityAnnotation;
 
@@ -69,8 +70,9 @@ public class MeetingDTO extends BaseDTO {
 	private String meetingParticipantDepartmentId;
 	private String meetingParticipantDepartmentName;
 	private String meetingParticipants;
-	private List<String> meetingRecordFileList;
-	private List<String> meetingFileList;
+	private String meetingParticipantNames;
+	private List<AttachmentDTO> meetingRecordFileList;
+	private List<AttachmentDTO> meetingFileList;
 	private List<MeetingMemberRfDTO> meetingMemberList;
 
 	public String getMeetingId() {
@@ -203,19 +205,27 @@ public class MeetingDTO extends BaseDTO {
 		this.meetingParticipants = meetingParticipants;
 	}
 
-	public List<String> getMeetingRecordFileList() {
+	public String getMeetingParticipantNames() {
+		return meetingParticipantNames;
+	}
+
+	public void setMeetingParticipantNames(String meetingParticipantNames) {
+		this.meetingParticipantNames = meetingParticipantNames;
+	}
+
+	public List<AttachmentDTO> getMeetingRecordFileList() {
 		return meetingRecordFileList;
 	}
 
-	public void setMeetingRecordFileList(List<String> meetingRecordFileList) {
+	public void setMeetingRecordFileList(List<AttachmentDTO> meetingRecordFileList) {
 		this.meetingRecordFileList = meetingRecordFileList;
 	}
 
-	public List<String> getMeetingFileList() {
+	public List<AttachmentDTO> getMeetingFileList() {
 		return meetingFileList;
 	}
 
-	public void setMeetingFileList(List<String> meetingFileList) {
+	public void setMeetingFileList(List<AttachmentDTO> meetingFileList) {
 		this.meetingFileList = meetingFileList;
 	}
 

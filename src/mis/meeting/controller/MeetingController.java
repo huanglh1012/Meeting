@@ -57,15 +57,10 @@ public class MeetingController  {
 	 * 
 	 * @param inMeetingDTO
 	 * 			会议信息
-	 * @param inMeetingSummaryFiles
-	 * 			会议纪要文件信息
-	 * @param inMeetingFiles
-	 * 			会议附件信息
 	 * @return
 	 * 			返回会议更改情况
 	 */
-	@SuppressWarnings("rawtypes")
-	public Object updateMeeting(MeetingDTO inMeetingDTO, List inMeetingSummaryFiles, List inMeetingFiles) {
+	public Object updateMeeting(MeetingDTO inMeetingDTO) {
 		ActionResult result = null;	
 		AjaxResult ajaxResult = new AjaxResult();
 		try {
@@ -152,6 +147,30 @@ public class MeetingController  {
 	}
 	
 	/**
+	 * 删除附件信息
+	 * 
+	 * @param inAttachmentId
+	 *     附件ID
+	 * @return
+	 *     返回会议信息删除情况
+	 */
+	public AjaxResult deleteAttachmentByAttachmentId(String inAttachmentId) {
+		ActionResult result = null;	
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		try {
+			result = this.meetingService.deleteAttachmentByAttachmentId(inAttachmentId);
+			ajaxResult.setSuccess(result.getIsSuccessful());
+			ajaxResult.setMsg(result.getActionResultMessage());
+		} catch (Exception e) {
+			ajaxResult.setSuccess(false);
+			ajaxResult.setMsg(e.getMessage());
+		}	
+		
+		return ajaxResult;
+	}
+	
+	/**
 	 * 根据会议ID获取会议信息
 	 * 
 	 * @param inMeetingId
@@ -162,6 +181,21 @@ public class MeetingController  {
 	 */
 	public Object getMeetingInfoById(String inMeetingId) throws Exception {
 		return this.meetingService.getMeetingInfoById(inMeetingId);
+	}
+	
+	/**
+	 * 根据会议ID获取会议附件信息
+	 * 
+	 * @param inMeetingId
+	 *     会议ID
+	 * @param inAttachmentCategoryId
+	 *     会议附件类型ID
+	 * @return
+	 *     返回会议附件信息
+	 * @throws Exception 
+	 */
+	public Object getMeetingAttachmentInfoByMeetingId(String inMeetingId, String inAttachmentCategoryId) throws Exception {
+		return this.meetingService.getMeetingAttachmentInfoByMeetingId(inMeetingId,inAttachmentCategoryId);
 	}
 	
 	/**

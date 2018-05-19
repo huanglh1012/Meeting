@@ -115,6 +115,7 @@ var searchCommon = function () {
     // 初始化数据源非来自远程的select2插件，主要针对input[data-url]元素
     function _initLocalSearchSelector ($select2Container, datas, disabled) { // items为数组，下拉列表项
         datas = (datas instanceof Array || datas instanceof Object ? datas : (typeof searchCommon.select2InitValue[datas] === "function" ? searchCommon.select2InitValue[datas](this) : searchCommon.select2InitValue[datas]));
+        console.log(searchCommon.select2InitValue);
         $select2Container.select2($.extend({
             width: "100%",
             multiple: true,
@@ -324,6 +325,53 @@ var searchCommon = function () {
                         }
                         queryConditions.push(obj);
                     }
+                });
+                $("div[data-moda]").each(function(i, dom) {
+                    var fieldName = $(this).attr("name");
+                    var obj = {};
+                    obj.isLike = true;
+                    obj.isRaw = false;
+                    obj.isEntityField = true;
+                    obj.isCaseSensitive = false;
+                    obj.fieldName = fieldName;
+
+                    if ($(this).data('type') === "date") {
+                        var startFieldName = fieldName + "DateStart";
+                        var endFieldName = fieldName + "DateEnd";
+                        var myStartFieldValue = $('input[name=' + startFieldName + ']').val();
+                        var myEndFieldValue = $('input[name=' + endFieldName + ']').val();
+                        if(myStartFieldValue != "" || myEndFieldValue != ""){
+                            if(myStartFieldValue != "" && myEndFieldValue != ""){
+                                myStartFieldValue += ' 00:00:00';
+                                myEndFieldValue += ' 23:59:59';
+                            }else if(myEndFieldValue=="" ){
+                                myEndFieldValue = myStartFieldValue + ' 23:59:59';
+                                myStartFieldValue += ' 00:00:00';
+                            }else {
+                                myStartFieldValue = myEndFieldValue + ' 00:00:00';
+                                myEndFieldValue += ' 23:59:59';
+                            }
+                            obj.type = "date";
+                            obj.startDate = myStartFieldValue;
+                            obj.endDate = myEndFieldValue;
+                        } else if ($(this).data('type') === "int") {
+                            var startFieldName = fieldName + "NumStart";
+                            var endFieldName = fieldName + "NumEnd";
+                            var myStartNumberValue = $('input[name=' + startFieldName + ']').val();
+                            var myEndNumberValue = $('input[name=' + endFieldName + ']').val();
+                            if (myStartNumberValue != "" || myEndNumberValue != "") {
+                                if (myStartNumberValue == "") {
+                                    myStartNumberValue = myEndNumberValue;
+                                } else if(myEndNumberValue == ""){
+                                    myEndNumberValue = myStartNumberValue;
+                                }
+                                obj.type = "int";
+                                obj.startIntNumber = myStartNumberValue;
+                                obj.endIntNumber = myEndFieldValue;
+                            }
+                        }
+                    }
+                    queryConditions.push(obj);
                 });
             }
 

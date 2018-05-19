@@ -34,8 +34,6 @@ var userEdit = function () {
                 });
             }
         }
-
-
     }
 
     var handleSelect2 = function () {

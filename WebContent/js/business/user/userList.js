@@ -103,6 +103,20 @@ var userList = function () {
                         }
                     }
                 });
+            } else {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请选择需要删除的用户信息',
+                    callback: function() {
+                    },
+                    title: "错误提示"
+                });
             }
         });
     }

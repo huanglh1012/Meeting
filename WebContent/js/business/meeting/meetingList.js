@@ -16,20 +16,76 @@ var meetingList = function () {
     var selectTr = null;
 
     var handleSelect2 = function () {
-        $('input[name="meetingCreator"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
-        $('input[name="meetingParticipant"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
-        $('input[name="meetingPresenter"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
+        var meetingStateData = [{
+            "id": "0",
+            "text": "已发起"
+        }, {
+            "id": "1",
+            "text": "已结束"
+        }];
 
-        $('input[name="meetingCreatorDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
-        $('input[name="meetingParticipantDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+        $('input[name="meetingStateId"]').select2({
+            allowClear:true,
+            width:'100%',
+            data:meetingStateData
+        });
 
-        $('input[name="meetingRoomId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'meetingController',proxyMethod:'getMeetingRoomList',jsonString:null});
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'meetingController',proxyMethod:'getMeetingRoomList',jsonString:null}),
+            success:function(result){
+                $('input[name="meetingRoomId"]').select2({
+                    multiple: true,
+                    allowClear:true,
+                    width:'100%',
+                    data:result
+                });
+            }
+        });
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null}),
+            success:function(result){
+                $('input[name="meetingCreator"],input[name="meetingParticipant"],input[name="meetingPresenter"]').select2({
+                    multiple: true,
+                    allowClear:true,
+                    width:'100%',
+                    data:result
+                });
+            }
+        });
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null}),
+            success:function(result){
+                $('input[name="meetingCreatorDepartmentId"],input[name="meetingParticipantDepartmentId"]').select2({
+                    multiple: true,
+                    allowClear:true,
+                    width:'100%',
+                    data:result
+                });
+            }
+        });
+//        $('input[name="meetingCreator"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
+//        $('input[name="meetingParticipant"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
+//        $('input[name="meetingPresenter"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
+//
+//        $('input[name="meetingCreatorDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+//        $('input[name="meetingParticipantDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+
+//        $('input[name="meetingRoomId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'meetingController',proxyMethod:'getMeetingRoomList',jsonString:null});
     }
 
     var handleButton = function () {
@@ -96,6 +152,20 @@ var meetingList = function () {
                         }
                     }
                 });
+            } else {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请选择需要关闭的会议信息',
+                    callback: function() {
+                    },
+                    title: "错误提示"
+                });
             }
         });
 
@@ -141,6 +211,20 @@ var meetingList = function () {
                             });
                         }
                     }
+                });
+            } else {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请选择需要删除的会议信息',
+                    callback: function() {
+                    },
+                    title: "错误提示"
                 });
             }
         });
@@ -191,11 +275,22 @@ var meetingList = function () {
                 data: $.proxy(searchCommon.setDatatableData, searchCommon)
             }
         });
+
+        $('#dt_issues tbody').on('click','tr', function () {
+            if ($(this).hasClass("highlight")){
+                $(this).removeClass("highlight");
+                selectTr = null;
+            } else {
+                oTable.$('tr.highlight').removeClass("highlight");
+                $(this).addClass("highlight");
+                selectTr = oTable.fnGetData(this);
+            }
+        });
     }
 
     return {
         _select2InitValue: {
-            meetingStatusId: [{
+            meetingStateId: [{
                 "id": "0",
                 "text": "已发起"
             }, {
@@ -206,11 +301,11 @@ var meetingList = function () {
         init: function () {
             handleButton();
             handleSelect2();
-            searchCommon.select2InitValue = this._select2InitValue;
+//            searchCommon.select2InitValue = handleSelect2();
             searchCommon.tableAjaxParam.proxyClass = "meetingController";
             searchCommon.tableAjaxParam.proxyMethod = "getMeetingListByCondition";
             searchCommon.bindingSearchEvent();
-            searchCommon.init();
+//            searchCommon.init();
             common.loadDatatableSettings();
             handleDatePicker();
             handleTable();

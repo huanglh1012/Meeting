@@ -3,8 +3,12 @@ package ecp.bsp.system.framework.file.data.dto;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.stereotype.Component;
 
+import ecp.bsp.system.commons.utils.jackson.deserilizer.JsonDateDeSerializer;
+import ecp.bsp.system.commons.utils.jackson.serializer.JsonDateSerializer;
 import ecp.bsp.system.core.BaseDTO;
 
 /**
@@ -46,6 +50,8 @@ public class AttachmentDTO extends BaseDTO {
 	/**
 	 * 闄勪欢鍒涘缓鏃堕棿
 	 */
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
 	private Date attachmentCreateTime;
 	/**
 	 * 闄勪欢绫诲瀷
@@ -58,6 +64,12 @@ public class AttachmentDTO extends BaseDTO {
 	/**
 	 * 闄勪欢涓婁紶浜�	 */
 	private String employeeId;
+	/**
+	 * 闄勪欢涓婁紶浜�	 */
+	private String employeeName;
+	/**
+	 * 闄勪欢涓婁紶浜�	 */
+	private String departmentName;
 	/**
 	 * 闄勪欢鍒楄〃
 	 */
@@ -134,6 +146,18 @@ public class AttachmentDTO extends BaseDTO {
 	}
 	public void setAttachmentList(List<AttachmentDTO> attachmentList) {
 		this.attachmentList = attachmentList;
+	}
+	public String getEmployeeName() {
+		return employeeName;
+	}
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
 	}
 	
 }

@@ -17,6 +17,11 @@
     <!-- Date Picker -->
     <link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
+    <style>
+        .datatable tr .highlight {
+            background-color: #87cefa;
+        }
+    </style>
 </head>
 <body>
     <!-- Left panel : Navigation area -->
@@ -66,23 +71,28 @@
                                                             <a href="javascript:;" data-last-value="meetingCreator" data-multi="true">发起人</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="meetingPresenter" data-multi="true">主持人</a>
+                                                            <!--<a href="javascript:;" data-last-value="meetingPresenter" data-multi="true">主持人</a>-->
                                                         </li>
                                                         <li>
                                                             <a href="javascript:;" data-last-value="meetingRoomId" data-multi="true">会议地点</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:;" data-last-value="meetingStateId" data-multi="true">会议状态</a>
                                                         </li>
                                                     </ul>
                                                 </div>
                                                 <input class="form-control" type="text" placeholder="会议主题"  name="meetingSubject" data-keyup="true">
 
-                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                <input class="hidden" name="meetingCreatorDepartmentId" type="hidden" placeholder="发起部门" data-url="">
+                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                <input class="hidden" name="meetingCreatorDepartmentId" type="hidden" placeholder="发起部门" data-srcccc="local">
 
-                                                <input class="hidden" name="meetingCreator" type="hidden" placeholder="发起人" data-url="">
+                                                <input class="hidden" name="meetingCreator" type="hidden" placeholder="发起人" data-srcccc="local">
 
-                                                <input class="hidden" name="meetingPresenter" type="hidden" placeholder="主持人" data-url="">
+                                                <!--<input class="hidden" name="meetingPresenter" type="hidden" placeholder="主持人" data-srcccc="local">-->
 
-                                                <input class="hidden" name="meetingRoomId" type="hidden" placeholder="会议地点"  data-url="">
+                                                <input class="hidden" name="meetingRoomId" type="hidden" placeholder="会议地点"  data-srcccc="local">
+
+                                                <input class="hidden" name="meetingStateId" type="hidden" placeholder="会议状态"  data-srcccc="local">
 
         	                                    <div class="input-group-btn">
         	                                      <button id="btn-simple-search" type="button" class="btn btn-primary">
@@ -114,22 +124,22 @@
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                                <input name="meetingCreatorDepartmentId" type="hidden" placeholder="发起部门" data-moda="combination" data-url="" data-type="checkbox">
+                                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingCreatorDepartmentId" type="hidden" placeholder="发起部门" data-moda="combination" data-srcccc="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                                <input name="meetingCreator" type="hidden" placeholder="发起人" data-moda="combination" data-url="" data-type="checkbox">
+                                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingCreator" type="hidden" placeholder="发起人" data-moda="combination" data-srcccc="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin: 0;">
-                                                        <div class="col-sm-6 col-md-4 col-lg-4">
+                                                        <div class="col-sm-6 col-md-4 col-lg-4" data-type="date" data-moda="combination" name="meetingStartTime">
                                                             <div class="col-sm-5 col-md-5 col-lg-5"   style="padding: 0;">
                                                                 <div class="form-group">
-                                                                    <input id="meetingStartTime" type="text" placeholder="会议时间" class="form-control input-sm" name="meetingStartTime" data-type="date" data-moda="combination">
+                                                                    <input id="meetingStartTime" type="text" placeholder="会议开始时间" class="form-control input-sm" name="meetingStartTimeDateStart" >
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-2 col-md-2 col-lg-2"  style="padding-top: 5px;">
@@ -141,36 +151,36 @@
                                                             </div>
                                                             <div class="col-sm-5 col-md-5 col-lg-5" style="padding: 0;">
                                                                 <div class="form-group">
-                                                                    <input id="meetingEndTime" type="text" placeholder="会议时间" class="form-control input-sm" name="meetingStartTime" data-type="date" data-moda="combination">
+                                                                    <input id="meetingEndTime" type="text" placeholder="会议开始时间" class="form-control input-sm" name="meetingStartTimeDateEnd">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                                <input name="meetingPresenter" type="hidden" placeholder="主持人" data-moda="combination" data-url="" data-type="checkbox">
+                                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingPresenter" type="hidden" placeholder="主持人" data-moda="combination" data-srcccc="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-12 col-md-8 col-lg-8">
                                                             <div class="form-group">
-                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                                <input name="meetingRoomId" type="hidden" placeholder="会议地点" data-moda="combination" data-url="" data-type="checkbox">
+                                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingRoomId" type="hidden" placeholder="会议地点" data-moda="combination" data-srcccc="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                                <input name="meetingParticipantDepartmentId" type="hidden" placeholder="参会部门" data-moda="combination" data-url="" data-type="checkbox">
+                                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingParticipantDepartmentId" type="hidden" placeholder="参会部门" data-moda="combination" data-srcccc="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                                <input name="meetingParticipant" type="hidden" placeholder="参会人员" data-moda="combination" data-url="" data-type="checkbox">
+                                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingParticipant" type="hidden" placeholder="参会人员" data-moda="combination" data-srcccc="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -182,8 +192,8 @@
                                                         </div>
                                                         <div class="col-sm-6 col-md-4 col-lg-4">
                                                             <div class="form-group">
-                                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-                                                                <input name="meetingStatusId" type="hidden" placeholder="会议状态" data-moda="combination" data-src="local" data-type="checkbox">
+                                                                <!--请保留name="status"和data-srcccc="local", data-src属性指示数据来源于本地-->
+                                                                <input name="meetingStateId" type="hidden" placeholder="会议状态" data-moda="combination" data-srcccc="local" data-type="checkbox">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -211,7 +221,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="well">
                         <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
-                            <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
+                            <a href='#' class="btn btn-primary btn-sm pull-right" >
                                 <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" id="closeMeetingBtn">结束会议</span>
                             </a>
                             <a href='#' class="btn btn-success btn-sm pull-right" >
@@ -220,7 +230,7 @@
                             <a href='#' class="btn btn-warning btn-sm pull-right" >
                                 <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" id="modifyMeetingBtn">编辑会议</span>
                             </a>
-                            <a href='#' class="btn btn-primary btn-sm pull-right" >
+                            <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
                                 <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">发起会议</span>
                             </a>
                             <!--<div class="btn-group hidden-phone pull-right">-->

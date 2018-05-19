@@ -176,10 +176,10 @@ var meetingRoomList = function () {
             { "sTitle": "会议室地址", "mData": "meetingRoomAddress","type":"string"}
         ];
         var tmpMeetingRoomBookingListTableHead = [
-            { "sTitle": "开始时间","mData": "meetingSubject","type" :"string" },
-            { "sTitle": "结束时间", "mData": "meetingRoomAddress","type":"string"},
-            { "sTitle": "发起人","mData": "proposer","type" :"string" },
-            { "sTitle": "发起部门", "mData": "proposeDepartment","type":"string"}
+            { "sTitle": "开始时间","mData": "meetingStartTime","type" :"string" },
+            { "sTitle": "结束时间", "mData": "meetingEndTime","type":"string"},
+            { "sTitle": "发起人","mData": "employeeName","type" :"string" },
+            { "sTitle": "发起部门", "mData": "departmentName","type":"string"}
         ];
 
         meetingRoomTable = $('#meetingRoomList').dataTable({
@@ -240,8 +240,10 @@ var meetingRoomList = function () {
                     }),
                     dataType: "json",
                     success: function (result) {
-                        meetingRoomBookingTable.fnClearTable();
-                        meetingRoomBookingTable.fnAddData(result);
+                        if (result.length > 0) {
+                            meetingRoomBookingTable.fnClearTable();
+                            meetingRoomBookingTable.fnAddData(result);
+                        }
                     }
                 });
             }
