@@ -37,6 +37,13 @@ public class MeetingConstant {
 	.toString();
 	
 	public static final String SQL_GET_MEETING_ATTACHMENT_LIST_BY_CONDITION = new StringBuilder("")
+	.append(" SELECT B.*,C.ATTACHMENT_ID,C.ATTACHMENT_NAME,C.ATTACHMENT_PATH,D.EMPLOYEE_ID,D.EMPLOYEE_NAME,E.DEPARTMENT_ID,E.DEPARTMENT_NAME,F.MEETING_STATE_NAME ") 
+	.append(" FROM MEETING_ATTACHMENT A,MEETING B,ATTACHMENT C,EMPLOYEE D,DEPARTMENT E, MEETING_STATE F ")
+	.append(" WHERE A.MEETING_ID = B.MEETING_ID ")
+	.append(" AND A.ATTACHMENT_ID = C.ATTACHMENT_ID ")
+	.append(" AND C.EMPLOYEE_ID = D.EMPLOYEE_ID ")
+	.append(" AND D.DEPARTMENT_ID = E.DEPARTMENT_ID ")
+	.append(" AND B.MEETING_STATE_ID = F.MEETING_STATE_ID ")
 	.toString();
 	
 	public static final String SQL_GET_MEETING_ATTACHMENT_LIST_BY_MEETING_ID = new StringBuilder("")
@@ -74,9 +81,20 @@ public class MeetingConstant {
 	.append(" AND A.MEETING_STATE_ID = C.MEETING_STATE_ID ")
 	.toString();
 	
-	public static final String SQL_GET_MEETING_INFO_BY_EMPLOYEE_ID = new StringBuilder("SELECT * FROM (")
+	public static final String SQL_GET_MEETING_INFO_BY_MEETING_ID = new StringBuilder("SELECT * FROM (")
 	.append(SQL_GET_MEETING_LIST_BY_CONDITION)
 	.append(") A WHERE A.MEETING_ID = ?")
 	.toString();
 
+	public static final String SQL_GET_CREATOR_MEETING_INFO_BY_EMPLOYEE_ID = new StringBuilder("SELECT * FROM (")
+	.append(SQL_GET_MEETING_LIST_BY_CONDITION)
+	.append(") A WHERE A.MEETING_CREATOR = ?")
+	.toString();
+	
+	public static final String SQL_GET_PARTICIPANT_MEETING_INFO_BY_EMPLOYEE_ID = new StringBuilder("SELECT DISTINCT A.* FROM (")
+	.append(SQL_GET_MEETING_LIST_BY_CONDITION)
+	.append(") A, MEETING_MEMBER_RF B ")
+	.append(" WHERE A.MEETING_ID = B.MEETING_ID ")
+	.append(" AND B.EMPLOYEE_ID = ? ")
+	.toString();
 }

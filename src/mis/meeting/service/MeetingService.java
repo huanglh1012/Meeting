@@ -329,6 +329,30 @@ public class MeetingService extends BaseService {
 		return tmpMeetingDTO;
 	}
 	
+	/**
+	 * 根据用户ID获取用户参与的会议列表
+	 * 
+	 * @param inEmployeeId
+	 * 			用户ID
+	 * @return
+	 * 			返回用户参与的会议列表
+	 */
+	public List<MeetingDTO> getParticipantMeetingByEmployeeId(String inEmployeeId) {
+		return this.meetingDAO.getParticipantMeetingByEmployeeId(inEmployeeId);
+	}
+	
+	/**
+	 * 根据用户ID获取用户发起的会议列表
+	 * 
+	 * @param inEmployeeId
+	 * 			用户ID
+	 * @return
+	 * 			返回用户发起的会议列表
+	 */
+	public List<MeetingDTO> getCreatorMeetingByEmployeeId(String inEmployeeId) {
+		return this.meetingDAO.getCreatorMeetingByEmployeeId(inEmployeeId);
+	}
+	
 	public List<AttachmentDTO> getMeetingAttachmentInfoByMeetingId(String inMeetingId, String inAttachmentCategoryId) throws Exception {
 		return this.meetingDAO.getMeetingAttachmentInfoByMeetingId(inMeetingId,inAttachmentCategoryId);
 	}

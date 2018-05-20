@@ -47,9 +47,35 @@ public class MeetingDAO extends BaseDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public MeetingDTO getMeetingInfoById(String inMeetingId) throws Exception {
-		List<MeetingDTO> tmpMeetingDTOist = (List<MeetingDTO>) this.query(MeetingConstant.SQL_GET_MEETING_INFO_BY_EMPLOYEE_ID, 
+		List<MeetingDTO> tmpMeetingDTOist = (List<MeetingDTO>) this.query(MeetingConstant.SQL_GET_MEETING_INFO_BY_MEETING_ID, 
 				new Object[] {inMeetingId}, MeetingDTO.class);
 		return tmpMeetingDTOist.size() > 0 ? tmpMeetingDTOist.get(0) : null;
+	}
+	
+	/**
+	 * 根据用户ID获取用户发起的会议列表
+	 * 
+	 * @param inEmployeeId
+	 * 			用户ID
+	 * @return
+	 * 			返回用户发起的会议列表
+	 */
+	@SuppressWarnings("unchecked")
+	public List<MeetingDTO> getCreatorMeetingByEmployeeId(String inEmployeeId) {
+		return (List<MeetingDTO>) this.query(MeetingConstant.SQL_GET_CREATOR_MEETING_INFO_BY_EMPLOYEE_ID, new Object[] {inEmployeeId}, MeetingDTO.class);
+	}
+	
+	/**
+	 * 根据用户ID获取用户参与的会议列表
+	 * 
+	 * @param inEmployeeId
+	 * 			用户ID
+	 * @return
+	 * 			返回用户擦米的会议列表
+	 */
+	@SuppressWarnings("unchecked")
+	public List<MeetingDTO> getParticipantMeetingByEmployeeId(String inEmployeeId) {
+		return (List<MeetingDTO>) this.query(MeetingConstant.SQL_GET_PARTICIPANT_MEETING_INFO_BY_EMPLOYEE_ID, new Object[] {inEmployeeId}, MeetingDTO.class);
 	}
 	
 	/**

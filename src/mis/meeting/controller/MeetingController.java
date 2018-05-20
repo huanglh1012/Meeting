@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import mis.meeting.constant.MeetingConstant;
+import mis.meeting.dto.MeetingAttachmentDTO;
 import mis.meeting.dto.MeetingDTO;
 import mis.meeting.dto.MeetingRoomDTO;
 import mis.meeting.service.MeetingService;
@@ -183,6 +184,31 @@ public class MeetingController  {
 		return this.meetingService.getMeetingInfoById(inMeetingId);
 	}
 	
+	
+	/**
+	 * 根据用户ID获取用户参与的会议列表
+	 * 
+	 * @param inEmployeeId
+	 * 			用户ID
+	 * @return
+	 * 			返回用户参与的会议列表
+	 */
+	public Object getParticipantMeetingByEmployeeId(String inEmployeeId) {
+		return (List<MeetingDTO>) this.meetingService.getParticipantMeetingByEmployeeId(inEmployeeId);
+	}
+	
+	/**
+	 * 根据用户ID获取用户发起的会议列表
+	 * 
+	 * @param inEmployeeId
+	 * 			用户ID
+	 * @return
+	 * 			返回用户发起的会议列表
+	 */
+	public Object getCreatorMeetingByEmployeeId(String inEmployeeId) {
+		return (List<MeetingDTO>) this.meetingService.getCreatorMeetingByEmployeeId(inEmployeeId);
+	}
+	
 	/**
 	 * 根据会议ID获取会议附件信息
 	 * 
@@ -222,7 +248,7 @@ public class MeetingController  {
 	public Object getMeetingAttachmentListByCondition(List queryCondition,Integer start,Integer limit){
 		String sql = MeetingConstant.SQL_GET_MEETING_ATTACHMENT_LIST_BY_CONDITION;
 		List<DynamicGridQueryEntity> filter = PageQueryHepler.createConditions(queryCondition);
-		QueryPager queryPager = this.pageQueryService.queryList(filter, sql, start, limit, MeetingDTO.class);
+		QueryPager queryPager = this.pageQueryService.queryList(filter, sql, start, limit, MeetingAttachmentDTO.class);
 		QueryResultDTO queryResultDTO = new QueryResultDTO();
 		queryResultDTO.setRecordsTotal(queryPager.getTotalCount());
 		queryResultDTO.setRecordsFiltered((queryPager.getTotalCount()));

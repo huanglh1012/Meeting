@@ -11,5 +11,5 @@ public class MeetingEntityRegister {
 	public final static String MeetingMemberRoleEntity = "mis.meeting.entity.MeetingMemberRoleEntity";
 	public final static String MeetingRoomEntity = "mis.meeting.entity.MeetingRoomEntity";
 	public final static String MeetingStateEntity = "mis.meeting.entity.MeetingStateEntity";
-
+	public final static String AttachmentEntity = "ecp.bsp.system.framework.file.data.entity.AttachmentEntity";
 }

@@ -72,20 +72,6 @@ var meetingList = function () {
                 });
             }
         });
-//        $('input[name="meetingCreator"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
-//        $('input[name="meetingParticipant"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
-//        $('input[name="meetingPresenter"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//            ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null});
-//
-//        $('input[name="meetingCreatorDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
-//        $('input[name="meetingParticipantDepartmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
-
-//        $('input[name="meetingRoomId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//            ,proxyClass:'meetingController',proxyMethod:'getMeetingRoomList',jsonString:null});
     }
 
     var handleButton = function () {

@@ -17,6 +17,11 @@
     <!-- Date Picker -->
     <link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
+    <style>
+        .datatable tr .highlight {
+            background-color: #87cefa;
+        }
+    </style>
 </head>
 <body>
     <!-- Left panel : Navigation area -->
@@ -54,14 +59,14 @@
                     <div class="well">
                         <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
                             <span class="font-lg text-primary pull-left">我发起的会议</span>
-                            <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
-                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >结束会议</span>
+                            <a href='#' class="btn btn-primary btn-sm pull-right" >
+                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" id="closeMeetingBtn">结束会议</span>
                             </a>
-                            <a href='meeting_new.html' class="btn btn-success btn-sm pull-right" >
-                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除会议</span>
+                            <a href='#' class="btn btn-success btn-sm pull-right" >
+                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" id="deleteMeetingBtn">删除会议</span>
                             </a>
-                            <a href='meeting_new.html' class="btn btn-warning btn-sm pull-right" >
-                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >编辑会议</span>
+                            <a href='#' class="btn btn-warning btn-sm pull-right" >
+                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" id="modifyMeetingBtn">编辑会议</span>
                             </a>
                             <a href='meeting_new.html' class="btn btn-primary btn-sm pull-right" >
                                 <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">发起会议</span>
