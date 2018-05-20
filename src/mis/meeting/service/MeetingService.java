@@ -292,6 +292,7 @@ public class MeetingService extends BaseService {
 		for (MeetingMemberRfDTO subMeetingMemberRfDTO : tmpMeetingMemberRfDTOList) {
 			if (subMeetingMemberRfDTO.getMeetingMemberRoleId().equals(String.valueOf(MeetingMemberRoleEnum.MEETING_PRESENTER.ordinal()))) {
 				tmpMeetingDTO.setMeetingPresenter(subMeetingMemberRfDTO.getEmployeeId());
+				tmpMeetingDTO.setMeetingPresenterName(subMeetingMemberRfDTO.getEmployeeName());
 			} else if (subMeetingMemberRfDTO.getMeetingMemberRoleId().equals(String.valueOf(MeetingMemberRoleEnum.MEETING_PARTICIPANT.ordinal()))) {
 				if (!StringUtils.isValidateString(meetingParticipants)) {
 					meetingParticipants += "," + subMeetingMemberRfDTO.getEmployeeId();

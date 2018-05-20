@@ -354,24 +354,26 @@ var searchCommon = function () {
                             obj.type = "date";
                             obj.startDate = myStartFieldValue;
                             obj.endDate = myEndFieldValue;
-                        } else if ($(this).data('type') === "int") {
-                            var startFieldName = fieldName + "NumStart";
-                            var endFieldName = fieldName + "NumEnd";
-                            var myStartNumberValue = $('input[name=' + startFieldName + ']').val();
-                            var myEndNumberValue = $('input[name=' + endFieldName + ']').val();
-                            if (myStartNumberValue != "" || myEndNumberValue != "") {
-                                if (myStartNumberValue == "") {
-                                    myStartNumberValue = myEndNumberValue;
-                                } else if(myEndNumberValue == ""){
-                                    myEndNumberValue = myStartNumberValue;
-                                }
-                                obj.type = "int";
-                                obj.startIntNumber = myStartNumberValue;
-                                obj.endIntNumber = myEndFieldValue;
+                            queryConditions.push(obj);
+                        }
+                    } else if ($(this).data('type') === "int") {
+                        var startFieldName = fieldName + "NumStart";
+                        var endFieldName = fieldName + "NumEnd";
+                        var myStartNumberValue = $('input[name=' + startFieldName + ']').val();
+                        var myEndNumberValue = $('input[name=' + endFieldName + ']').val();
+                        if (myStartNumberValue != "" || myEndNumberValue != "") {
+                            if (myStartNumberValue == "") {
+                                myStartNumberValue = myEndNumberValue;
+                            } else if(myEndNumberValue == ""){
+                                myEndNumberValue = myStartNumberValue;
                             }
+                            obj.type = "int";
+                            obj.startIntNumber = myStartNumberValue;
+                            obj.endIntNumber = myEndFieldValue;
+                            queryConditions.push(obj);
                         }
                     }
-                    queryConditions.push(obj);
+
                 });
             }
 

@@ -272,6 +272,10 @@ var meetingList = function () {
                 selectTr = oTable.fnGetData(this);
             }
         });
+
+        $('#dt_issues tbody').on('dblclick','tr', function () {
+            window.location.href='meeting_view.html?meetingId='+ oTable.fnGetData(this).meetingId;
+        });
     }
 
     return {

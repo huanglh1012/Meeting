@@ -336,6 +336,7 @@ public class MeetingAttachmentDTO extends BaseDTO {
 		this.employeeName = employeeName;
 	}
 
+	@DtoField2QueryField(field="DEPARTMENT_ID")
 	public String getDepartmentId() {
 		return departmentId;
 	}

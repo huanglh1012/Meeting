@@ -100,7 +100,7 @@ var meetingAttachmentList = function () {
             { "sTitle": "会议时间", "mData": "meetingStartTime"},
             { "sTitle": "会议状态", "mData": "meetingStateName"}
         ];
-        var oTable =  $('#meetingAttachmentList').dataTable({
+        var oTable =  $('#dt_issues').dataTable({
             "aoColumns": tableHead,
             "serverSide": true,
             "bAutoWidth": false,

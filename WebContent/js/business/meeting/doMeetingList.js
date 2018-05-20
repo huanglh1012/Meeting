@@ -208,10 +208,6 @@ var doMeetingList = function () {
             }
         });
 
-        $('#joinMeetingList tbody').on('dbclick','tr', function () {
-
-        });
-
         creatorMeetingTable = $('#myMeetingList').dataTable({
             //表头设置
             "aoColumns": tableHead,
@@ -257,6 +253,14 @@ var doMeetingList = function () {
                 $(this).addClass("highlight");
                 creatorMeetingSelectTr = creatorMeetingTable.fnGetData(this);
             }
+        });
+
+        $('#joinMeetingList tbody').on('dblclick','tr', function () {
+            window.location.href='meeting_view.html?meetingId='+ participantMeetingTable.fnGetData(this).meetingId;
+        });
+
+        $('#myMeetingList tbody').on('dblclick','tr', function () {
+            window.location.href='meeting_view.html?meetingId='+ creatorMeetingTable.fnGetData(this).meetingId;
         });
     }
 
