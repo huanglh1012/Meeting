@@ -18,10 +18,7 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 	private String messageSendStateId;
 	private Date sendDatetime;
 	private String sendMessage;
-
-	public MessageSendCenterEntity() {
-	}
-
+	private boolean isActive;
 
 	@Id
 	@Column(name="MESSAGE_SEND_CENTER_ID", unique=true, nullable=false, length=32)
@@ -33,8 +30,7 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 		this.setId(messageSendCenterId);
 	}
 
-
-	@Column(name="MEETING_ID", nullable=false, length=32)
+	@Column(name="MEETING_ID", length=32)
 	public String getMeetingId() {
 		return this.meetingId;
 	}
@@ -42,7 +38,6 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 	public void setMeetingId(String meetingId) {
 		this.meetingId = meetingId;
 	}
-
 
 	@Column(name="MESSAGE_SEND_STATE_ID", length=32)
 	public String getMessageSendStateId() {
@@ -62,7 +57,6 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 		this.sendDatetime = sendDatetime;
 	}
 
-
 	@Lob
 	@Column(name="SEND_MESSAGE", nullable=false)
 	public String getSendMessage() {
@@ -73,4 +67,12 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 		this.sendMessage = sendMessage;
 	}
 
+	@Column(name="IS_ACTIVE", nullable=false)
+	public boolean getIsActive() {
+		return this.isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 }

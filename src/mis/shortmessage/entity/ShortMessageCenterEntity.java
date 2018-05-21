@@ -13,11 +13,10 @@ import javax.persistence.*;
 public class ShortMessageCenterEntity extends ecp.bsp.system.core.BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String shortMessageCenterId;
+	private String shortMessageCenterName;
 	private String centerPhoneNumber;
 	private String sendMessagePhoneNumber;
-
-	public ShortMessageCenterEntity() {
-	}
+	private String messageModel;
 
 
 	@Id
@@ -28,6 +27,16 @@ public class ShortMessageCenterEntity extends ecp.bsp.system.core.BaseEntity imp
 
 	public void setShortMessageCenterId(String shortMessageCenterId) {
 		this.setId(shortMessageCenterId);
+	}
+
+	@Column(name="SHORT_MESSAGE_CENTER_NAME", nullable=false, length=128)
+	public String getShortMessageCenterName() {
+		return shortMessageCenterName;
+	}
+
+
+	public void setShortMessageCenterName(String shortMessageCenterName) {
+		this.shortMessageCenterName = shortMessageCenterName;
 	}
 
 
@@ -50,4 +59,12 @@ public class ShortMessageCenterEntity extends ecp.bsp.system.core.BaseEntity imp
 		this.sendMessagePhoneNumber = sendMessagePhoneNumber;
 	}
 
+	@Column(name="MESSAGE_MODEL", nullable=false, length=1024)
+	public String getMessageModel() {
+		return messageModel;
+	}
+
+	public void setMessageModel(String messageModel) {
+		this.messageModel = messageModel;
+	}
 }

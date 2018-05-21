@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/5/16 21:15:14                           */
+/* Created on:     2018-05-21 9:39:50                           */
 /*==============================================================*/
 
 
@@ -85,7 +85,7 @@ alter table ATTACHMENT_CATEGORY comment '0：普通附件
 /*==============================================================*/
 create table ATTACHMENT_TEMP
 (
-   ATTACHMENT_ID   varchar(32) not null,
+   ATTACHMENT_ID        varchar(32) not null,
    EMPLOYEE_ID          varchar(32),
    ATTACHMENT_NAME      varchar(256) not null,
    ATTACHMENT_RENAME    varchar(256),
@@ -97,7 +97,7 @@ create table ATTACHMENT_TEMP
    ATTACHMENT_STATUS_ID varchar(32) comment '0,已删除
             1.存在',
    ATTACHMENT_SIZE      integer,
-   primary key (ATTACHMENT_TEMP_ID)
+   primary key (ATTACHMENT_ID)
 );
 
 /*==============================================================*/
@@ -146,13 +146,14 @@ create table MEETING
 (
    MEETING_ID           varchar(32) not null,
    MEETING_ROOM_ID      varchar(32) not null,
-   MEETING_STATE_ID        varchar(32) not null,
+   MEETING_STATE_ID     varchar(32) not null,
    MEETING_PROPOSE_TIME timestamp not null,
    MEETING_START_TIME   timestamp not null,
    MEETING_END_TIME     timestamp not null,
    MEETING_SUBJECT      varchar(512) not null,
    MEETING_ATTENTIONS   text,
-   MEETING_UPLOAD_END_TIME timestamp not null,
+   MEETING_UPLOAD_END_TIME timestamp,
+   IS_SEND_MESSAGE_NOTICE boolean not null,
    primary key (MEETING_ID)
 );
 
@@ -226,12 +227,17 @@ alter table MEETING_STATE comment '0：已发起
 create table MESSAGE_SEND_CENTER
 (
    MESSAGE_SEND_CENTER_ID varchar(32) not null,
-   MEETING_ID           varchar(32) not null,
+   MEETING_ID           varchar(32),
    MESSAGE_SEND_STATE_ID varchar(32),
    SEND_DATETIME        datetime not null,
    SEND_MESSAGE         text not null,
+   IS_ACTIVE            boolean not null comment '0：无效
+            1：有效
+            会议创建后置有效状态，会议被删除后，置无效状态''',
    primary key (MESSAGE_SEND_CENTER_ID)
 );
+
+alter table MESSAGE_SEND_CENTER comment '会议创建IS_ACTIVE字段置1，会议删除后，将会议外键置空，IS_ACTIVE字段置0';
 
 /*==============================================================*/
 /* Table: MESSAGE_SEND_STATE                                    */
@@ -308,6 +314,7 @@ create table SEX
 create table SHORT_MESSAGE_CENTER
 (
    SHORT_MESSAGE_CENTER_ID varchar(32) not null,
+   SHORT_MESSAGE_CENTER_NAME varchar(128) not null,
    CENTER_PHONE_NUMBER  varchar(128) not null,
    SEND_MESSAGE_PHONE_NUMBER varchar(128) not null,
    MESSAGE_MODEL        varchar(1024),

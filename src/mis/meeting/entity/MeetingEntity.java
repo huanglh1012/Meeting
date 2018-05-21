@@ -23,6 +23,7 @@ public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Ser
 	private Date meetingStartTime;
 	private String meetingSubject;
 	private Date meetingUploadEndTime;
+	private boolean isSendMessageNotice;
 	
 	public MeetingEntity() {
 	}
@@ -118,4 +119,14 @@ public class MeetingEntity extends ecp.bsp.system.core.BaseEntity implements Ser
 		this.meetingUploadEndTime = meetingUploadEndTime;
 	}
 
+	
+	@Column(name="IS_SEND_MESSAGE_NOTICE", nullable=false)
+	public boolean isSendMessageNotice() {
+		return isSendMessageNotice;
+	}
+
+	public void setSendMessageNotice(boolean isSendMessageNotice) {
+		this.isSendMessageNotice = isSendMessageNotice;
+	}
+	
 }
