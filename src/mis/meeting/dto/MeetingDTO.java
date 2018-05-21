@@ -34,7 +34,7 @@ refEntity = MeetingEntityRegister.AttachmentCategoryEntity +
             )
 @DtoField2QueryField
 public class MeetingDTO extends BaseDTO {
-	private String meetingId;
+	private String meetingId; 
 	private String meetingStateId;
 	private String meetingSubject;
 	private String meetingStateName;
