@@ -17,7 +17,7 @@ public class BrandDTO extends BaseDTO {
 	/**
 	 * 品牌ID.
 	 */
-	private String brandId;
+	private String brandId; 
 	
 	/**
 	 * 品牌名称.
