@@ -24,7 +24,7 @@ function _get(name){
 
 (function($){
     //获取当前用户任务节点
-	$.ajax({ 
+	$.ajax({
     	type:'post',
         dataType:"json",
         async: false,
@@ -34,8 +34,8 @@ function _get(name){
         	if(result.success){
         		CurrentLoginUser.data = result.msg ;
         	}else{
-        		 window.location.href='login.html';   		 
-        	}     
-        } 
+        		 window.location.href='login.html';
+        	}
+        }
     });
 })(jQuery);

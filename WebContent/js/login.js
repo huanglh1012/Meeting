@@ -43,8 +43,8 @@ var login = function () {
                     dataType:"json",
                     success:function(result) {
                         if (result.success) {
-                            console.log(result);
-                            localStorage.setItem("EmployeeDTO", result.msg.entityKeyValue);
+                            localStorage.setItem("EmployeeDTO", JSON.stringify(result.msg.entityKeyValue));
+//                            console.log(JSON.parse(localStorage.getItem("EmployeeDTO")));
 //                            $.pnotify({
 //                                text: result.msg
 //                            });
@@ -79,6 +79,9 @@ var login = function () {
     };
 
     var handleTop = function () {
+        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+        document.getElementById("loginUser").innerHTML = tmpEmployeeDTO.employeeName;
+
         initTopEvent();
         validateFrom();
 
@@ -88,14 +91,11 @@ var login = function () {
             if (localStorage.getItem("EmployeeDTO") == null)
                 window.location.href = '../../login.html';
 
-            console.log(localStorage.getItem("EmployeeDTO"));
-            $("#loginUser").text(CurrentLoginUser.data.user_fullname);
-
             // 退出登录
             $("#logout").click(function(e) {
                 // 将所有保存的数据删除
                 localStorage.clear();
-                window.location.href = '../../login.html';
+                window.location.href = '../../../login.html';
 //                localStorage.removeItem("target_nav");
 //                localStorage.removeItem("username");
 //                localStorage.removeItem("globalResources");
