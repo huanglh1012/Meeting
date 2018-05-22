@@ -203,7 +203,8 @@ var doMeetingList = function () {
                 dataType:"json",
                 success:function(data) {
                     participantMeetingTable.fnClearTable();
-                    participantMeetingTable.fnAddData(data);
+                    if (data.length > 0)
+                        participantMeetingTable.fnAddData(data);
                 }
             }
         });
@@ -239,7 +240,8 @@ var doMeetingList = function () {
                 dataType:"json",
                 success:function(data) {
                     creatorMeetingTable.fnClearTable();
-                    creatorMeetingTable.fnAddData(data);
+                    if (data.length > 0)
+                        creatorMeetingTable.fnAddData(data);
                 }
             }
         });

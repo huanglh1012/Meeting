@@ -58,14 +58,16 @@ public class SecurityService extends BaseService {
 		}
 		
 		// 密码是否正确
-		tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, new String[] {"login", "password"}, new Object[] {inLoginDTO.getLogin(), tmpPasswordMd5});
+		tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, new String[] {"login", "password"}, new Object[] {inLoginDTO.getLogin(), inLoginDTO.getPassword()});
 		if (tmpEmployeeEntity == null) {
 			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "'" + inLoginDTO.getLogin() + "'用户的密码错误";
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 			throw new RuntimeException(exceptionMessage);
 		}
 
-		return ActionResultUtil.getActionResult(inLoginDTO.getLogin(), "用户登陆成功");
+		// 获取用户信息
+		EmployeeDTO tmpEmployeeDTO = this.getEmployeeInfoById(tmpEmployeeEntity.getEmployeeId());
+		return ActionResultUtil.getActionResult(tmpEmployeeDTO, "用户登陆成功");
 	}
 	
 	/**

@@ -48,7 +48,7 @@ public class SecurityController  {
 		try {
 			result = this.securityService.login(inLoginDTO);
 			ajaxResult.setSuccess(result.getIsSuccessful());
-			ajaxResult.setMsg(result.getActionResultMessage());
+			ajaxResult.setMsg(result);
 		} catch (Exception e) {
 			ajaxResult.setSuccess(false);
 			ajaxResult.setMsg(e.getMessage());
