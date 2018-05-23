@@ -64,7 +64,7 @@ var meetingRoomList = function () {
                                     if(result.success){
                                         meetingRoomTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: '删除成功'
+                                            text: result.msg
                                         });
                                     }else{
                                         $.pnotify({
@@ -91,7 +91,7 @@ var meetingRoomList = function () {
             addData['meetingRoomId'] = meetingRoomId;
             addData['meetingRoomName'] = meetingRoomName;
             addData['meetingRoomAddress'] = meetingRoomAddress;
-            console.log(addData);
+
             if (meetingRoomName == '' || meetingRoomAddress == '') {
                 bootbox.alert({
                     className: 'span4 alert-error',
@@ -130,13 +130,15 @@ var meetingRoomList = function () {
                         });
                     },
                     success: function (result) {
-                        console.log(result);
                         if (result.success) {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
                                 $('#meetingRoomModal').modal('hide');
                                 meetingRoomTable.api().ajax.reload();
+                                $.pnotify({
+                                    text: result.msg.actionResultMessage
+                                });
                             }, 1500);
 
                         } else {

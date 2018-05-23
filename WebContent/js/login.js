@@ -44,10 +44,6 @@ var login = function () {
                     success:function(result) {
                         if (result.success) {
                             localStorage.setItem("EmployeeDTO", JSON.stringify(result.msg.entityKeyValue));
-//                            console.log(JSON.parse(localStorage.getItem("EmployeeDTO")));
-//                            $.pnotify({
-//                                text: result.msg
-//                            });
                             window.location.href='index.html';
                         } else {
                             bootbox.alert({
@@ -79,91 +75,29 @@ var login = function () {
     };
 
     var handleTop = function () {
-        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
-        document.getElementById("loginUser").innerHTML = tmpEmployeeDTO.employeeName;
-
         initTopEvent();
         validateFrom();
 
         // 初始化表单提交事件
         function initTopEvent() {
-            // 设置登录名
-            if (localStorage.getItem("EmployeeDTO") == null)
+            var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+            if (tmpEmployeeDTO == null)
                 window.location.href = '../../login.html';
+
+            // 设置登录名
+            document.getElementById("loginUser").innerHTML = tmpEmployeeDTO.employeeName;
 
             // 退出登录
             $("#logout").click(function(e) {
                 // 将所有保存的数据删除
                 localStorage.clear();
-                window.location.href = '../../../login.html';
-//                localStorage.removeItem("target_nav");
-//                localStorage.removeItem("username");
-//                localStorage.removeItem("globalResources");
-//                localStorage.removeItem("specificResources");
-//                localStorage.removeItem("roles");
-//                $.ajax({
-//                    type:'post',
-//                    dataType:"json",
-//                    url: SMController.getUrl({controller:'controllerProxy',method:'callBackByRequest',
-//                        proxyClass:'loginController',proxyMethod:'userLogout',jsonString:null}),
-//                    success:function(result){
-//                        if(result.success){
-//                            window.location.href="../login.html";
-//                        }else{
-//                            bootbox.alert({
-//                                className:'span4 alert-error',
-//                                buttons: {
-//                                    ok: {
-//                                        label: '确定',
-//                                        className: 'btn blue'
-//                                    }
-//                                },
-//                                message:result.msg,
-//                                title: "错误提示"
-//                            });
-//                        }
-//                    }
-//                });
             });
 
             // 提交表单
             $("#btn-modifiedPassword").on('click', function(e){
                 // 清除界面上的弹出框
                 clearSmallBox();
-                // 锁定，防止重复提交
-                if(!lockItms($('#btn-modifiedPassword').get(0))) {
-                    return;
-                }
-                if(!$("#password-form").valid()) {
-                    // 解锁
-                    unlockItms($('#btn-modifiedPassword').get(0));
-                    return;
-                }
-                $.ajax({
-                    url : $.url_root + '/user/changePassWord.jspa',
-                    type : 'post',
-                    dataType: "json",
-                    data : {
-                        "userDTO.password" : $("#password").val(),
-                        "userDTO.newPassword" : $("#newPassword").val()
-                    },
-                    success : function(data) {
-                        checkResult(data, {
-                            message : "密码更改成功",
-                            showBox : true,
-                            callback : function(){
-                                //修改成功后重置表单及清除格式
-                                resetOrClearForm();
-                                $("#modifyPasswordModal").modal("hide");
-                            }
-                        });
-                        // 解锁
-                        unlockItms($('#btn-modifiedPassword').get(0));
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        showOperationError(xhr, textStatus, errorThrown);
-                    }
-                });
+
             });
 
             //取消提交表单,表单填充域清空

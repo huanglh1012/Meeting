@@ -42,18 +42,8 @@ var userList = function () {
     var handleButton = function () {
         $('#modifyUserBtn').on('click', function (e) {
             if (selectTr == null) {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要修改的用户信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要修改的用户信息'
                 });
             }else{
                 window.location.href='user_new.html?employeeId='+ selectTr.employeeId;
@@ -89,7 +79,7 @@ var userList = function () {
                                     if(result.success){
                                         oTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: '删除成功'
+                                            text: result.msg
                                         });
                                     }else{
                                         $.pnotify({
@@ -104,18 +94,8 @@ var userList = function () {
                     }
                 });
             } else {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要删除的用户信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要删除的用户信息'
                 });
             }
         });

@@ -124,7 +124,7 @@ var postList = function () {
                                     if(result.success){
                                         oTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: '删除成功'
+                                            text: result.msg
                                         });
                                         //客户端”删除“
                                         oTable.fnDeleteRow(selectTr);
@@ -210,6 +210,9 @@ var postList = function () {
                                 $.unblockUI();
                                 $('#myModal').modal('hide');
                                 oTable.api().ajax.reload();
+                                $.pnotify({
+                                    text: result.msg
+                                });
                             }, 1500);
 
                         } else {

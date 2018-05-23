@@ -39,35 +39,47 @@ var departmentList = function () {
     var handleButton = function() {
         $('#add_department').on('click', function (e) {
             clearModalData();
-            var treeId = zTreeObj.getSelectedNodes()[0].id;
-            var treeName = zTreeObj.getSelectedNodes()[0].name;
+            if(zTreeObj.getSelectedNodes().length > 0) {
+                var treeId = zTreeObj.getSelectedNodes()[0].id;
+                var treeName = zTreeObj.getSelectedNodes()[0].name;
 
-            $('input[name="parentDepartmentId"]').val(treeId);
-            $('input[name="parentDepartmentName"]').val(treeName);
-            $('#departmentModal').modal('show',true);
+                $('input[name="parentDepartmentId"]').val(treeId);
+                $('input[name="parentDepartmentName"]').val(treeName);
+                $('#departmentModal').modal('show',true);
+            } else {
+                $.pnotify({
+                    text: '请选择任意部门进行操作'
+                });
+            }
         });
 
         $('#modify_department').on('click', function (e) {
             clearModalData();
-            var treeId = zTreeObj.getSelectedNodes()[0].id;
-            var treePid = zTreeObj.getSelectedNodes()[0].pId;
-            var treeName = zTreeObj.getSelectedNodes()[0].name;
-            var isParent = zTreeObj.getSelectedNodes()[0].isParent;
+            if(zTreeObj.getSelectedNodes().length > 0) {
+                var treeId = zTreeObj.getSelectedNodes()[0].id;
+                var treePid = zTreeObj.getSelectedNodes()[0].pId;
+                var treeName = zTreeObj.getSelectedNodes()[0].name;
+                var isParent = zTreeObj.getSelectedNodes()[0].isParent;
 
-            var parentNode = zTreeObj.getSelectedNodes()[0].getParentNode();
-            if (parentNode != null){
-                $('input[name="parentDepartmentName"]').val(parentNode.name);
+                var parentNode = zTreeObj.getSelectedNodes()[0].getParentNode();
+                if (parentNode != null){
+                    $('input[name="parentDepartmentName"]').val(parentNode.name);
+                }
+
+                $('input[name="departmentId"]').val(treeId);
+                $('input[name="parentDepartmentId"]').val(treePid);
+                $('input[name="departmentName"]').val(treeName);
+                $('input[name="isParent"]').val(isParent);
+                $('#departmentModal').modal('show',true);
+            } else {
+                $.pnotify({
+                    text: '请选择需要修改的部门'
+                });
             }
-
-            $('input[name="departmentId"]').val(treeId);
-            $('input[name="parentDepartmentId"]').val(treePid);
-            $('input[name="departmentName"]').val(treeName);
-            $('input[name="isParent"]').val(isParent);
-            $('#departmentModal').modal('show',true);
         });
 
         $('#delete_department').on('click', function (e) {
-            if(zTreeObj.getSelectedNodes()[0] != null){
+            if(zTreeObj.getSelectedNodes()[0] != null) {
                 bootbox.confirm({
                     buttons: {
                         confirm: {
@@ -108,7 +120,7 @@ var departmentList = function () {
                                             }
                                         });
                                         $.pnotify({
-                                            text: '删除成功'
+                                            text: result.msg
                                         });
                                     }else{
                                         $.pnotify({
@@ -121,6 +133,10 @@ var departmentList = function () {
                             });
                         }
                     }
+                });
+            } else {
+                $.pnotify({
+                    text: '请选择需要删除的部门'
                 });
             }
         });
@@ -145,7 +161,6 @@ var departmentList = function () {
             addData['parentDepartmentId'] = parentDepartmentId;
             addData['departmentName'] = departmentName;
             addData['isParent'] = isParent;
-            console.log(addData);
 
             if (departmentName == '') {
                 bootbox.alert({
@@ -185,7 +200,6 @@ var departmentList = function () {
                         });
                     },
                     success: function (result) {
-                        console.log(result);
                         if (result.success) {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
@@ -204,6 +218,9 @@ var departmentList = function () {
                                     success: function (result) {
                                         zTreeObj = $.fn.zTree.init($("#departmentTree"), setting, result);
                                     }
+                                });
+                                $.pnotify({
+                                    text: result.msg
                                 });
                             }, 1500);
 

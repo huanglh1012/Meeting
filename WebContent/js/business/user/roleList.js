@@ -90,16 +90,22 @@ var roleList = function () {
 
         $('#modify_role').on('click', function (e) {
             clearModalData();
-            var treeId = zTreeObj.getSelectedNodes()[0].id;
-            var treeName = zTreeObj.getSelectedNodes()[0].name;
+            if(zTreeObj.getSelectedNodes().length > 0) {
+                var treeId = zTreeObj.getSelectedNodes()[0].id;
+                var treeName = zTreeObj.getSelectedNodes()[0].name;
 
-            $('input[name="roleId"]').val(treeId);
-            $('input[name="roleName"]').val(treeName);
-            $('#roleModal').modal('show',true);
+                $('input[name="roleId"]').val(treeId);
+                $('input[name="roleName"]').val(treeName);
+                $('#roleModal').modal('show',true);
+            } else {
+                $.pnotify({
+                    text: '请选择需要修改的角色信息'
+                });
+            }
         });
 
         $('#delete_role').on('click', function (e) {
-            if(zTreeObj.getSelectedNodes()[0] != null){
+            if(zTreeObj.getSelectedNodes()[0] != null) {
                 bootbox.confirm({
                     buttons: {
                         confirm: {
@@ -154,6 +160,10 @@ var roleList = function () {
                         }
                     }
                 });
+            } else {
+                $.pnotify({
+                    text: '请选择需要删除的角色信息'
+                });
             }
         });
 
@@ -170,7 +180,6 @@ var roleList = function () {
             var addData = {};
             addData['roleId'] = roleId;
             addData['roleName'] = roleName;
-            console.log(addData);
 
             if (roleName == '') {
                 bootbox.alert({
@@ -210,7 +219,6 @@ var roleList = function () {
                         });
                     },
                     success: function (result) {
-                        console.log(result);
                         if (result.success) {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
@@ -229,6 +237,9 @@ var roleList = function () {
                                     success: function (result) {
                                         zTreeObj = $.fn.zTree.init($("#roleTree"), setting, result);
                                     }
+                                });
+                                $.pnotify({
+                                    text: result.msg
                                 });
                             }, 1500);
 
@@ -257,19 +268,8 @@ var roleList = function () {
         $('#submitSecurity').on('click', function (e) {
             var obj = [];
             if (zTreeObj.getSelectedNodes()[0] == null) {
-                bootbox.alert({
-                    className: 'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message: "请选择角色",
-                    callback: function () {
-
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要操作的角色信息'
                 });
             } else {
                 var roleId = zTreeObj.getSelectedNodes()[0].id;
@@ -277,7 +277,6 @@ var roleList = function () {
                 $("input[name='checkbox']:checkbox:checked").each(function(){
                     securityList.push($(this).val());
                 })
-                console.log(securityList);
                 obj.push(StringUtil.decorateRequestData('String', roleId));
                 obj.push(StringUtil.decorateRequestData('List', securityList));
                 //进度条
@@ -301,28 +300,21 @@ var roleList = function () {
                         });
                     },
                     success: function (result) {
-                        console.log(result);
                         if (result.success) {
                             $("#processStatus").text("提交成功...");
                             setTimeout(function(){
                                 $.unblockUI();
+                                $.pnotify({
+                                    text: result.msg
+                                });
                             }, 1500);
 
                         } else {
                             $.unblockUI();
-                            bootbox.alert({
-                                title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
-                                message:result.msg,
-                                className:'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
-                                        className: 'btn blue'
-                                    }
-                                },
-                                callback: function() {
-
-                                }
+                            $.pnotify({
+                                type:'error',
+                                text: result.msg,
+                                delay: 8000
                             });
                         }
                     }

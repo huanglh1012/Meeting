@@ -45,6 +45,7 @@
         'js/plugin/sockjs/sockjs.js',
         'js/plugin/stomp/dist/stomp.js',
         'js/plugin/bootbox/bootbox.js',
+        'js/plugin/jquery-pnotify/jquery.pnotify.js',
         // MAIN APP JS FILE
         'js/app.js',
         'js/notification/SmartNotification.min.js',

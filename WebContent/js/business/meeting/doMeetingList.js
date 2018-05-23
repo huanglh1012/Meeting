@@ -66,7 +66,7 @@ var doMeetingList = function () {
                                     if(result.success){
                                         creatorMeetingTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: '关闭成功'
+                                            text: result.msg
                                         });
                                     }else{
                                         $.pnotify({
@@ -126,7 +126,7 @@ var doMeetingList = function () {
                                     if(result.success){
                                         creatorMeetingTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: '删除成功'
+                                            text: result.msg
                                         });
                                     }else{
                                         $.pnotify({
@@ -171,7 +171,7 @@ var doMeetingList = function () {
         ];
 
         var obj = [];
-        obj.push(StringUtil.decorateRequestData('String','AFB8BA86F3394642939F3FF6848CA85D'));
+        obj.push(StringUtil.decorateRequestData('String', JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId));
         participantMeetingTable = $('#joinMeetingList').dataTable({
             //表头设置
             "aoColumns": tableHead,

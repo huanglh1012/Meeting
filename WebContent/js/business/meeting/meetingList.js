@@ -124,7 +124,7 @@ var meetingList = function () {
                                     if(result.success){
                                         oTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: '关闭成功'
+                                            text: '会议关闭成功'
                                         });
                                     }else{
                                         $.pnotify({
@@ -184,7 +184,7 @@ var meetingList = function () {
                                     if(result.success){
                                         oTable.api().ajax.reload();
                                         $.pnotify({
-                                            text: '删除成功'
+                                            text: '会议删除成功'
                                         });
                                     }else{
                                         $.pnotify({
