@@ -8,16 +8,13 @@
     <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
     <link href="../../css/smartadmin-production.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/smartadmin-skins.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/jquery.pnotify.default.css" media="screen" rel="stylesheet" type="text/css" >
+    <link href="../../css/jquery.pnotify.default.icons.css" media="screen" rel="stylesheet" type="text/css" >
     <!-- Common Style -->
     <link href="../../css/common.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/demo.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/navigation.css" media="screen" rel="stylesheet" type="text/css">
 
-    <link href="../../css/dataTables.colVis.css" media="screen" rel="stylesheet" type="text/css">
-    <!-- Date Picker -->
-    <link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">
-    <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../css/ztree.css" type="text/css">
 </head>
 <body>
     <!-- Left panel : Navigation area -->
@@ -30,7 +27,7 @@
         <div id="ribbon">
             <!-- breadcrumb -->
             <ol class="breadcrumb">
-                <li><a href="/dashboard_cardpro.jspa" data-item-index="1">系统管理</a></li>
+                <li><a href="#" data-item-index="1">系统管理</a></li>
                 <li>短信中心设置</li>
             </ol>
             <!-- end breadcrumb -->
@@ -39,12 +36,19 @@
 
         <!-- MAIN CONTENT -->
         <div id="content">
-            <form id="create-meeting-form" method="post" class="form-horizontal">
+            <form id="shortMessageCenterForm" method="post" class="form-horizontal">
                 <div class="well">
                     <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
-                        <a href='meeting_new.html' class="btn btn-primary btn-sm pull-left" >
-                            <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">保存</span>
-                        </a>
+                        <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 保存</button>&nbsp;&nbsp;
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            短信中心名称
+                        </label>
+                        <div class="col-sm-10">
+                            <input class="form-control required-validation" name="shortMessageCenterName" style="width: 100%">
+                            <input name="shortMessageCenterId" type="hidden">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">
@@ -88,23 +92,8 @@
     }
 </script>
 <script src="../../js/core/ecpLoader.js"></script>
-<!-- JQUERY SELECT2 INPUT -->
-<script src="../../js/plugin/select2/select2.min.js"></script>
-<!-- bootstrap-datepicker-master -->
-<script src="../../js/plugin/bootstrap-datepicker-master/bootstrap-datepicker.js"></script>
-<script src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>
-<script src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
-<script src="../../js/plugin/datatables10/dataTables.colReorder.js"></script>
-<script src="../../js/plugin/datatables10/dataTables.colVis.min.js"></script>
-<script src="../../js/plugin/datatables/ZeroClipboard.js"></script>
-<script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
-<script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
-<script src="../../js/core/searchCommon.js"></script>
-
-<script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.core.js"></script>
-<script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.excheck.js"></script>
-<script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.exedit.js"></script>
-
+<!-- JQUERY BLOCK UI -->
+<script type="text/javascript" src="../../js/plugin/jquery-blockui/jquery.blockUI.js"></script>
 <script src="../../js/business/system/messageCenterEdit.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){

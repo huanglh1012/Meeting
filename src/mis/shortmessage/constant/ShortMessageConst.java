@@ -15,4 +15,6 @@ public class ShortMessageConst {
 			"  ) " +
 			"AND MEETING_ID = ?";
 
+	public static final String SQL_GET_SHORT_MESSAGE_CENTER_INFO = "SELECT * FROM SHORT_MESSAGE_CENTER";
+
 }

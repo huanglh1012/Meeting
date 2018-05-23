@@ -1,7 +1,10 @@
 package mis.shortmessage.dto;
 
+import org.springframework.stereotype.Component;
+
 import ecp.bsp.system.core.BaseDTO;
 
+@Component
 public class ShortMessageCenterDTO extends BaseDTO {
 	
 	private String shortMessageCenterId;

@@ -55,4 +55,8 @@ public class ShortMessageService extends BaseService {
 		
 		return tmpActionResult;
 	}
+	
+	public ShortMessageCenterDTO getShortMessageCenterInfo() throws Exception {
+		return this.shortMessageDAO.getShortMessageCenterInfo();
+	}
 }
