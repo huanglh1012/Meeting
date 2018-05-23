@@ -12,6 +12,7 @@
  * @type {meetingAttachmentList}
  */
 var meetingAttachmentList = function () {
+    var selectFiles = [];
     var selectTr = null;
 
     var handleSelect2 = function () {
@@ -91,8 +92,8 @@ var meetingAttachmentList = function () {
     var handleTable = function () {
         // 表头定义
         var tableHead = [
+            { "sTitle": '<input type="checkbox" id="filesCheckAll"/>',"bSortable":false,"sWidth": "12px" },
             { "sTitle": "附件ID", "mData": "attachmentId","bVisible":false},
-            { "sTitle": "附件路径", "mData": "attachmentPath","bVisible":false},
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
             { "sTitle": "上传部门", "mData": "departmentName"},
@@ -106,11 +107,9 @@ var meetingAttachmentList = function () {
             "bAutoWidth": false,
             "responsive": true,
             "ordering": true,
-            "order": [[ 2, "ASC" ]],
             "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
             "lengthChange": true,
             "paging": true,
-            "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
             "ajax": {
                 url: "../../controllerProxy.do?method=callBack",
                 type: "POST",
@@ -118,36 +117,61 @@ var meetingAttachmentList = function () {
                 data: $.proxy(searchCommon.setDatatableData, searchCommon)
             },
             "columnDefs": [{
-                "targets": [0],
-                "render": function(data, type, full) {
-                    return '<a title="' + data + '" target="_blank" href="' + $.url_root + '/issue/viewIssueOfCard.jspa?issueId=' + full.issueId + '">' + data + '</a>';
-                }
-            }, {
-                "targets": [1],
-                "render": function(data, type, full) {
-                    return '<a class="without-decoration font-default" title="' + data + '" href="javascript:;">' + data + '</a>';
-                }
-            }, {
-                "targets": [2],
-                "render": function(data, type, full) {
-                    data = data || "";
-                    return '<a class="without-decoration font-default" title="' + data + '" href="javascript:;">' + data + '</a>';
+                "aTargets": [0],
+                "mRender": function (data, type, full ) {
+                    return'<input type="checkbox" class="checkboxes"/>';
                 }
             }]
         });
 
-        $('#dt_issues tbody').on('click','tr', function () {
-            if ($(this).hasClass("highlight")){
-                $(this).removeClass("highlight");
-                selectTr = null;
-            } else {
-                oTable.$('tr.highlight').removeClass("highlight");
-                $(this).addClass("highlight");
-                selectTr = oTable.fnGetData(this);
+        //复选框全选
+        $('#filesCheckAll').on('click', function (e) {
+            var isCheck = $('#filesCheckAll').prop('checked');
+            if(isCheck){
+                //先清空之前的选项
+                selectFiles = [];
+                $('#dt_issues :checkbox').each(function(){
+                    $(this).prop("checked","true");
+                });
+                var tmpTableNodes = oTable.fnGetNodes();
+                for(var i = 0; i < tmpTableNodes.length; i++)
+                    selectFiles.push(oTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
+            }else{
+                $('#dt_issues :checkbox').each(function(){
+                    $(this).removeAttr("checked");
+                });
+                selectFiles = [];
             }
+        });
+
+        //根据复选框的值来获得行数据
+        $('#dt_issues tbody').on('click','tr', function () {
+            var isCheck = this.getElementsByTagName('input').item(0).checked ;
+            if(isCheck)
+                selectFiles.push(oTable.fnGetData(this).attachmentId);
+            else
+                selectFiles.remove(oTable.fnGetData(this).attachmentId);
         });
     }
 
+    var handleButton = function () {
+        //“下载”按钮
+        $('#attachmentDownloadBtn').on('click', function (e) {
+            var obj = [];
+            obj.push(StringUtil.decorateRequestData('List',selectFiles));
+            $.ajax({
+                type:'post',
+                dataType:"json",
+                url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                    ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                    jsonString:MyJsonUtil.obj2str(obj)}),
+                success:function(result){
+                    console.log(result);
+                    window.location.href = '../../../'+result;
+                }
+            });
+        });
+    }
     return {
         init: function () {
             searchCommon.tableAjaxParam.proxyClass = "meetingController";
@@ -157,6 +181,7 @@ var meetingAttachmentList = function () {
             handleSelect2();
             handleDatePicker();
             handleTable();
+            handleButton();
         }
     };
 }();

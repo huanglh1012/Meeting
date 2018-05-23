@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018-05-21 9:39:50                           */
+/* Created on:     2018-05-23 10:19:06                          */
 /*==============================================================*/
 
 
@@ -153,7 +153,7 @@ create table MEETING
    MEETING_SUBJECT      varchar(512) not null,
    MEETING_ATTENTIONS   text,
    MEETING_UPLOAD_END_TIME timestamp,
-   IS_SEND_MESSAGE_NOTICE boolean not null,
+   IS_SEND_MESSAGE_NOTICE tinyint not null,
    primary key (MEETING_ID)
 );
 
@@ -231,7 +231,7 @@ create table MESSAGE_SEND_CENTER
    MESSAGE_SEND_STATE_ID varchar(32),
    SEND_DATETIME        datetime not null,
    SEND_MESSAGE         text not null,
-   IS_ACTIVE            boolean not null comment '0：无效
+   IS_ACTIVE            tinyint not null comment '0：无效
             1：有效
             会议创建后置有效状态，会议被删除后，置无效状态''',
    primary key (MESSAGE_SEND_CENTER_ID)

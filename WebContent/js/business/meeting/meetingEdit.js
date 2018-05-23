@@ -38,6 +38,8 @@ var meetingEdit = function () {
                     success:function(result){
                         var tmpJsonObject = JSON.parse(result);
                         DomUtil.setFormElementsValueViaJSONObject('createMeetingForm',tmpJsonObject);
+                        if (tmpJsonObject.isSendMessageNotice == 1)
+                            $('input[name="isSendMessageNotice"]').prop('checked',true);
                         $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
                         $('#meetingCreator').select2('val',tmpJsonObject.meetingCreator);
                         $('#meetingRoomId').select2('val',tmpJsonObject.meetingRoomId);
@@ -249,65 +251,88 @@ var meetingEdit = function () {
 
             submitHandler: function(form) { //验证通过时触发
                 var meetingId = $('input[name="meetingId"]').val();
-                var obj = [];
+                var isSendMessageNotice = $('input[name="isSendMessageNotice"]').prop('checked');
+                var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
                 // 隐藏域赋值
-                $('input[name="employeeId"]').val("AFB8BA86F3394642939F3FF6848CA85D");
+                $('input[name="employeeId"]').val(JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId);
                 var addData = DomUtil.getJSONObjectFromForm('createMeetingForm', null);
-                // 添加会议记录附件表格记录
-                var tmpMeetingRecordFileList = [];
-                var tmpMeetingRecordFilesTableNodes = meetingRecordFilesTable.fnGetNodes();
-                for(var i = 0; i < tmpMeetingRecordFilesTableNodes.length; i++) {
-                    var tmpAttachmentId = meetingRecordFilesTable.fnGetData(tmpMeetingRecordFilesTableNodes[i]).attachmentId;
-                    var tmpAttachmentDTO = {};
-                    tmpAttachmentDTO.attachmentId = tmpAttachmentId;
-                    tmpMeetingRecordFileList.push(tmpAttachmentDTO);
-                }
-                // 添加会议附件表格记录
-                var tmpMeetingFileList = [];
-                var tmpMeetingFilesTableNodes = meetingFilesTable.fnGetNodes();
-                for(var i = 0; i < tmpMeetingFilesTableNodes.length; i++) {
-                    var tmpAttachmentId = meetingFilesTable.fnGetData(tmpMeetingFilesTableNodes[i]).attachmentId;
-                    var tmpAttachmentDTO = {};
-                    tmpAttachmentDTO.attachmentId = tmpAttachmentId;
-                    tmpMeetingFileList.push(tmpAttachmentDTO);
-                }
-                addData.meetingRecordFileList = tmpMeetingRecordFileList;
-                addData.meetingFileList = tmpMeetingFileList;
-                obj.push(StringUtil.decorateRequestData('MeetingDTO', addData));
-                console.log(addData);
-                // 会议时间重复时需要询问用户是否确认发起会议
-                $.ajax({
-                    type:'post',
-                    dataType:"json",
-                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                        ,proxyClass:'meetingController',proxyMethod:'isMeetingExistByPlanDatetimeRang',jsonString:MyJsonUtil.obj2str(obj)}),
-                    success:function(result){
-                        console.log(result);
-                        if (!result.success) {
-                            bootbox.confirm({
-                                buttons: {
-                                    confirm: {
-                                        label: '确认',
-                                        className: 'btn green'
-                                    },
-                                    cancel: {
-                                        label: '取消',
-                                        className: 'btn'
-                                    }
-                                },
-                                message: result.msg.actionResultMessage,
-                                title: "消息提示",
-                                callback: function(result) {
-                                    if(result) {
-                                        submitMeeting(addData);
-                                    }
-                                }
-                            });
-                        } else {
-                            submitMeeting(addData);
-                        }
+
+                if (isSendMessageNotice && addData.messageNoticeTime == '') {
+                    bootbox.alert({
+                        className: 'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
+                        },
+                        message: "短信提醒时间不能为空",
+                        callback: function () {
+
+                        },
+                        title: "错误提示"
+                    });
+                } else {
+                    // 添加会议记录附件表格记录
+                    var tmpMeetingRecordFileList = [];
+                    var tmpMeetingRecordFilesTableNodes = meetingRecordFilesTable.fnGetNodes();
+                    for(var i = 0; i < tmpMeetingRecordFilesTableNodes.length; i++) {
+                        var tmpAttachmentId = meetingRecordFilesTable.fnGetData(tmpMeetingRecordFilesTableNodes[i]).attachmentId;
+                        var tmpAttachmentDTO = {};
+                        tmpAttachmentDTO.attachmentId = tmpAttachmentId;
+                        tmpMeetingRecordFileList.push(tmpAttachmentDTO);
                     }
-                });
+                    // 添加会议附件表格记录
+                    var tmpMeetingFileList = [];
+                    var tmpMeetingFilesTableNodes = meetingFilesTable.fnGetNodes();
+                    for(var i = 0; i < tmpMeetingFilesTableNodes.length; i++) {
+                        var tmpAttachmentId = meetingFilesTable.fnGetData(tmpMeetingFilesTableNodes[i]).attachmentId;
+                        var tmpAttachmentDTO = {};
+                        tmpAttachmentDTO.attachmentId = tmpAttachmentId;
+                        tmpMeetingFileList.push(tmpAttachmentDTO);
+                    }
+                    var obj = [];
+                    addData.meetingRecordFileList = tmpMeetingRecordFileList;
+                    addData.meetingFileList = tmpMeetingFileList;
+                    if (isSendMessageNotice)
+                        addData.isSendMessageNotice = 1;
+                    else
+                        addData.isSendMessageNotice = 0;
+                    obj.push(StringUtil.decorateRequestData('MeetingDTO', addData));
+                    // 会议时间重复时需要询问用户是否确认发起会议
+                    $.ajax({
+                        type:'post',
+                        dataType:"json",
+                        url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                            ,proxyClass:'meetingController',proxyMethod:'isMeetingExistByPlanDatetimeRang',jsonString:MyJsonUtil.obj2str(obj)}),
+                        success:function(result){
+                            console.log(result);
+                            if (!result.success) {
+                                bootbox.confirm({
+                                    buttons: {
+                                        confirm: {
+                                            label: '确认',
+                                            className: 'btn green'
+                                        },
+                                        cancel: {
+                                            label: '取消',
+                                            className: 'btn'
+                                        }
+                                    },
+                                    message: result.msg.actionResultMessage,
+                                    title: "消息提示",
+                                    callback: function(result) {
+                                        if(result) {
+                                            submitMeeting(addData);
+                                        }
+                                    }
+                                });
+                            } else {
+                                submitMeeting(addData);
+                            }
+                        }
+                    });
+                }
             }, // Do not change code below
 
             errorPlacement: function(error, element) {
@@ -616,8 +641,8 @@ var meetingEdit = function () {
                 var tempAttachmentObject = {};
                 tempAttachmentObject.attachmentId = tmpFileData.id;
                 tempAttachmentObject.attachmentName = tmpFileData.name;
-                tempAttachmentObject.employeeName = "曾庆越";
-                tempAttachmentObject.departmentName = "科技部";
+                tempAttachmentObject.employeeName = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeName;
+                tempAttachmentObject.departmentName = JSON.parse(localStorage.getItem("EmployeeDTO")).departmentName;
                 tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");
                 tempAttachmentObject.attachmentId = tmpFileData.id;
                 meetingRecordFilesTable.fnAddData(tempAttachmentObject);
@@ -636,8 +661,7 @@ var meetingEdit = function () {
                         url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                             ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
                             jsonString:MyJsonUtil.obj2str(obj)}),
-                        success :function(result)
-                        {
+                        success :function(result) {
                             if(result) {
                                 meetingRecordFilesTable.fnDeleteRow(tr);
                                 meetingRecordFilesTable.remove(tmpRowData.attachmentId);
@@ -671,8 +695,8 @@ var meetingEdit = function () {
             var tempAttachmentObject = {};
             tempAttachmentObject.attachmentId = tmpFileData.id;
             tempAttachmentObject.attachmentName = tmpFileData.name;
-            tempAttachmentObject.employeeName = "曾庆越";
-            tempAttachmentObject.departmentName = "科技部";
+            tempAttachmentObject.employeeName = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeName;
+            tempAttachmentObject.departmentName = JSON.parse(localStorage.getItem("EmployeeDTO")).departmentName;
             tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");;
             tempAttachmentObject.attachmentId = tmpFileData.id;
             meetingFilesTable.fnAddData(tempAttachmentObject);
@@ -691,8 +715,7 @@ var meetingEdit = function () {
                         url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                             ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
                             jsonString:MyJsonUtil.obj2str(obj)}),
-                        success :function(result)
-                        {
+                        success :function(result) {
                             if(result) {
                                 meetingFilesTable.fnDeleteRow(tr);
                                 meetingFilesTable.remove(tmpRowData.attachmentId);

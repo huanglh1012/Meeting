@@ -106,7 +106,8 @@ public class MeetingService extends BaseService {
 		
 		// 清空短信通知信息
 		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingDTO.getMeetingId());
-		this.meetingDAO.delete(tmpMessageSendCenterEntity);
+		if (tmpMessageSendCenterEntity != null)
+			this.meetingDAO.delete(tmpMessageSendCenterEntity);
 			
 		// 更新会议信息
 		MeetingDTO.dtoToEntity(inMeetingDTO, tmpCurrentMeetingEntity);
@@ -268,6 +269,7 @@ public class MeetingService extends BaseService {
 			tmpMessageSendCenterEntity.setSendMessage(inMeetingDTO.getMeetingSubject());
 			tmpMessageSendCenterEntity.setSendDatetime(inMeetingDTO.getMessageNoticeTime());
 			tmpMessageSendCenterEntity.setMessageSendStateId(String.valueOf(MessageSendStateEnum.UNSEND.ordinal()));
+			tmpMessageSendCenterEntity.setIsActive(inMeetingDTO.getIsSendMessageNotice());
 			this.meetingDAO.insert(tmpMessageSendCenterEntity);
 		}
 	}
@@ -294,7 +296,7 @@ public class MeetingService extends BaseService {
 				tmpMeetingDTO.setMeetingPresenter(subMeetingMemberRfDTO.getEmployeeId());
 				tmpMeetingDTO.setMeetingPresenterName(subMeetingMemberRfDTO.getEmployeeName());
 			} else if (subMeetingMemberRfDTO.getMeetingMemberRoleId().equals(String.valueOf(MeetingMemberRoleEnum.MEETING_PARTICIPANT.ordinal()))) {
-				if (!StringUtils.isValidateString(meetingParticipants)) {
+				if (StringUtils.isValidateString(meetingParticipants)) {
 					meetingParticipants += "," + subMeetingMemberRfDTO.getEmployeeId();
 				} else {
 					meetingParticipants = subMeetingMemberRfDTO.getEmployeeId();
@@ -317,7 +319,8 @@ public class MeetingService extends BaseService {
 		
 		// 获取短信提醒信息
 		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingId);
-		tmpMeetingDTO.setMessageNoticeTime(tmpMessageSendCenterEntity.getSendDatetime());
+		if (tmpMessageSendCenterEntity != null)
+			tmpMeetingDTO.setMessageNoticeTime(tmpMessageSendCenterEntity.getSendDatetime());
 		
 		// 获取附件信息
 		List<AttachmentDTO> tmpMeetingRecordFileList = this.meetingDAO.getMeetingAttachmentInfoByMeetingId(inMeetingId,

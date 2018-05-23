@@ -18,7 +18,7 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 	private String messageSendStateId;
 	private Date sendDatetime;
 	private String sendMessage;
-	private boolean isActive;
+	private Integer isActive;
 
 	@Id
 	@Column(name="MESSAGE_SEND_CENTER_ID", unique=true, nullable=false, length=32)
@@ -68,11 +68,12 @@ public class MessageSendCenterEntity extends ecp.bsp.system.core.BaseEntity impl
 	}
 
 	@Column(name="IS_ACTIVE", nullable=false)
-	public boolean getIsActive() {
-		return this.isActive;
+	public Integer getIsActive() {
+		return isActive;
 	}
 
-	public void setIsActive(boolean isActive) {
+	public void setIsActive(Integer isActive) {
 		this.isActive = isActive;
 	}
+
 }

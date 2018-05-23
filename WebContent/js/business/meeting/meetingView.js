@@ -228,12 +228,37 @@ var meetingView = function () {
 
     var handleButton = function() {
         $('#meetingRecordFileDownloadBtn').on('click', function (e) {
-
+            var obj = [];
+            obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
+            $.ajax({
+                type:'post',
+                dataType:"json",
+                url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                    ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                    jsonString:MyJsonUtil.obj2str(obj)}),
+                success:function(result){
+                    console.log(result);
+                    window.location.href = '../../../'+result;
+                }
+            });
         });
 
         $('#meetingFileDownloadBtn').on('click', function (e) {
-
+            var obj = [];
+            obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
+            $.ajax({
+                type:'post',
+                dataType:"json",
+                url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                    ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                    jsonString:MyJsonUtil.obj2str(obj)}),
+                success:function(result){
+                    console.log(result);
+                    window.location.href = '../../../'+result;
+                }
+            });
         });
+
     }
 
     return {

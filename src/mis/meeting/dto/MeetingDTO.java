@@ -71,10 +71,11 @@ public class MeetingDTO extends BaseDTO {
 	private String meetingParticipantDepartmentName;
 	private String meetingParticipants;
 	private String meetingParticipantNames;
+	private Integer isSendMessageNotice;
 	private List<AttachmentDTO> meetingRecordFileList;
 	private List<AttachmentDTO> meetingFileList;
 	private List<MeetingMemberRfDTO> meetingMemberList;
-
+	
 	public String getMeetingId() {
 		return this.meetingId;
 	}
@@ -330,6 +331,14 @@ public class MeetingDTO extends BaseDTO {
 
 	public void setMeetingRoomName(String meetingRoomName) {
 		this.meetingRoomName = meetingRoomName;
+	}
+
+	public Integer getIsSendMessageNotice() {
+		return isSendMessageNotice;
+	}
+
+	public void setIsSendMessageNotice(Integer isSendMessageNotice) {
+		this.isSendMessageNotice = isSendMessageNotice;
 	}
 	
 }
