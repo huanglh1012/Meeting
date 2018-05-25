@@ -59,6 +59,8 @@ public class EmployeeDTO extends BaseDTO {
 	
 	private String text;
 	
+	private List<String> securityCodeList;
+	
 	public String getEmployeeId() {
 		return employeeId;
 	}
@@ -202,4 +204,13 @@ public class EmployeeDTO extends BaseDTO {
 	public void setText(String text) {
 		this.text = text;
 	}
+
+	public List<String> getSecurityCodeList() {
+		return securityCodeList;
+	}
+
+	public void setSecurityCodeList(List<String> securityCodeList) {
+		this.securityCodeList = securityCodeList;
+	}
+
 }

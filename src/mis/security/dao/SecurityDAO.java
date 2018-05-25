@@ -89,4 +89,9 @@ public class SecurityDAO extends BaseDAO {
 	public List<SecurityDTO> getRoleSecurityByEmployeeId(String inEmployeeId) {
 		return (List<SecurityDTO>) this.query(SecurityConst.SQL_GET_ROLE_SECURITY_LIST_BY_EMPLOEE_ID, new Object[] { inEmployeeId }, SecurityDTO.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<RoleDTO> getRoleListByEmployeeId(String inEmployeeId) {
+		return (List<RoleDTO>) this.query(SecurityConst.SQL_GET_ROLE_LIST_BY_EMPLOEE_ID, new Object[] { inEmployeeId }, RoleDTO.class);
+	}
 }

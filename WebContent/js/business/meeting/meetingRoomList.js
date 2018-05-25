@@ -215,7 +215,8 @@ var meetingRoomList = function () {
                 dataType:"json",
                 success:function(data) {
                     meetingRoomTable.fnClearTable();
-                    meetingRoomTable.fnAddData(data);
+                    if (data.length > 0)
+                        meetingRoomTable.fnAddData(data);
                 }
             }
         });

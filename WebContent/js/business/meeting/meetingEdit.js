@@ -18,8 +18,8 @@ var meetingEdit = function () {
     var searchLocationIndex = 0;
     var meetingRecordFilesTable = null;
     var meetingFilesTable = null;
-    var selectMeetingRecordFiles = [];
-    var selectMeetingFiles = [];
+//    var selectMeetingRecordFiles = [];
+//    var selectMeetingFiles = [];
 
     var handlePageInfo = function () {
         var tmpUrl = document.URL;
@@ -48,6 +48,18 @@ var meetingEdit = function () {
                             meetingFilesTable.fnAddData(tmpJsonObject.meetingFileList);
                         if (tmpJsonObject.meetingRecordFileList.length > 0)
                             meetingRecordFilesTable.fnAddData(tmpJsonObject.meetingRecordFileList);
+                        // 判断操作人是否为发起人员或者管理员，如果不是，则只允许上传，删除和下载自己的会议材料，不允许修改会议内容，不允许下载其他部门会议材料
+                        console.log(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList);
+                        console.log(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1'));
+                        console.log(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0'));
+                        if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
+                        } else {
+                            $('input,select,textarea',$('#createMeetingForm')).attr('readonly',true);
+                            $("#messageNoticeTime,#meetingStartTime,#meetingEndTime,#meetingProposeTime,#meetingJoiner").attr('disabled',true);
+                            $('input[name="isSendMessageNotice"]').attr('disabled',true);
+                        }
                     }
                 });
             }
@@ -57,7 +69,8 @@ var meetingEdit = function () {
     var handleDatePickers = function () {
         $("#messageNoticeTime,#meetingStartTime,#meetingEndTime,#meetingProposeTime").datetimepicker({
             language:'zh-CN',
-            format: "yyyy-mm-dd hh:ii:ss"
+            autoclose: true,
+            format: "yyyy-mm-dd hh:ii"
         });
 
 //        $("#meetingProposeTime").datepicker({
@@ -96,11 +109,11 @@ var meetingEdit = function () {
                     allowClear:true,
                     data:result
                 });
-                $('#meetingCreator').select2({
-                    placeholder: "请选择发起人",
-                    allowClear:true,
-                    data:result
-                });
+//                $('#meetingCreator').select2({
+//                    placeholder: "请选择发起人",
+//                    allowClear:true,
+//                    data:result
+//                });
             }
         });
 
@@ -118,19 +131,19 @@ var meetingEdit = function () {
             }
         });
 
-        $.ajax({
-            type:'post',
-            dataType:"json",
-            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null}),
-            success:function(result){
-                $('#meetingCreatorDepartmentId').select2({
-                    placeholder: "请选择部门",
-                    allowClear:true,
-                    data:result
-                });
-            }
-        });
+//        $.ajax({
+//            type:'post',
+//            dataType:"json",
+//            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//                ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null}),
+//            success:function(result){
+//                $('#meetingCreatorDepartmentId').select2({
+//                    placeholder: "请选择部门",
+//                    allowClear:true,
+//                    data:result
+//                });
+//            }
+//        });
     }
 
     var handleTree = function() {
@@ -176,6 +189,10 @@ var meetingEdit = function () {
     }
 
     var handleForm = function () {
+        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+        // 隐藏域赋值
+        $('input[name="meetingCreatorName"]').val(tmpEmployeeDTO.employeeName);
+        $('input[name="meetingCreatorDepartmentName"]').val(tmpEmployeeDTO.departmentName);
         $("#createMeetingForm").validate({
             errorElement: "strong",
             ignore: ":not('.required-validation')",
@@ -250,13 +267,11 @@ var meetingEdit = function () {
             },
 
             submitHandler: function(form) { //验证通过时触发
+                $('input[name="employeeId"]').val(tmpEmployeeDTO.employeeId);
+                $('input[name="meetingCreator"]').val(tmpEmployeeDTO.employeeId);
                 var meetingId = $('input[name="meetingId"]').val();
                 var isSendMessageNotice = $('input[name="isSendMessageNotice"]').prop('checked');
-                var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
-                // 隐藏域赋值
-                $('input[name="employeeId"]').val(JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId);
                 var addData = DomUtil.getJSONObjectFromForm('createMeetingForm', null);
-
                 if (isSendMessageNotice && addData.messageNoticeTime == '') {
                     bootbox.alert({
                         className: 'span4 alert-error',
@@ -298,6 +313,12 @@ var meetingEdit = function () {
                         addData.isSendMessageNotice = 1;
                     else
                         addData.isSendMessageNotice = 0;
+                    // 设置时间值
+                    if ($("#messageNoticeTime").val() != '')
+                        addData.messageNoticeTime = $("#messageNoticeTime").val()+":00";
+                    addData.meetingStartTime = $("#meetingStartTime").val()+":00";
+                    addData.meetingEndTime = $("#meetingEndTime").val()+":00";
+                    addData.meetingProposeTime = $("#meetingProposeTime").val()+":00";
                     obj.push(StringUtil.decorateRequestData('MeetingDTO', addData));
                     // 会议时间重复时需要询问用户是否确认发起会议
                     $.ajax({
@@ -488,18 +509,18 @@ var meetingEdit = function () {
             var isCheck = $('#meetingFilesCheckAll').prop('checked');
             if(isCheck){
                 //先清空之前的选项
-                selectMeetingFiles = [];
+//                selectMeetingFiles = [];
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-                var tmpTableNodes = meetingFilesTable.fnGetNodes();
-                for(var i = 0; i < tmpTableNodes.length; i++)
-                    selectMeetingFiles.push(meetingFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
+//                var tmpTableNodes = meetingFilesTable.fnGetNodes();
+//                for(var i = 0; i < tmpTableNodes.length; i++)
+//                    selectMeetingFiles.push(meetingFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-                selectMeetingFiles = [];
+//                selectMeetingFiles = [];
             }
         });
 
@@ -508,40 +529,48 @@ var meetingEdit = function () {
             var isCheck = $('#meetingRecordFilesCheckAll').prop('checked');
             if(isCheck){
                 //先清空之前的选项
-                selectMeetingRecordFiles = [];
+//                selectMeetingRecordFiles = [];
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
                 var tmpTableNodes = meetingRecordFilesTable.fnGetNodes();
-                for(var i = 0; i < tmpTableNodes.length; i++)
-                    selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
+//                for(var i = 0; i < tmpTableNodes.length; i++)
+//                    selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-                selectMeetingRecordFiles = [];
+//                selectMeetingRecordFiles = [];
             }
         });
 
         //根据复选框的值来获得行数据
-        $('#meetingFiles tbody').on('click','tr', function () {
-            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-            if(isCheck)
-                selectMeetingFiles.push(meetingFilesTable.fnGetData(this).attachmentId);
-            else
-                selectMeetingFiles.remove(meetingFilesTable.fnGetData(this).attachmentId);
-        });
-
-        $('#meetingRecordFiles tbody').on('click','tr', function () {
-            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-            if(isCheck)
-                selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(this).attachmentId);
-            else
-                selectMeetingRecordFiles.remove(meetingRecordFilesTable.fnGetData(this).attachmentId);
-        });
+//        $('#meetingFiles tbody').on('click','tr', function () {
+//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
+//            if(isCheck)
+//                selectMeetingFiles.push(meetingFilesTable.fnGetData(this).attachmentId);
+//            else
+//                selectMeetingFiles.remove(meetingFilesTable.fnGetData(this).attachmentId);
+//        });
+//
+//        $('#meetingRecordFiles tbody').on('click','tr', function () {
+//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
+//            if(isCheck)
+//                selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(this).attachmentId);
+//            else
+//                selectMeetingRecordFiles.remove(meetingRecordFilesTable.fnGetData(this).attachmentId);
+//        });
     }
 
     var handleButton = function() {
+        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+        var tmpSecurityCodeList = tmpEmployeeDTO.securityCodeList;
+        // 设置按钮权限
+        $("span[data-security-code]").each(function(i, v) {
+            if (tmpSecurityCodeList.indexOf(""+$(this).data('securityCode')) == -1)
+                $(this).hide();
+        });
+
         $('#meetingJoiner').on('click', function (e) {
             $('input[name="searchEmployeeText"]').val('');
             $('#meetingJoinerModal').modal('show',true);
@@ -626,7 +655,6 @@ var meetingEdit = function () {
             autoUpload: true,
             maxFileSize: 1000000000// <1000 MB
         }).on('fileuploadprocessalways', function (e, data) {
-                console.log("fileuploadprocessalways");
                 if(data.files.error){
                     $('#imageError').find("label").empty();
                     if(data.files[0].error=="File is too large"){
@@ -645,32 +673,66 @@ var meetingEdit = function () {
                 tempAttachmentObject.departmentName = JSON.parse(localStorage.getItem("EmployeeDTO")).departmentName;
                 tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");
                 tempAttachmentObject.attachmentId = tmpFileData.id;
+                tempAttachmentObject.employeeId = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId;
                 meetingRecordFilesTable.fnAddData(tempAttachmentObject);
             });
 
         $('#meetingRecordFileDeleteBtn').on('click', function (e) {
+            var isDelete = true;
             $('#meetingRecordFiles :checkbox').each(function(){
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
-                    var obj = [];
-                    obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
-                    $.ajax({
-                        type:'post',
-                        dataType:"json",
-                        url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                            ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
-                            jsonString:MyJsonUtil.obj2str(obj)}),
-                        success :function(result) {
-                            if(result) {
-                                meetingRecordFilesTable.fnDeleteRow(tr);
-                                meetingRecordFilesTable.remove(tmpRowData.attachmentId);
-                            }else {
-                            }
+                    // 如果不是发起人或者管理员，则只允许删除自己的会议材料
+                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()) {
+                    } else {
+                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
+                            bootbox.alert({
+                                className: 'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message: "只允许删除自己的会议材料",
+                                callback: function () {
+
+                                },
+                                title: "错误提示"
+                            });
+                            isDelete = false;
+                            return false;
                         }
-                    });
+                    }
                 }
             });
+            if (isDelete) {
+                $('#meetingRecordFiles :checkbox').each(function(){
+                    if($(this).prop("checked") && $(this).prop("id") == "") {
+                        var tr = $(this).parents('tr');
+                        var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
+                        var obj = [];
+                        obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
+                        $.ajax({
+                            type:'post',
+                            dataType:"json",
+                            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
+                                jsonString:MyJsonUtil.obj2str(obj)}),
+                            success :function(result) {
+                                if(result) {
+                                    meetingRecordFilesTable.fnDeleteRow(tr);
+                                    meetingRecordFilesTable.remove(tmpRowData.attachmentId);
+                                }else {
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         });
 
         $('#meetingFileUploadBtn').fileupload({
@@ -680,7 +742,6 @@ var meetingEdit = function () {
             autoUpload: true,
             maxFileSize: 1000000000// <1000 MB
         }).on('fileuploadprocessalways', function (e, data) {
-            console.log("fileuploadprocessalways");
             if(data.files.error){
                 $('#imageError').find("label").empty();
                 if(data.files[0].error=="File is too large"){
@@ -699,32 +760,66 @@ var meetingEdit = function () {
             tempAttachmentObject.departmentName = JSON.parse(localStorage.getItem("EmployeeDTO")).departmentName;
             tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");;
             tempAttachmentObject.attachmentId = tmpFileData.id;
+            tempAttachmentObject.employeeId = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId;
             meetingFilesTable.fnAddData(tempAttachmentObject);
         });
 
         $('#meetingFileDeleteBtn').on('click', function (e) {
+            var isDelete = true;
             $('#meetingFiles :checkbox').each(function(){
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingFilesTable.fnGetData(tr);
-                    var obj = [];
-                    obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
-                    $.ajax({
-                        type:'post',
-                        dataType:"json",
-                        url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                            ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
-                            jsonString:MyJsonUtil.obj2str(obj)}),
-                        success :function(result) {
-                            if(result) {
-                                meetingFilesTable.fnDeleteRow(tr);
-                                meetingFilesTable.remove(tmpRowData.attachmentId);
-                            }else {
-                            }
+                    // 如果不是发起人或者管理员，则只允许删除自己的会议材料
+                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()) {
+                    } else {
+                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
+                            bootbox.alert({
+                                className: 'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message: "只允许删除自己的会议材料",
+                                callback: function () {
+
+                                },
+                                title: "错误提示"
+                            });
+                            isDelete = false;
+                            return false;
                         }
-                    });
+                    }
                 }
             });
+            if (isDelete) {
+                $('#meetingFiles :checkbox').each(function(){
+                    if($(this).prop("checked") && $(this).prop("id") == "") {
+                        var tr = $(this).parents('tr');
+                        var tmpRowData = meetingFilesTable.fnGetData(tr);
+                        var obj = [];
+                        obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
+                        $.ajax({
+                            type:'post',
+                            dataType:"json",
+                            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
+                                jsonString:MyJsonUtil.obj2str(obj)}),
+                            success :function(result) {
+                                if(result) {
+                                    meetingFilesTable.fnDeleteRow(tr);
+                                    meetingFilesTable.remove(tmpRowData.attachmentId);
+                                }else {
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         });
     }
 

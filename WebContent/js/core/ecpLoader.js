@@ -53,13 +53,13 @@
 //        'js/core/componentConfig.js',
 //        'js/resetheight.js',
         // 工具类
-        'js/core/globalInfo.js',
-        //'js/core/globalInfoLoader.js',
         'js/util/MyJsonUtil.js',
         'js/util/StringUtil.js',
         'js/util/DomUtil.js',
         'js/util/Cookie.js',
         'js/util/I18n.js',
+        'js/core/globalInfo.js',
+        'js/core/globalInfoLoader.js',
         'js/login.js'
     ];
 	

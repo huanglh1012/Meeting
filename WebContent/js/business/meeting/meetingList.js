@@ -75,6 +75,14 @@ var meetingList = function () {
     }
 
     var handleButton = function () {
+        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+        var tmpSecurityCodeList = tmpEmployeeDTO.securityCodeList;
+        // 设置按钮权限
+        $("a[data-security-code]").each(function(i, v) {
+            if (tmpSecurityCodeList.indexOf(""+$(this).data('securityCode')) == -1)
+                $(this).hide();
+        });
+
         $('#modifyMeetingBtn').on('click', function (e) {
             if (selectTr == null) {
                 bootbox.alert({

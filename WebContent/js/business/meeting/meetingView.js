@@ -18,8 +18,8 @@ var meetingView = function () {
     var searchLocationIndex = 0;
     var meetingRecordFilesTable = null;
     var meetingFilesTable = null;
-    var selectMeetingRecordFiles = [];
-    var selectMeetingFiles = [];
+//    var selectMeetingRecordFiles = [];
+//    var selectMeetingFiles = [];
 
     var handlePageInfo = function () {
         var tmpUrl = document.URL;
@@ -39,14 +39,10 @@ var meetingView = function () {
                         var tmpJsonObject = JSON.parse(result);
                         DomUtil.setFormElementsValueViaJSONObject('meetingForm',tmpJsonObject);
                         $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
-//                        $('#meetingCreator').select2('val',tmpJsonObject.meetingCreator);
-//                        $('#meetingRoomId').select2('val',tmpJsonObject.meetingRoomId);
-//                        $('#meetingCreatorDepartmentId').select2('val',tmpJsonObject.meetingCreatorDepartmentId);
                         if (tmpJsonObject.meetingFileList.length > 0)
                             meetingFilesTable.fnAddData(tmpJsonObject.meetingFileList);
                         if (tmpJsonObject.meetingRecordFileList.length > 0)
                             meetingRecordFilesTable.fnAddData(tmpJsonObject.meetingRecordFileList);
-//                        $('input,select,textarea',$('#meetingForm')).attr('readonly',true);
                     }
                 });
             }
@@ -61,19 +57,19 @@ var meetingView = function () {
     }
     
     var handleSelect2 = function () {
-        $.ajax({
-            type:'post',
-            dataType:"json",
-            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null}),
-            success:function(result){
-                $('#meetingPresenter').select2({
-                    placeholder: "请选择主持人",
-                    allowClear:true,
-                    data:result
-                });
-            }
-        });
+//        $.ajax({
+//            type:'post',
+//            dataType:"json",
+//            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//                ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null}),
+//            success:function(result){
+//                $('#meetingPresenter').select2({
+//                    placeholder: "请选择主持人",
+//                    allowClear:true,
+//                    data:result
+//                });
+//            }
+//        });
     }
 
     var handleTable = function () {
@@ -173,18 +169,18 @@ var meetingView = function () {
             var isCheck = $('#meetingFilesCheckAll').prop('checked');
             if(isCheck){
                 //先清空之前的选项
-                selectMeetingFiles = [];
+//                selectMeetingFiles = [];
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-                var tmpTableNodes = meetingFilesTable.fnGetNodes();
-                for(var i = 0; i < tmpTableNodes.length; i++)
-                    selectMeetingFiles.push(meetingFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
+//                var tmpTableNodes = meetingFilesTable.fnGetNodes();
+//                for(var i = 0; i < tmpTableNodes.length; i++)
+//                    selectMeetingFiles.push(meetingFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-                selectMeetingFiles = [];
+//                selectMeetingFiles = [];
             }
         });
 
@@ -193,72 +189,143 @@ var meetingView = function () {
             var isCheck = $('#meetingRecordFilesCheckAll').prop('checked');
             if(isCheck){
                 //先清空之前的选项
-                selectMeetingRecordFiles = [];
+//                selectMeetingRecordFiles = [];
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-                var tmpTableNodes = meetingRecordFilesTable.fnGetNodes();
-                for(var i = 0; i < tmpTableNodes.length; i++)
-                    selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
+//                var tmpTableNodes = meetingRecordFilesTable.fnGetNodes();
+//                for(var i = 0; i < tmpTableNodes.length; i++)
+//                    selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-                selectMeetingRecordFiles = [];
+//                selectMeetingRecordFiles = [];
             }
         });
 
         //根据复选框的值来获得行数据
-        $('#meetingFiles tbody').on('click','tr', function () {
-            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-            if(isCheck)
-                selectMeetingFiles.push(meetingFilesTable.fnGetData(this).attachmentId);
-            else
-                selectMeetingFiles.remove(meetingFilesTable.fnGetData(this).attachmentId);
-        });
-
-        $('#meetingRecordFiles tbody').on('click','tr', function () {
-            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-            if(isCheck)
-                selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(this).attachmentId);
-            else
-                selectMeetingRecordFiles.remove(meetingRecordFilesTable.fnGetData(this).attachmentId);
-        });
+//        $('#meetingFiles tbody').on('click','tr', function () {
+//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
+//            if(isCheck)
+//                selectMeetingFiles.push(meetingFilesTable.fnGetData(this).attachmentId);
+//            else
+//                selectMeetingFiles.remove(meetingFilesTable.fnGetData(this).attachmentId);
+//        });
+//
+//        $('#meetingRecordFiles tbody').on('click','tr', function () {
+//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
+//            if(isCheck)
+//                selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(this).attachmentId);
+//            else
+//                selectMeetingRecordFiles.remove(meetingRecordFilesTable.fnGetData(this).attachmentId);
+//        });
     }
 
     var handleButton = function() {
+
         $('#meetingRecordFileDownloadBtn').on('click', function (e) {
-            var obj = [];
-            obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
-            $.ajax({
-                type:'post',
-                dataType:"json",
-                url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                    ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
-                    jsonString:MyJsonUtil.obj2str(obj)}),
-                success:function(result){
-                    console.log(result);
-                    window.location.href = '../../../'+result;
+            var isDownload = true;
+            var selectMeetingRecordFiles = [];
+            $('#meetingRecordFiles :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "") {
+                    var tr = $(this).parents('tr');
+                    var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
+                    // 如果不是发起人或者管理员，则只允许下载自己的会议材料
+                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                        selectMeetingRecordFiles.push(tmpRowData.attachmentId);
+                    } else {
+                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
+                            bootbox.alert({
+                                className: 'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message: "只允许下载自己的会议材料",
+                                callback: function () {
+
+                                },
+                                title: "错误提示"
+                            });
+                            isDownload = false;
+                            return false;
+                        }
+                    }
                 }
             });
+            if (isDownload) {
+                var obj = [];
+                obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
+                $.ajax({
+                    type:'post',
+                    dataType:"json",
+                    url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                        jsonString:MyJsonUtil.obj2str(obj)}),
+                    success:function(result){
+                        window.location.href = '../../../'+result;
+                    }
+                });
+            }
         });
 
         $('#meetingFileDownloadBtn').on('click', function (e) {
-            var obj = [];
-            obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
-            $.ajax({
-                type:'post',
-                dataType:"json",
-                url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                    ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
-                    jsonString:MyJsonUtil.obj2str(obj)}),
-                success:function(result){
-                    console.log(result);
-                    window.location.href = '../../../'+result;
+            var isDownload = true;
+            var selectMeetingFiles = [];
+            $('#meetingFiles :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "") {
+                    var tr = $(this).parents('tr');
+                    var tmpRowData = meetingFilesTable.fnGetData(tr);
+                    // 如果不是发起人或者管理员，则只允许下载自己的会议材料
+                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                        selectMeetingFiles.push(tmpRowData.attachmentId);
+                    } else {
+                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
+                            bootbox.alert({
+                                className: 'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message: "只允许下载自己的会议材料",
+                                callback: function () {
+
+                                },
+                                title: "错误提示"
+                            });
+                            isDownload = false;
+                            return false;
+                        }
+                    }
                 }
             });
+            if (isDownload) {
+                console.log(selectMeetingFiles);
+                var obj = [];
+                obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
+                $.ajax({
+                    type:'post',
+                    dataType:"json",
+                    url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                        jsonString:MyJsonUtil.obj2str(obj)}),
+                    success:function(result){
+                        window.location.href = '../../../'+result;
+                    }
+                });
+            }
         });
-
     }
 
     return {

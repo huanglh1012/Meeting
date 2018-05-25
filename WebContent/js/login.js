@@ -43,7 +43,7 @@ var login = function () {
                     dataType:"json",
                     success:function(result) {
                         if (result.success) {
-                            localStorage.setItem("EmployeeDTO", JSON.stringify(result.msg.entityKeyValue));
+                            localStorage.setItem("LoginDTO", JSON.stringify(result.msg.entityKeyValue));
                             window.location.href='index.html';
                         } else {
                             bootbox.alert({
@@ -80,12 +80,12 @@ var login = function () {
 
         // 初始化表单提交事件
         function initTopEvent() {
-            var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
-            if (tmpEmployeeDTO == null)
+            var tmpLoginDTO= JSON.parse(localStorage.getItem("LoginDTO"));
+            if (tmpLoginDTO == null)
                 window.location.href = '../../login.html';
 
             // 设置登录名
-            document.getElementById("loginUser").innerHTML = tmpEmployeeDTO.employeeName;
+            document.getElementById("loginUser").innerHTML = tmpLoginDTO.employeeName;
 
             // 退出登录
             $("#logout").click(function(e) {

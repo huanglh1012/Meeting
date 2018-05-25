@@ -106,60 +106,77 @@ var roleList = function () {
 
         $('#delete_role').on('click', function (e) {
             if(zTreeObj.getSelectedNodes()[0] != null) {
-                bootbox.confirm({
-                    buttons: {
-                        confirm: {
-                            label: '确认',
-                            className: 'btn green'
+                if (zTreeObj.getSelectedNodes()[0].id == '-1' || zTreeObj.getSelectedNodes()[0].id == '0') {
+                    bootbox.alert({
+                        className: 'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
                         },
-                        cancel: {
-                            label: '取消',
-                            className: 'btn'
-                        }
-                    },
-                    message: '确定删除这一行吗 ?',
-                    title: "消息提示",
-                    callback: function(result) {
-                        if(result) {
-                            var obj = [];
-                            obj.push(StringUtil.decorateRequestData('String',zTreeObj.getSelectedNodes()[0].id));
-                            $.ajax({
-                                type:'post',
-                                dataType:"json",
-                                async: false,
-                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                                    ,proxyClass:'securityController',proxyMethod:'deleteRole',jsonString:MyJsonUtil.obj2str(obj)}),
-                                success:function(result){
-                                    if(result.success){
-                                        $.ajax({
-                                            type: "POST",
-                                            url: SMController.getUrl({
-                                                controller: 'controllerProxy',
-                                                method: 'callBack',
-                                                proxyClass: 'securityController',
-                                                proxyMethod: 'getRoleTreeList',
-                                                jsonString: null
-                                            }),
-                                            dataType: "json",
-                                            success: function (result) {
-                                                zTreeObj = $.fn.zTree.init($("#roleTree"), setting, result);
-                                            }
-                                        });
-                                        $.pnotify({
-                                            text: '删除成功'
-                                        });
-                                    }else{
-                                        $.pnotify({
-                                            type:'error',
-                                            text: result.msg,
-                                            delay: 8000
-                                        });
+                        message: "不允许删除管理员角色信息",
+                        callback: function () {
+
+                        },
+                        title: "错误提示"
+                    });
+                } else {
+                    bootbox.confirm({
+                        buttons: {
+                            confirm: {
+                                label: '确认',
+                                className: 'btn green'
+                            },
+                            cancel: {
+                                label: '取消',
+                                className: 'btn'
+                            }
+                        },
+                        message: '确定删除这一行吗 ?',
+                        title: "消息提示",
+                        callback: function(result) {
+                            if(result) {
+                                var obj = [];
+                                obj.push(StringUtil.decorateRequestData('String',zTreeObj.getSelectedNodes()[0].id));
+                                $.ajax({
+                                    type:'post',
+                                    dataType:"json",
+                                    async: false,
+                                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                        ,proxyClass:'securityController',proxyMethod:'deleteRole',jsonString:MyJsonUtil.obj2str(obj)}),
+                                    success:function(result){
+                                        if(result.success){
+                                            $.ajax({
+                                                type: "POST",
+                                                url: SMController.getUrl({
+                                                    controller: 'controllerProxy',
+                                                    method: 'callBack',
+                                                    proxyClass: 'securityController',
+                                                    proxyMethod: 'getRoleTreeList',
+                                                    jsonString: null
+                                                }),
+                                                dataType: "json",
+                                                success: function (result) {
+                                                    zTreeObj = $.fn.zTree.init($("#roleTree"), setting, result);
+                                                }
+                                            });
+                                            $.pnotify({
+                                                text: '删除成功'
+                                            });
+                                        }else{
+                                            $.pnotify({
+                                                type:'error',
+                                                text: result.msg,
+                                                delay: 8000
+                                            });
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
             } else {
                 $.pnotify({
                     text: '请选择需要删除的角色信息'

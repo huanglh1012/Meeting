@@ -64,10 +64,8 @@ public class SecurityService extends BaseService {
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 			throw new RuntimeException(exceptionMessage);
 		}
-
-		// 获取用户信息
-		EmployeeDTO tmpEmployeeDTO = this.getEmployeeInfoById(tmpEmployeeEntity.getEmployeeId());
-		return ActionResultUtil.getActionResult(tmpEmployeeDTO, "用户登陆成功");
+		
+		return ActionResultUtil.getActionResult(tmpEmployeeEntity, "用户登陆成功");
 	}
 	
 	/**
@@ -241,6 +239,25 @@ public class SecurityService extends BaseService {
 	 */
 	public EmployeeDTO getEmployeeInfoById(String inEmployeeId) {
 		return this.securityDAO.getEmployeeInfoById(inEmployeeId);
+	}
+	
+	public EmployeeDTO getEmployeeDetailInfoByEmployeeId(String inEmployeeId) {
+		// 获取用户权限列表
+		List<SecurityDTO> tmpSecurityDTOList = this.getEmployeeSecurity(inEmployeeId);
+		List<String> tmpSecurityCodeList = new ArrayList<String>();
+		for (SecurityDTO subSecurityDTO : tmpSecurityDTOList) 
+			tmpSecurityCodeList.add(subSecurityDTO.getSecurityCode());
+		// 获取用户角色列表
+		List<RoleDTO> tmpRoleDTOList = this.securityDAO.getRoleListByEmployeeId(inEmployeeId);
+		List<String> tmpRoleIdList = new ArrayList<String>();
+		for (RoleDTO subRoleDTO : tmpRoleDTOList) 
+			tmpRoleIdList.add(subRoleDTO.getRoleId());
+		// 获取用户信息
+		EmployeeDTO tmpEmployeeDTO = this.getEmployeeInfoById(inEmployeeId);
+		tmpEmployeeDTO.setSecurityCodeList(tmpSecurityCodeList);
+		tmpEmployeeDTO.setRoleIdList(tmpRoleIdList);
+		
+		return tmpEmployeeDTO;
 	}
 	
 	/**
