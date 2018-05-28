@@ -33,53 +33,91 @@ var doMeetingList = function () {
                     title: "错误提示"
                 });
             }else{
-                window.location.href='meeting_new.html?meetingId='+ creatorMeetingSelectTr.meetingId;
+                if (creatorMeetingSelectTr.meetingStateId == '1') {
+                    // 如果是管理员，则允许修改已关闭的会议
+                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1) {
+                        window.location.href='meeting_new.html?meetingId='+ creatorMeetingSelectTr.meetingId;
+                    } else {
+                        bootbox.alert({
+                            className:'span4 alert-error',
+                            buttons: {
+                                ok: {
+                                    label: '确定',
+                                    className: 'btn blue'
+                                }
+                            },
+                            message:'该会议已关闭，不允许修改',
+                            callback: function() {
+                            },
+                            title: "错误提示"
+                        });
+                    }
+                } else {
+                    window.location.href='meeting_new.html?meetingId='+ creatorMeetingSelectTr.meetingId;
+                }
             }
         });
 
         $('#closeMeetingBtn').on('click', function (e) {
             if(creatorMeetingSelectTr != null){
-                bootbox.confirm({
-                    buttons: {
-                        confirm: {
-                            label: '确认',
-                            className: 'btn green'
+                if (creatorMeetingSelectTr.meetingStateId == '1') {
+                    bootbox.alert({
+                        className:'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
                         },
-                        cancel: {
-                            label: '取消',
-                            className: 'btn'
-                        }
-                    },
-                    message: '确定关闭该会议信息吗 ?',
-                    title: "消息提示",
-                    callback: function(result) {
-                        if(result) {
-                            var obj = [];
-                            obj.push(StringUtil.decorateRequestData('String',creatorMeetingSelectTr.meetingId));
-                            $.ajax({
-                                type:'post',
-                                dataType:"json",
-                                async: false,
-                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                                    ,proxyClass:'meetingController',proxyMethod:'closeMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
-                                success:function(result){
-                                    if(result.success){
-                                        creatorMeetingTable.api().ajax.reload();
-                                        $.pnotify({
-                                            text: result.msg
-                                        });
-                                    }else{
-                                        $.pnotify({
-                                            type:'error',
-                                            text: result.msg,
-                                            delay: 8000
-                                        });
+                        message:'该会议已关闭',
+                        callback: function() {
+                        },
+                        title: "错误提示"
+                    });
+                } else {
+                    bootbox.confirm({
+                        buttons: {
+                            confirm: {
+                                label: '确认',
+                                className: 'btn green'
+                            },
+                            cancel: {
+                                label: '取消',
+                                className: 'btn'
+                            }
+                        },
+                        message: '确定关闭该会议信息吗 ?',
+                        title: "消息提示",
+                        callback: function(result) {
+                            if(result) {
+                                var obj = [];
+                                obj.push(StringUtil.decorateRequestData('String',creatorMeetingSelectTr.meetingId));
+                                $.ajax({
+                                    type:'post',
+                                    dataType:"json",
+                                    async: false,
+                                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                        ,proxyClass:'meetingController',proxyMethod:'closeMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
+                                    success:function(result){
+                                        if(result.success){
+                                            creatorMeetingTable.api().ajax.reload();
+                                            $.pnotify({
+                                                text: result.msg
+                                            });
+                                        }else{
+                                            $.pnotify({
+                                                type:'error',
+                                                text: result.msg,
+                                                delay: 8000
+                                            });
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
             } else {
                 bootbox.alert({
                     className:'span4 alert-error',
@@ -99,47 +137,109 @@ var doMeetingList = function () {
 
         $('#deleteMeetingBtn').on('click', function (e) {
             if(creatorMeetingSelectTr != null){
-                bootbox.confirm({
-                    buttons: {
-                        confirm: {
-                            label: '确认',
-                            className: 'btn green'
-                        },
-                        cancel: {
-                            label: '取消',
-                            className: 'btn'
-                        }
-                    },
-                    message: '确定删除该会议信息吗 ?',
-                    title: "消息提示",
-                    callback: function(result) {
-                        if(result) {
-                            var obj = [];
-                            obj.push(StringUtil.decorateRequestData('String',creatorMeetingSelectTr.meetingId));
-                            $.ajax({
-                                type:'post',
-                                dataType:"json",
-                                async: false,
-                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                                    ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
-                                success:function(result){
-                                    if(result.success){
-                                        creatorMeetingTable.api().ajax.reload();
-                                        $.pnotify({
-                                            text: result.msg
-                                        });
-                                    }else{
-                                        $.pnotify({
-                                            type:'error',
-                                            text: result.msg,
-                                            delay: 8000
-                                        });
-                                    }
+                if (creatorMeetingSelectTr.meetingStateId == '1') {
+                    // 如果是管理员，则允许删除已关闭的会议
+                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1) {
+                        bootbox.confirm({
+                            buttons: {
+                                confirm: {
+                                    label: '确认',
+                                    className: 'btn green'
+                                },
+                                cancel: {
+                                    label: '取消',
+                                    className: 'btn'
                                 }
-                            });
-                        }
+                            },
+                            message: '确定删除该会议信息吗 ?',
+                            title: "消息提示",
+                            callback: function(result) {
+                                if(result) {
+                                    var obj = [];
+                                    obj.push(StringUtil.decorateRequestData('String',creatorMeetingSelectTr.meetingId));
+                                    $.ajax({
+                                        type:'post',
+                                        dataType:"json",
+                                        async: false,
+                                        url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                            ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
+                                        success:function(result){
+                                            if(result.success){
+                                                creatorMeetingTable.api().ajax.reload();
+                                                $.pnotify({
+                                                    text: result.msg
+                                                });
+                                            }else{
+                                                $.pnotify({
+                                                    type:'error',
+                                                    text: result.msg,
+                                                    delay: 8000
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        bootbox.alert({
+                            className:'span4 alert-error',
+                            buttons: {
+                                ok: {
+                                    label: '确定',
+                                    className: 'btn blue'
+                                }
+                            },
+                            message:'该会议已关闭，不允许删除',
+                            callback: function() {
+                            },
+                            title: "错误提示"
+                        });
                     }
-                });
+                } else {
+                    bootbox.confirm({
+                        buttons: {
+                            confirm: {
+                                label: '确认',
+                                className: 'btn green'
+                            },
+                            cancel: {
+                                label: '取消',
+                                className: 'btn'
+                            }
+                        },
+                        message: '确定删除该会议信息吗 ?',
+                        title: "消息提示",
+                        callback: function(result) {
+                            if(result) {
+                                var obj = [];
+                                obj.push(StringUtil.decorateRequestData('String',creatorMeetingSelectTr.meetingId));
+                                $.ajax({
+                                    type:'post',
+                                    dataType:"json",
+                                    async: false,
+                                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                        ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
+                                    success:function(result){
+                                        if(result.success){
+                                            creatorMeetingTable.api().ajax.reload();
+                                            $.pnotify({
+                                                text: result.msg
+                                            });
+                                        }else{
+                                            $.pnotify({
+                                                type:'error',
+                                                text: result.msg,
+                                                delay: 8000
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
             } else {
                 bootbox.alert({
                     className:'span4 alert-error',

@@ -76,6 +76,7 @@ var login = function () {
 
     var handleTop = function () {
         initTopEvent();
+        intSecurity();
         validateFrom();
 
         // 初始化表单提交事件
@@ -103,6 +104,17 @@ var login = function () {
             //取消提交表单,表单填充域清空
             $("#btn-cancel , .close").on('click',function(e){
                 resetOrClearForm();
+            });
+        }
+
+        // 初始化用户权限
+        function intSecurity() {
+            var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+            var tmpSecurityCodeList = tmpEmployeeDTO.securityCodeList;
+            // 设置按钮权限
+            $("span[data-security-code],a[data-security-code]").each(function(i, v) {
+                if (tmpSecurityCodeList.indexOf(""+$(this).data('securityCode')) == -1)
+                    $(this).hide();
             });
         }
 

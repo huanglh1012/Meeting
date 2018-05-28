@@ -46,14 +46,15 @@
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                     <div class="well">
                         <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
-                            <a href='#' class="btn btn-primary btn-sm pull-left" id="add_role">
-                                <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">增加</span>
+                            <span class="font-lg text-primary pull-left">角色列表</span>
+                            <a href='#' class="btn btn-success btn-sm pull-right" id="delete_role" data-security-code="2012">
+                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除</span>
                             </a>
-                            <a href='#' class="btn btn-warning btn-sm pull-left" id="modify_role">
+                            <a href='#' class="btn btn-warning btn-sm pull-right" id="modify_role" data-security-code="2011">
                                 <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改</span>
                             </a>
-                            <a href='#' class="btn btn-success btn-sm pull-left" id="delete_role">
-                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除</span>
+                            <a href='#' class="btn btn-primary btn-sm pull-right" id="add_role" data-security-code="2010">
+                                <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">增加</span>
                             </a>
                         </div>
                         <div class="row">
@@ -71,9 +72,15 @@
                     <div class="well">
                         <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
                             <div class="pull-left form-action-bar">
-                                <button class="btn btn-primary" id="submitSecurity"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 保存</button>&nbsp;&nbsp;
-                                <a thref="#" class="btn btn-default" id="selectAllSecurity"><i class="glyphicon glyphicon-check"></i>&nbsp; 全选</a>
-                                <a thref="#" class="btn btn-default" id="clearSecurity"><i class="fa fa-ban"></i>&nbsp; 重置</a>
+                                <a href="#" class="btn btn-primary" id="submitSecurity" data-security-code="2013">
+                                    <i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 保存
+                                </a>&nbsp;&nbsp;
+                                <a href="#" class="btn btn-default" id="selectAllSecurity" data-security-code="2014">
+                                    <i class="glyphicon glyphicon-check"></i>&nbsp; 全选
+                                </a>
+                                <a href="#" class="btn btn-default" id="clearSecurity" data-security-code="2015">
+                                    <i class="fa fa-ban"></i>&nbsp; 重置
+                                </a>
                             </div>
                         </div>
                         <div class="form-group" id="securityList">

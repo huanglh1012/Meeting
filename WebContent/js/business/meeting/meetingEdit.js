@@ -340,7 +340,7 @@ var meetingEdit = function () {
                                             className: 'btn'
                                         }
                                     },
-                                    message: result.msg.actionResultMessage,
+                                    message: result.msg + "<br>是否继续发起会议?",
                                     title: "消息提示",
                                     callback: function(result) {
                                         if(result) {
@@ -563,14 +563,6 @@ var meetingEdit = function () {
     }
 
     var handleButton = function() {
-        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
-        var tmpSecurityCodeList = tmpEmployeeDTO.securityCodeList;
-        // 设置按钮权限
-        $("span[data-security-code]").each(function(i, v) {
-            if (tmpSecurityCodeList.indexOf(""+$(this).data('securityCode')) == -1)
-                $(this).hide();
-        });
-
         $('#meetingJoiner').on('click', function (e) {
             $('input[name="searchEmployeeText"]').val('');
             $('#meetingJoinerModal').modal('show',true);

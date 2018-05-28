@@ -223,7 +223,6 @@ var meetingView = function () {
     }
 
     var handleButton = function() {
-
         $('#meetingRecordFileDownloadBtn').on('click', function (e) {
             var isDownload = true;
             var selectMeetingRecordFiles = [];

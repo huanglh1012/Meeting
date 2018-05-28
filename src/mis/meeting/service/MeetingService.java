@@ -52,11 +52,17 @@ public class MeetingService extends BaseService {
 	private AttachmentService attachmentService;
 	
 	public ActionResult isMeetingExistByPlanDatetimeRang(MeetingDTO inMeetingDTO) {
-		MeetingEntity tmpMeetingEntity = this.meetingDAO.getMeetingByPlanDatetimeRang(inMeetingDTO.getMeetingRoomId(), 
+		MeetingEntity tmpMeetingEntity = null;
+		if (inMeetingDTO.getMeetingId() != null) {
+			tmpMeetingEntity = this.meetingDAO.getMeetingByDatetimeRangWithoutMeetingId(inMeetingDTO.getMeetingRoomId(),
+					inMeetingDTO.getMeetingId(), inMeetingDTO.getMeetingStartTime(), inMeetingDTO.getMeetingEndTime());
+		} else {
+			tmpMeetingEntity = this.meetingDAO.getMeetingByPlanDatetimeRang(inMeetingDTO.getMeetingRoomId(), 
 				inMeetingDTO.getMeetingStartTime(), inMeetingDTO.getMeetingEndTime());
+		}
 		if (tmpMeetingEntity != null) {
-			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "会议时间冲突" + "\n\r" 
-				    + "在当前发起会议的开始时间和结束时间段内已经有其它会议占用了会议室" + "\n\r"
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "会议时间冲突" + "<br>" 
+				    + "在当前发起会议的开始时间和结束时间段内已经有其它会议占用了会议室" + "<br>"
 					+ "发生冲突的会议：" + tmpMeetingEntity.getMeetingSubject();
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 			throw new RuntimeException(exceptionMessage);
@@ -111,7 +117,6 @@ public class MeetingService extends BaseService {
 			
 		// 更新会议信息
 		MeetingDTO.dtoToEntity(inMeetingDTO, tmpCurrentMeetingEntity);
-		tmpCurrentMeetingEntity.setMeetingStateId(String.valueOf(MeetingStateEnum.MEETING_OPEN.ordinal()));
 		this.meetingDAO.update(tmpCurrentMeetingEntity);
 		
 		// 插入与会人员信息

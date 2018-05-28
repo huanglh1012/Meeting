@@ -24,7 +24,7 @@ public class MeetingDAO extends BaseDAO {
 	@SuppressWarnings("unchecked")
 	public MeetingEntity getMeetingByPlanDatetimeRang(String inMeetingRoomId, Date inMeetingStartTime, Date inMeetingEndTime) {
 		List<MeetingEntity> tmpMeetingEntityList = (List<MeetingEntity>) this.query(MeetingConstant.SQL_GET_MEETING_BY_PAN_DATETIME_RANG, 
-				new Object[] {inMeetingRoomId, inMeetingStartTime, inMeetingStartTime, inMeetingEndTime, inMeetingEndTime}, MeetingEntity.class);
+				new Object[] {inMeetingRoomId, inMeetingStartTime, inMeetingEndTime}, MeetingEntity.class);
 		if (tmpMeetingEntityList == null || tmpMeetingEntityList.isEmpty()) {
 			return null;
 		}
@@ -32,6 +32,17 @@ public class MeetingDAO extends BaseDAO {
 		return tmpMeetingEntityList.get(0);
 	}
 
+	@SuppressWarnings("unchecked")
+	public MeetingEntity getMeetingByDatetimeRangWithoutMeetingId(String inMeetingRoomId, String inMeetingId,Date inMeetingStartTime, Date inMeetingEndTime) {
+		List<MeetingEntity> tmpMeetingEntityList = (List<MeetingEntity>) this.query(MeetingConstant.SQL_GET_MEETING_BY_DATETIME_RANG_WITHOUT_MEETING_ID, 
+				new Object[] {inMeetingRoomId, inMeetingId, inMeetingStartTime, inMeetingEndTime}, MeetingEntity.class);
+		if (tmpMeetingEntityList == null || tmpMeetingEntityList.isEmpty()) {
+			return null;
+		}
+		
+		return tmpMeetingEntityList.get(0);
+	}
+	
 	public void CloseMeeting(String inMeetingId) throws Exception {
 		MeetingStateEntity tmpMeetingStateEntity = this.getEntity(MeetingStateEntity.class, "meetingStateCode", MeetingStateEnum.MEETING_CLOSE.ordinal());
 		this.excuteSQL(MeetingConstant.SQL_UPDATE_MEETING_STATE, new Object[] { tmpMeetingStateEntity.getMeetingStateId(), inMeetingId });
