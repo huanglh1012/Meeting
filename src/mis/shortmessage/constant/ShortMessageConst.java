@@ -1,7 +1,12 @@
 package mis.shortmessage.constant;
 
 public class ShortMessageConst {
-
+	public static final String PROPERTIES_NAME_FILE_DIR_PATH = "shortMessage.properties";
+	public static final String PROPERTIES_KEY_SEND_URL = "sendUrl";
+	public static final String PROPERTIES_KEY_CALLER_ID = "callerId";
+	public static final String PROPERTIES_KEY_PASSOWRD = "password";
+	public static final String PROPERTIES_KEY_TEMPLATE_ID = "templateId";
+	
 	public static final String SQL_SET_MESSAGE_SEND_CENTER_NULL_BY_MEETING_ID = 
 			"UPDATE MESSAGE_SEND_CENTER SET MEETING_ID = NULL WHERE MEETING_ID = ?";
 	

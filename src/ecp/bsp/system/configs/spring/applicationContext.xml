@@ -16,7 +16,6 @@
     <!-- <import resource="quartz-config.xml"/> -->
         
 	<!-- 自动扫描类 -->
-	<context:component-scan base-package="ecp.bsp.business" />
 	<context:component-scan base-package="ecp.bsp.system" />
 	<context:component-scan base-package="mis.security" />
 	<context:component-scan base-package="mis.meeting" />
@@ -27,16 +26,9 @@
       <property name="locations">
          <list>
           <value>classpath:ecp/bsp/system/configs/properties/dataSource.properties</value>
-          <value>classpath:ecp/bsp/system/configs/properties/paa.properties</value>
          </list>
       </property>
     </bean>
-   
-    <!-- 配置PAA所需数据 -->
-	<bean id="paaConfiguration" class="ecp.bsp.system.commons.dto.PAAConfiguration">
-	    <property name="paaAccessUrl" value="${paa.accessUrl}"/>
-    	<property name="paaAccessApplication" value="${paa.accessApplication}"/>
-	</bean>
 	
 	<!-- 配置数据源 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -54,7 +46,6 @@
 	<bean id="i18NClassNameCollection" class="ecp.bsp.system.framework.query.data.entity.I18NClassNameCollection">
 		<property name="dtoPaths" >
 		<list>
-		  <value>ecp.bsp.business.file.dto</value>
 		  <value>mis.security.dto</value>
 		  <value>mis.meeting.dto</value>
 		  <value>mis.shortmessage.dto</value>
@@ -67,7 +58,6 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan">
 			<list> 
-	         	<value>ecp.bsp.business</value> 
 	         	<value>ecp.bsp.system</value> 
 	         	<value>mis.security.entity</value> 
 	         	<value>mis.meeting.entity</value> 

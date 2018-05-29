@@ -18,8 +18,7 @@
 	<!-- 自动注册DefaultAnnotationHandlerMapping 与AnnotationMethodHandlerAdapter两个bean,无法给它注入interceptors属性，就无法指定拦截器 -->
 	<!--<mvc:annotation-driven />--> 
 	
-	<!-- 把标记了@Controller注解的类转换为bean -->     
-	<context:component-scan base-package="ecp.bsp.business.file.controller.impl" /> 
+	<!-- 把标记了@Controller注解的类转换为bean -->
 	<context:component-scan base-package="ecp.bsp.system.core" />  
    	<context:component-scan base-package="mis.security.controller" /> 
    	<context:component-scan base-package="mis.meeting.controller" /> 

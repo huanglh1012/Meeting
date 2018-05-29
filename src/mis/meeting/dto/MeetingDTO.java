@@ -33,7 +33,7 @@ refEntity = MeetingEntityRegister.AttachmentCategoryEntity +
             MeetingEntityRegister.MeetingStateEntity
             )
 @DtoField2QueryField
-public class MeetingDTO extends BaseDTO {
+public class MeetingDTO extends BaseDTO{
 	private String meetingId; 
 	private String meetingStateId;
 	private String meetingSubject;
@@ -75,6 +75,7 @@ public class MeetingDTO extends BaseDTO {
 	private List<AttachmentDTO> meetingRecordFileList;
 	private List<AttachmentDTO> meetingFileList;
 	private List<MeetingMemberRfDTO> meetingMemberList;
+	private String telephone;
 	
 	public String getMeetingId() {
 		return this.meetingId;
@@ -339,6 +340,14 @@ public class MeetingDTO extends BaseDTO {
 
 	public void setIsSendMessageNotice(Integer isSendMessageNotice) {
 		this.isSendMessageNotice = isSendMessageNotice;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 	
 }
