@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018-05-24 17:05:00                          */
+/* Created on:     2018-05-29 20:52:45                          */
 /*==============================================================*/
 
 
@@ -329,9 +329,14 @@ alter table SHORT_MESSAGE_CENTER comment '具体信息按移动提供的接口调整';
 create table SHORT_MESSAGE_SEND_LOG
 (
    SHORT_MESSAGE_SEND_LOG_ID varchar(32) not null,
-   SHORT_MESSAGE_CENTER_ID varchar(32) not null,
+   SHORT_MESSAGE_CENTER_ID varchar(32),
    MESSAGE_SEND_CENTER_ID varchar(32) not null,
    MESSAGE_SEND_STATE_ID varchar(32) not null,
+   MESSAGE_SEND_TELEPHONE text not null,
+   MESSAGE_SEND_PARAM   text not null,
+   MESSAGE_SEND_TIME    datetime not null,
+   MESSAGE_SEND_RESULT  text not null,
+   MESSAGE_SEND_COUNT   int not null,
    primary key (SHORT_MESSAGE_SEND_LOG_ID)
 );
 

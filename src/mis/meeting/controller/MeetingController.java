@@ -9,10 +9,10 @@ import mis.meeting.dto.MeetingAttachmentDTO;
 import mis.meeting.dto.MeetingDTO;
 import mis.meeting.dto.MeetingRoomDTO;
 import mis.meeting.service.MeetingService;
+import mis.security.dto.QueryResultDTO;
 
 import org.springframework.stereotype.Controller;
 
-import ecp.bsp.business.file.dto.QueryResultDTO;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.dto.AjaxResult;
 import ecp.bsp.system.framework.query.PageQueryHepler;

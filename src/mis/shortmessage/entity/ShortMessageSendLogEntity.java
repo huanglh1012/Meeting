@@ -1,6 +1,8 @@
 package mis.shortmessage.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.*;
 
 
@@ -16,7 +18,11 @@ public class ShortMessageSendLogEntity extends ecp.bsp.system.core.BaseEntity im
 	private String messageSendCenterId;
 	private String messageSendStateId;
 	private String shortMessageCenterId;
-
+	private String messageSendTelephone;
+	private String messageSendParam;
+	private Date messageSendTime;
+	private String messageSendResult;
+	private int messageSendCount;
 	public ShortMessageSendLogEntity() {
 	}
 
@@ -61,4 +67,56 @@ public class ShortMessageSendLogEntity extends ecp.bsp.system.core.BaseEntity im
 		this.shortMessageCenterId = shortMessageCenterId;
 	}
 
+	@Lob
+	@Column(name="MESSAGE_SEND_TELEPHONE", nullable=false)
+	public String getMessageSendTelephone() {
+		return messageSendTelephone;
+	}
+
+
+	public void setMessageSendTelephone(String messageSendTelephone) {
+		this.messageSendTelephone = messageSendTelephone;
+	}
+
+	@Lob
+	@Column(name="MESSAGE_SEND_PARAM", nullable=false)
+	public String getMessageSendParam() {
+		return messageSendParam;
+	}
+
+	public void setMessageSendParam(String messageSendParam) {
+		this.messageSendParam = messageSendParam;
+	}
+
+	@Column(name="MESSAGE_SEND_TIME", nullable=false)
+	public Date getMessageSendTime() {
+		return messageSendTime;
+	}
+
+	public void setMessageSendTime(Date messageSendTime) {
+		this.messageSendTime = messageSendTime;
+	}
+
+	@Lob
+	@Column(name="MESSAGE_SEND_RESULT", nullable=false)
+	public String getMessageSendResult() {
+		return messageSendResult;
+	}
+
+
+	public void setMessageSendResult(String messageSendResult) {
+		this.messageSendResult = messageSendResult;
+	}
+
+	@Column(name="MESSAGE_SEND_COUNT", nullable=false)
+	public int getMessageSendCount() {
+		return messageSendCount;
+	}
+
+
+	public void setMessageSendCount(int messageSendCount) {
+		this.messageSendCount = messageSendCount;
+	}
+
+	
 }

@@ -1,7 +1,7 @@
 package mis.meeting.service;
 
 import java.io.File;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,9 +23,10 @@ import mis.meeting.job.MeetingMessageSendJob;
 import mis.meeting.myenum.AttachmentCategoryEnum;
 import mis.meeting.myenum.MeetingMemberRoleEnum;
 import mis.meeting.myenum.MeetingStateEnum;
-import mis.shortmessage.constant.ShortMessageConst;
+import mis.shortmessage.dto.ShortMessageResultDTO;
 import mis.shortmessage.dto.ShortMessageSendDTO;
 import mis.shortmessage.entity.MessageSendCenterEntity;
+import mis.shortmessage.entity.ShortMessageSendLogEntity;
 import mis.shortmessage.myenum.MessageSendStateEnum;
 import mis.shortmessage.service.ShortMessageService;
 
@@ -42,11 +43,9 @@ import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.utils.ActionResultUtil;
 import ecp.bsp.system.commons.utils.LoggerUtil;
-import ecp.bsp.system.commons.utils.PropertiesUtil;
 import ecp.bsp.system.commons.utils.StringUtils;
 import ecp.bsp.system.core.BaseDTO;
 import ecp.bsp.system.core.BaseService;
-import ecp.bsp.system.framework.file.data.constant.AttachmentDAOConst;
 import ecp.bsp.system.framework.file.data.dto.AttachmentDTO;
 import ecp.bsp.system.framework.file.data.entity.AttachmentEntity;
 import ecp.bsp.system.framework.file.data.entity.AttachmentTempEntity;
@@ -285,8 +284,8 @@ public class MeetingService extends BaseService {
 	
 	public void saveMessageSendInfo(MeetingDTO inMeetingDTO) throws Exception {
 		// 保存消息发送信息
+		MessageSendCenterEntity tmpMessageSendCenterEntity = new MessageSendCenterEntity();
 		if (inMeetingDTO.getMessageNoticeTime() != null) {
-			MessageSendCenterEntity tmpMessageSendCenterEntity = new MessageSendCenterEntity();
 			tmpMessageSendCenterEntity.setMeetingId(inMeetingDTO.getMeetingId());
 			tmpMessageSendCenterEntity.setSendMessage(inMeetingDTO.getMeetingSubject());
 			tmpMessageSendCenterEntity.setSendDatetime(inMeetingDTO.getMessageNoticeTime());
@@ -297,17 +296,18 @@ public class MeetingService extends BaseService {
 		
 		// 清空作业任务
 		if(QuarzManager.checkJobExists(inMeetingDTO.getMeetingId(), "meetingJobGroup"))
-			QuarzManager.deleteJob(inMeetingDTO.getMeetingId(),"meetingJobGroup");		
+			QuarzManager.deleteJob(inMeetingDTO.getMeetingId(), "meetingJobGroup");		
 		
 		if (inMeetingDTO.getIsSendMessageNotice() == 1) {
 			// 添加定时任务
-			Map<String,Object> tmpJobMap = new HashMap<String,Object>();
 			ShortMessageSendDTO tmpShortMessageSendDTO = new ShortMessageSendDTO();
 			BaseDTO.copyObjectPropertys(inMeetingDTO, tmpShortMessageSendDTO);
+			tmpShortMessageSendDTO.setMessageSendCenterId(tmpMessageSendCenterEntity.getMessageSendCenterId());
+			Map<String,Object> tmpJobMap = new HashMap<String,Object>();
 			tmpJobMap.put("shortMessageSendDTO", tmpShortMessageSendDTO);
 			Date tmpMessagePreNoticeTime = new Date(inMeetingDTO.getMeetingStartTime().getTime() - 600000);
-			JobEntity jobEntity2 = new JobEntity(inMeetingDTO.getMeetingId(), "meetingJobGroup", MeetingMessageSendJob.class);
-			QuarzManager.createSimpleJob(jobEntity2, tmpJobMap, true);
+			JobEntity tmpJobEntity = new JobEntity(inMeetingDTO.getMeetingId(), "meetingJobGroup", MeetingMessageSendJob.class);
+			QuarzManager.createSimpleJob(tmpJobEntity, tmpJobMap, true);
 			Trigger tmpNoticeTrigger = MyTriggerUtils.newSimpleCountTrigger(inMeetingDTO.getMeetingId(), "meetingJobGroup", 
 					inMeetingDTO.getMeetingId() + "NoticeTrigger", "meetingTriggerGroup",
 					IntervalUnit.MINUTE,Integer.valueOf("1"),Integer.valueOf(1), inMeetingDTO.getMessageNoticeTime());
@@ -474,10 +474,27 @@ public class MeetingService extends BaseService {
 		return (List<MeetingRoomBookingDTO>) this.meetingDAO.getMeetingRoomBookingListByRoomId(inMeetingRoomId);
 	}
 
-	public void sendMeetingMessage(ShortMessageSendDTO inShortMessageSendDTO) throws IOException {
+	public void sendMeetingMessage(ShortMessageSendDTO inShortMessageSendDTO) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
+		
 		MeetingRoomEntity tmpMeetingRoomEntity = this.attachmentDAO.getEntity(MeetingRoomEntity.class, inShortMessageSendDTO.getMeetingRoomId());
-		String tmpMessageParam = "大家好," + tmpMeetingRoomEntity.getMeetingRoomName() + "-" + tmpMeetingRoomEntity.getMeetingRoomAddress();
+		String tmpMessageParam = "各位,"+sdf.format(inShortMessageSendDTO.getMeetingStartTime()) + "在" + tmpMeetingRoomEntity.getMeetingRoomName() + "-" + tmpMeetingRoomEntity.getMeetingRoomAddress();
 		MeetingDTO tmpMeetingDTO = this.meetingDAO.getMeetingEmployeeInfo(inShortMessageSendDTO.getMeetingId());
-		this.shortMessageService.sendMessage(tmpMeetingDTO.getTelephone(), tmpMessageParam);
+		// 发送信息
+		ShortMessageResultDTO tmpShortMessageResultDTO = this.shortMessageService.sendMessage(tmpMeetingDTO.getTelephone(), tmpMessageParam);
+		// 保存消息发送日志
+		ShortMessageSendLogEntity tmpShortMessageSendLogEntity = new ShortMessageSendLogEntity();
+		tmpShortMessageSendLogEntity.setMessageSendCenterId(inShortMessageSendDTO.getMessageSendCenterId());
+		tmpShortMessageSendLogEntity.setShortMessageCenterId(null);
+		tmpShortMessageSendLogEntity.setMessageSendParam(tmpMessageParam);
+		tmpShortMessageSendLogEntity.setMessageSendTelephone(tmpMeetingDTO.getTelephone());
+		tmpShortMessageSendLogEntity.setMessageSendResult(tmpShortMessageResultDTO.getMessageSendResult());
+		tmpShortMessageSendLogEntity.setMessageSendTime(new Date());
+		tmpShortMessageSendLogEntity.setMessageSendCount(1);
+		if (tmpShortMessageResultDTO.getCode().equals("00")) 
+			tmpShortMessageSendLogEntity.setMessageSendStateId(String.valueOf(MessageSendStateEnum.SEND_SUCCESSED.ordinal()));
+		else 
+			tmpShortMessageSendLogEntity.setMessageSendStateId(String.valueOf(MessageSendStateEnum.SEND_FAILED.ordinal()));
+		this.meetingDAO.insert(tmpShortMessageSendLogEntity);
 	}
 }

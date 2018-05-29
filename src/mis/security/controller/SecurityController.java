@@ -10,6 +10,7 @@ import mis.security.dto.DepartmentDTO;
 import mis.security.dto.EmployeeDTO;
 import mis.security.dto.LoginDTO;
 import mis.security.dto.PostDTO;
+import mis.security.dto.QueryResultDTO;
 import mis.security.dto.RoleDTO;
 import mis.security.dto.SecurityDTO;
 import mis.security.dto.ZtreeNode;
@@ -17,7 +18,6 @@ import mis.security.service.SecurityService;
 
 import org.springframework.stereotype.Controller;
 
-import ecp.bsp.business.file.dto.QueryResultDTO;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.dto.AjaxResult;
 import ecp.bsp.system.framework.query.PageQueryHepler;

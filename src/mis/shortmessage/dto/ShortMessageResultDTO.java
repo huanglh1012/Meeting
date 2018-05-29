@@ -5,6 +5,7 @@ import java.util.List;
 public class ShortMessageResultDTO {
 	private String code;
 	private List<String> sId;
+	private String messageSendResult;
 	public String getCode() {
 		return code;
 	}
@@ -17,4 +18,11 @@ public class ShortMessageResultDTO {
 	public void setsId(List<String> sId) {
 		this.sId = sId;
 	}
+	public String getMessageSendResult() {
+		return messageSendResult;
+	}
+	public void setMessageSendResult(String messageSendResult) {
+		this.messageSendResult = messageSendResult;
+	}
+	
 }

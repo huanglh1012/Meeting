@@ -122,6 +122,7 @@ public class ShortMessageService extends BaseService {
 			} else {
 				tmpShortMessageResultDTO.setCode(tmpResult);
 			}
+			tmpShortMessageResultDTO.setMessageSendResult(tmpResult);
 			
 			return tmpShortMessageResultDTO;
 		} catch (MalformedURLException e) {
