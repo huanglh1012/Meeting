@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+    <!-- Basic Styles -->
+    <link href="../../css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/font-awesome.min.css" media="screen" rel="stylesheet" type="text/css">
+    <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
+    <link href="../../css/smartadmin-production.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/smartadmin-skins.css" media="screen" rel="stylesheet" type="text/css">
+    <!-- Common Style -->
+    <link href="../../css/common.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/demo.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/navigation.css" media="screen" rel="stylesheet" type="text/css">
+
+    <link href="../../css/jquery.pnotify.default.css" media="screen" rel="stylesheet" type="text/css" >
+    <link href="../../css/jquery.pnotify.default.icons.css" media="screen" rel="stylesheet" type="text/css" >
+
+    <link href="../../css/dataTables.colVis.css" media="screen" rel="stylesheet" type="text/css">
+    <!-- Date Picker -->
+    <link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../../css/ztree.css" type="text/css">
+</head>
+<body>
+    <!-- Left panel : Navigation area -->
+    <div id="top"></div>
+    <div id="leftnav"></div>
+    <!-- END NAVIGATION -->
+
+    <div id="main" role="main">
+        <!-- RIBBON -->
+        <div id="ribbon">
+            <!-- breadcrumb -->
+            <ol class="breadcrumb">
+                <li><a href="/dashboard_cardpro.jspa" data-item-index="1">权限管理</a></li>
+                <li>角色列表</li>
+            </ol>
+            <!-- end breadcrumb -->
+        </div>
+        <!-- END RIBBON -->
+
+        <!-- MAIN CONTENT -->
+        <div id="content">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="well">
+                        <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
+                            <span class="font-lg text-primary pull-left">角色列表</span>
+                            <a href='#' class="btn btn-success btn-sm pull-right" id="delete_role" data-security-code="2012">
+                                <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除</span>
+                            </a>
+                            <a href='#' class="btn btn-warning btn-sm pull-right" id="modify_role" data-security-code="2011">
+                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改</span>
+                            </a>
+                            <a href='#' class="btn btn-primary btn-sm pull-right" id="add_role" data-security-code="2010">
+                                <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">增加</span>
+                            </a>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div id="roleTree" class="ztree" style="min-height: 100px">
+                                        <!--<ul  class="ztree"></ul>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="well">
+                        <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
+                            <div class="pull-left form-action-bar">
+                                <a href="#" class="btn btn-primary" id="submitSecurity" data-security-code="2013">
+                                    <i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 保存
+                                </a>&nbsp;&nbsp;
+                                <a href="#" class="btn btn-default" id="selectAllSecurity" data-security-code="2014">
+                                    <i class="glyphicon glyphicon-check"></i>&nbsp; 全选
+                                </a>
+                                <a href="#" class="btn btn-default" id="clearSecurity" data-security-code="2015">
+                                    <i class="fa fa-ban"></i>&nbsp; 重置
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group" id="securityList">
+                        </div>
+                    </div>
+                </div>
+                <div  class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">编辑角色</h4>
+                            </div>
+                            <div class="modal-body form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        角色名称
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control required-validation" name="roleName" style="width: 100%">
+                                        <input name="roleId" type="hidden">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="submitRole">确定</button>
+                                <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 不能删除，查询所用 -->
+    <!-- the query mode, simple query or combinational query -->
+    <input id="query-mode" type="hidden" value="simple">
+    <div id="footer"></div>
+</body>
+
+<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
+<script data-pace-options='{ "restartOnRequestAfter": true }' src="../../js/plugin/pace/pace.min.js"></script>
+<script src="../../js/libs/jquery-2.0.2.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        document.write('<script src="../../js/libs/jquery-2.0.2.min.js"><\/script>');
+    }
+</script>
+<script src="../../js/libs/jquery-ui-1.10.3.min.js"></script>
+<script>
+    if (!window.jQuery.ui) {
+        document.write('<script src="../../js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+    }
+</script>
+<script src="../../js/core/ecpLoader.js"></script>
+<!-- JQUERY SELECT2 INPUT -->
+<script src="../../js/plugin/select2/select2.min.js"></script>
+<!-- bootstrap-datepicker-master -->
+<script src="../../js/plugin/bootstrap-datepicker-master/bootstrap-datepicker.js"></script>
+<script src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
+<script src="../../js/plugin/datatables10/dataTables.colReorder.js"></script>
+<script src="../../js/plugin/datatables10/dataTables.colVis.min.js"></script>
+<script src="../../js/plugin/datatables/ZeroClipboard.js"></script>
+<script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
+<script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
+<script src="../../js/core/searchCommon.js"></script>
+
+<script type="text/javascript" src="../../js/plugin/jquery-blockui/jquery.blockUI.js"></script>
+<script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.exedit.js"></script>
+
+<script src="../../js/business/user/roleList.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#top").load("../../pages/top.html");
+        $("#leftnav").load("../../pages/leftnav.html");
+        $("#footer").load("../../pages/footer.html");
+    });
+
+    window.onload = function(){
+        app.init();
+        app.internationalInit('UserManagement');
+        roleList.init();
+    }
+
+    // 不加载app.js其他浏览器会显示不了左侧导航的+-图标，火狐则可以正常显示
+    loadScript("../../js/app.js", initTop);
+    function initTop() {
+
+    }
+</script>
+</html>

@@ -12,6 +12,17 @@
  * @type {userList}
  */
 var userList = function () {
+    var oTable = null;
+    var selectTr = null;
+
+    var handleSelect2 = function () {
+        $('input[name="departmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+        $('input[name="postId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+            ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null});
+//        $('input[name="roleId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getRoleList',jsonString:null});
+    }
 
     var handleDatePicker = function () {
         $("#startDate, #endDate").datepicker({
@@ -20,10 +31,72 @@ var userList = function () {
             todayHighlight : 1,
             autoclose: true
         }).on("changeDate", function(e) {
-            if ($(e.target).data("type") === "start") {
-                $("#endDate").datepicker("setStartDate", e.date);
+                if ($(e.target).data("type") === "start") {
+                    $("#endDate").datepicker("setStartDate", e.date);
+                } else {
+                    $("#startDate").datepicker("setEndDate", e.date);
+                }
+            });
+    }
+
+    var handleButton = function () {
+        $('#modifyUserBtn').on('click', function (e) {
+            if (selectTr == null) {
+                $.pnotify({
+                    text: '请选择需要修改的用户信息'
+                });
+            }else{
+                window.location.href='user_new.html?employeeId='+ selectTr.employeeId;
+            }
+        });
+
+        $('#deleteUserBtn').on('click', function (e) {
+            if(selectTr != null){
+                bootbox.confirm({
+                    buttons: {
+                        confirm: {
+                            label: '确认',
+                            className: 'btn green'
+                        },
+                        cancel: {
+                            label: '取消',
+                            className: 'btn'
+                        }
+                    },
+                    message: '确定删除该用户信息吗 ?',
+                    title: "消息提示",
+                    callback: function(result) {
+                        if(result) {
+                            var obj = [];
+                            obj.push(StringUtil.decorateRequestData('String',selectTr.employeeId));
+                            $.ajax({
+                                type:'post',
+                                dataType:"json",
+                                async: false,
+                                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                    ,proxyClass:'securityController',proxyMethod:'deleteEmployee',jsonString:MyJsonUtil.obj2str(obj)}),
+                                success:function(result){
+                                    if(result.success){
+                                        oTable.api().ajax.reload();
+                                        $.pnotify({
+                                            text: result.msg
+                                        });
+                                    }else{
+                                        $.pnotify({
+                                            type:'error',
+                                            text: result.msg,
+                                            delay: 8000
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
             } else {
-                $("#startDate").datepicker("setEndDate", e.date);
+                $.pnotify({
+                    text: '请选择需要删除的用户信息'
+                });
             }
         });
     }
@@ -31,18 +104,18 @@ var userList = function () {
     var handleTable = function () {
         // 表头定义
         var tableHead = [
-            { "sTitle": "报表任务信息ID", "mData": "reportTaskId","bVisible":false},
-            { "sTitle": "报表名称","mData": "reportTaskName","type" :"string" },
-            { "sTitle": "活动状态", "mData": "repTaskActivityTypeName","type":"repTaskActivityTypeCombo"},
-            { "sTitle": "产品类型", "mData": "productTypeName","type" :"string" },
-            { "sTitle": "品牌", "mData": "brandName","type" :"string"},
-            { "sTitle": "运营商", "mData": "operatorName","type" :"string"},
-            { "sTitle": "分发类型", "mData": "reportSendTypeName","type":"reportSendTypeCombo" },
-            { "sTitle": "创建人", "mData": "paaUsername" ,"type" :"string"},
-            { "sTitle": "开始时间", "mData": "startTime","type" :"date"},
-            { "sTitle": "结束时间","mData": "endTime","type" :"date"}
+            { "sTitle": "用户ID", "mData": "employeeId","bVisible":false},
+            { "sTitle": "姓名","mData": "employeeName","type" :"string" },
+            { "sTitle": "身份证号", "mData": "identifyCardNumber","type":"string"},
+            { "sTitle": "性别", "mData": "sexName","type" :"string" },
+            { "sTitle": "账号", "mData": "login","type" :"string"},
+            { "sTitle": "部门", "mData": "departmentName","type" :"departmentCombo"},
+            { "sTitle": "职务", "mData": "postName","type":"postCombo" },
+            { "sTitle": "角色", "mData": "roleName" ,"type" :"roleCombo"},
+            { "sTitle": "联系电话", "mData": "telephone","type" :"string"}
         ];
-       var oTable =  $('#dt_issues').dataTable({
+
+        oTable =  $('#dt_issues').dataTable({
             "aoColumns": tableHead,
             "serverSide": true,
             "bAutoWidth": false,
@@ -78,35 +151,45 @@ var userList = function () {
             }]
         });
 
-        var table = $('#dt_issues').DataTable(),
-            colvis = new $.fn.dataTable.ColVis(table, {
-                buttonText: "显示 / 隐藏 列",
-                bRestore: true,
-                sRestore: "显示全部"
-            });
-
-        $("#dt_issues").resizableColumns({
-            store: window.store
+        $('#dt_issues tbody').on('click','tr', function () {
+            if ($(this).hasClass("highlight")){
+                $(this).removeClass("highlight");
+                selectTr = null;
+            } else {
+                oTable.$('tr.highlight').removeClass("highlight");
+                $(this).addClass("highlight");
+                selectTr = oTable.fnGetData(this);
+            }
         });
+
+//        var table = $('#dt_issues').DataTable(),
+//            colvis = new $.fn.dataTable.ColVis(table, {
+//                buttonText: "显示 / 隐藏 列",
+//                bRestore: true,
+//                sRestore: "显示全部"
+//            });
+//
+//        $("#dt_issues").resizableColumns({
+//            store: window.store
+//        });
     }
 
     return {
         _select2InitValue: {
-            reportSendTypeName: [{
-                "id": "B2BIC",
-                "text": "B2BIC"
+            sexId: [{
+                "id": "0",
+                "text": "男"
             }, {
-                "id": "E-MAIL",
-                "text": "E-MAIL"
-            }, {
-                "id": "FTP专线",
-                "text": "FTP专线"
+                "id": "1",
+                "text": "女"
             }]
         },
         init: function () {
+            handleButton();
+            handleSelect2();
             searchCommon.select2InitValue = this._select2InitValue;
-            searchCommon.tableAjaxParam.proxyClass = "fileController";
-            searchCommon.tableAjaxParam.proxyMethod = "getReportTaskListByCondition";
+            searchCommon.tableAjaxParam.proxyClass = "securityController";
+            searchCommon.tableAjaxParam.proxyMethod = "getEmployeeListByCondition";
             searchCommon.bindingSearchEvent();
             searchCommon.init();
             common.loadDatatableSettings();

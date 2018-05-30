@@ -30,78 +30,92 @@ var searchCommon = function () {
             for (var k in options) {
                 params[options[k]] = $selector.data(k);
             }
-            that._getRemoteItems($selector.data("url"), $selector, params);
+            _getRemoteItems($selector.data("url"), $selector, params);
         });
     }
 
     function _getRemoteItems (url, $select2Container, extraParams) {
-        $select2Container.select2($.extend({
-            allowClear: true,
-            width: "100%",
-            multiple: true,
-            minimumInputLength: 1,
-            query: function(options) {
-                var realParams = {};
-                $.extend(realParams, {
-                    pageSize: 5,
-                    pageNum: options.page
-                }); // 默认每次显示5条记录
-
-                for (var k in extraParams) {
-                    if (extraParams.hasOwnProperty(k)) {
-                        realParams[k] = (extraParams[k] || options.term);
-                    }
-                }
-
-                $.ajax({
-                    global: false,
-                    url: url,
-                    dataType: "json",
-                    type: "POST",
-                    data: realParams,
-                    quietMillis: 300,
-
-                    success: function(data) { // data format:
-                        // {"results":[{"id":"developer1","text":"developer1"}]}
-                        checkResult(data, {
-                            showBox: false,
-                            callback: function() {
-                                options.callback(data.json);
-                            }
-                        });
-                    }
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:url,
+            success:function(result){
+                $select2Container.select2({
+                    width: "100%",
+                    allowClear:true,
+                    multiple: true,
+                    data:result
                 });
-            },
-            dropdownCssClass: "bigdrop"
-        }, {
-            multiple: !$select2Container.data("single") ? true : false
-        }, {
-            minimumInputLength: $select2Container.data("minLimit") === false ? "" : 1
-        }, {
-            createSearchChoice: $select2Container.data("createsearchchoice") ? function(term, data) { // term为输入关键字，data为搜索总数据
-                var choice = {
-                    id: 0, // 约定，0代表创建新的标签组
-                    text: term
-                };
-                $.each(data, function(i, v) {
-                    if (term == v.text) {
-                        choice = {
-                            id: null,
-                            text: term
-                        };
-                        return false;
-                    }
-                });
-                return choice;
-            } : null
-        })).on("select2-selected", function(e) {
-                $(this).data("selectedtext", e.choice.text);
-            });
+            }
+        });
+//        $select2Container.select2($.extend({
+//            allowClear: true,
+//            width: "100%",
+//            multiple: true,
+//            minimumInputLength: 1,
+//            query: function(options) {
+//                var realParams = {};
+//                $.extend(realParams, {
+//                    pageSize: 5,
+//                    pageNum: options.page
+//                }); // 默认每次显示5条记录
+//
+//                for (var k in extraParams) {
+//                    if (extraParams.hasOwnProperty(k)) {
+//                        realParams[k] = (extraParams[k] || options.term);
+//                    }
+//                }
+//
+//                $.ajax({
+//                    global: false,
+//                    url: url,
+//                    dataType: "json",
+//                    type: "POST",
+//                    data: realParams,
+//                    quietMillis: 300,
+//
+//                    success: function(data) { // data format:
+//                        // {"results":[{"id":"developer1","text":"developer1"}]}
+//                        checkResult(data, {
+//                            showBox: false,
+//                            callback: function() {
+//                                options.callback(data.json);
+//                            }
+//                        });
+//                    }
+//                });
+//            },
+//            dropdownCssClass: "bigdrop"
+//        }, {
+//            multiple: !$select2Container.data("single") ? true : false
+//        }, {
+//            minimumInputLength: $select2Container.data("minLimit") === false ? "" : 1
+//        }, {
+//            createSearchChoice: $select2Container.data("createsearchchoice") ? function(term, data) { // term为输入关键字，data为搜索总数据
+//                var choice = {
+//                    id: 0, // 约定，0代表创建新的标签组
+//                    text: term
+//                };
+//                $.each(data, function(i, v) {
+//                    if (term == v.text) {
+//                        choice = {
+//                            id: null,
+//                            text: term
+//                        };
+//                        return false;
+//                    }
+//                });
+//                return choice;
+//            } : null
+//        })).on("select2-selected", function(e) {
+//                $(this).data("selectedtext", e.choice.text);
+//            });
     }
 
     // 初始化数据源非来自远程的select2插件，主要针对input[data-url]元素
     function _initLocalSearchSelector ($select2Container, datas, disabled) { // items为数组，下拉列表项
         datas = (datas instanceof Array || datas instanceof Object ? datas : (typeof searchCommon.select2InitValue[datas] === "function" ? searchCommon.select2InitValue[datas](this) : searchCommon.select2InitValue[datas]));
+        console.log(searchCommon.select2InitValue);
         $select2Container.select2($.extend({
             width: "100%",
             multiple: true,
@@ -276,16 +290,14 @@ var searchCommon = function () {
                     selectedComponentName = $selected.data("lastValue"),
                     inputValue = $.trim($("input[name=" + selectedComponentName + "]").val());
                 obj.fieldName = selectedComponentName;
-                if (inputValue) {
-                    if ($selected.data("multi")) {
-                        obj.type = "checkbox";
-                        obj.checkboxCondition = inputValue;
-                    } else {
-                        obj.type = "string";
-                        obj.stringCondition = inputValue;
-                    }
-
+                if ($selected.data("multi")) {
+                    obj.type = "checkbox";
+                    obj.checkboxCondition = inputValue;
+                } else {
+                    obj.type = "string";
+                    obj.stringCondition = inputValue;
                 }
+
                 queryConditions.push(obj);
             } else if ($("#query-mode").val() === that._const.searchType.combination) {
                 $("input[data-moda]").each(function(i, dom) {
@@ -313,6 +325,55 @@ var searchCommon = function () {
                         }
                         queryConditions.push(obj);
                     }
+                });
+                $("div[data-moda]").each(function(i, dom) {
+                    var fieldName = $(this).attr("name");
+                    var obj = {};
+                    obj.isLike = true;
+                    obj.isRaw = false;
+                    obj.isEntityField = true;
+                    obj.isCaseSensitive = false;
+                    obj.fieldName = fieldName;
+
+                    if ($(this).data('type') === "date") {
+                        var startFieldName = fieldName + "DateStart";
+                        var endFieldName = fieldName + "DateEnd";
+                        var myStartFieldValue = $('input[name=' + startFieldName + ']').val();
+                        var myEndFieldValue = $('input[name=' + endFieldName + ']').val();
+                        if(myStartFieldValue != "" || myEndFieldValue != ""){
+                            if(myStartFieldValue != "" && myEndFieldValue != ""){
+                                myStartFieldValue += ' 00:00:00';
+                                myEndFieldValue += ' 23:59:59';
+                            }else if(myEndFieldValue=="" ){
+                                myEndFieldValue = myStartFieldValue + ' 23:59:59';
+                                myStartFieldValue += ' 00:00:00';
+                            }else {
+                                myStartFieldValue = myEndFieldValue + ' 00:00:00';
+                                myEndFieldValue += ' 23:59:59';
+                            }
+                            obj.type = "date";
+                            obj.startDate = myStartFieldValue;
+                            obj.endDate = myEndFieldValue;
+                            queryConditions.push(obj);
+                        }
+                    } else if ($(this).data('type') === "int") {
+                        var startFieldName = fieldName + "NumStart";
+                        var endFieldName = fieldName + "NumEnd";
+                        var myStartNumberValue = $('input[name=' + startFieldName + ']').val();
+                        var myEndNumberValue = $('input[name=' + endFieldName + ']').val();
+                        if (myStartNumberValue != "" || myEndNumberValue != "") {
+                            if (myStartNumberValue == "") {
+                                myStartNumberValue = myEndNumberValue;
+                            } else if(myEndNumberValue == ""){
+                                myEndNumberValue = myStartNumberValue;
+                            }
+                            obj.type = "int";
+                            obj.startIntNumber = myStartNumberValue;
+                            obj.endIntNumber = myEndFieldValue;
+                            queryConditions.push(obj);
+                        }
+                    }
+
                 });
             }
 

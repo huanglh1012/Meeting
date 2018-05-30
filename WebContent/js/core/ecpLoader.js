@@ -31,7 +31,7 @@
         /********************** JS文件加载 ************************/
         'js/libs/i18n/jquery.i18n.properties.min.js',
         // BOOTSTRAP JS
-        'js/bootstrap/bootstrap.min.js',
+        'js/bootstrap/bootstrap2.js',
         // JARVIS WIDGETS
         'js/smartwidgets/jarvis.widget.min.js',
         // JQUERY VALIDATE -->
@@ -45,6 +45,7 @@
         'js/plugin/sockjs/sockjs.js',
         'js/plugin/stomp/dist/stomp.js',
         'js/plugin/bootbox/bootbox.js',
+        'js/plugin/jquery-pnotify/jquery.pnotify.js',
         // MAIN APP JS FILE
         'js/app.js',
         'js/notification/SmartNotification.min.js',
@@ -52,13 +53,13 @@
 //        'js/core/componentConfig.js',
 //        'js/resetheight.js',
         // 工具类
-        'js/core/globalInfo.js',
-        'js/core/globalInfoLoader.js',
         'js/util/MyJsonUtil.js',
         'js/util/StringUtil.js',
         'js/util/DomUtil.js',
         'js/util/Cookie.js',
         'js/util/I18n.js',
+        'js/core/globalInfo.js',
+        'js/core/globalInfoLoader.js',
         'js/login.js'
     ];
 	

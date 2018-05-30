@@ -13,10 +13,18 @@
     <link href="../../css/demo.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/navigation.css" media="screen" rel="stylesheet" type="text/css">
 
+    <link href="../../css/jquery.pnotify.default.css" media="screen" rel="stylesheet" type="text/css" >
+    <link href="../../css/jquery.pnotify.default.icons.css" media="screen" rel="stylesheet" type="text/css" >
+
     <link href="../../css/dataTables.colVis.css" media="screen" rel="stylesheet" type="text/css">
     <!-- Date Picker -->
     <link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
+    <style>
+        .datatable tr .highlight {
+            background-color: #87cefa;
+        }
+    </style>
 </head>
 <body>
     <!-- Left panel : Navigation area -->
@@ -53,97 +61,53 @@
         	                                <div class="input-group">
         	                                    <div class="input-group-btn">
         	                                        <button type="button" class="btn btn-default dropdown-toggle fixed-btn-height" data-toggle="dropdown">
-                                                        <span id="current-selected-condition">所有</span> <span class="caret"></span>
+                                                        <span id="current-selected-condition">姓名</span> <span class="caret"></span>
                                                     </button>
                                                     <ul id="issue-condition-selector" class="dropdown-menu">
                                                         <li class="active">
-                                                            <a href="javascript:;" data-last-value="allMatchers"><i class="fa fa-check"></i> 所有</a>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                        <li>
-                                                            <a href="javascript:;" data-last-value="reportTaskName">报表名称</a>
+                                                            <a href="javascript:;" data-last-value="employeeName">姓名</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="productTypeName">产品类型</a>
+                                                            <a href="javascript:;" data-last-value="identifyCardNumber">身份证号</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="brandName">品牌</a>
+                                                            <a href="javascript:;" data-last-value="sexId" data-multi="false">性别</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="operatorName">运营商</a>
+                                                            <a href="javascript:;" data-last-value="login">账号</a>
                                                         </li>
                                                         <li>
-                                                            <a href="javascript:;" data-last-value="reportSendTypeName" data-multi="true">分发类型</a>
+                                                            <a href="javascript:;" data-last-value="departmentId" data-multi="false">部门</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:;" data-last-value="postId" data-multi="false">职务</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:;" data-last-value="roleName" data-multi="false">角色</a>
                                                         </li>
                                                     </ul>
                                                 </div>
-        	                                    <input class="form-control" type="text" placeholder="项目提示" name="allMatchers" data-keyup="true">
-        
-        	                                    <input class="form-control hidden" type="text" placeholder="报表名称"  name="reportTaskName" data-keyup="true">
-        
-                                                <input class="form-control hidden" name="productTypeName" type="text" placeholder="产品类型" data-keyup="true">
-        
-        	                                    <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                    <input class="form-control hidden" name="brandName" type="text" placeholder="品牌"  data-keyup="true">
-        
-        	                                    <!--请保留name="severity"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                    <input class="form-control hidden" name="operatorName" type="text" placeholder="运营商"  data-keyup="true">
-        
-                                                <input class="hidden" name="reportSendTypeName" type="hidden" placeholder="分发类型" data-src="local">
-        
+
+                                                <input class="form-control" type="text" placeholder="姓名"  name="employeeName" data-keyup="true">
+
+                                                <input class="form-control hidden" name="identifyCardNumber" type="text" placeholder="身份证号" data-keyup="true">
+
+                                                <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
+                                                <input class="hidden" name="sexId" type="hidden" placeholder="性别"  data-src="local">
+
+                                                <!--请保留name="severity"和data-src="local", data-src属性指示数据来源于本地-->
+                                                <input class="form-control hidden" name="login" type="text" placeholder="账号"  data-keyup="true">
+
+                                                <input class="hidden" name="departmentId" type="hidden" placeholder="部门" data-url="">
+
+                                                <input class="hidden" name="postId" type="hidden" placeholder="职务" data-url="">
+
+                                                <input class="form-control hidden" name="roleName" type="text" placeholder="角色">
+
         	                                    <div class="input-group-btn">
         	                                      <button id="btn-simple-search" type="button" class="btn btn-primary">
         	                                          <i class="fa fa-fw fa-search "></i>搜索
         	                                      </button>
-        	                                    </div>
-        
-        	                                    <div class="input-group-btn">
-        	                                      <button id="btn-show-more-search" type="button" class="btn btn-default" data-search-mode="combination">
-        	                                      高级
-        	                                      </button>
-        	                                    </div>
-        	                                </div>
-        	                            </form>
-        	                        </div>
-        
-        	                        <!--more search-->
-        	                        <div id="more-search" style="display: none;">
-        	                            <form id="combinational-search-form">
-        	                                <div class="row">
-        	                                    <div class="col-sm-10 col-md-10 col-lg-10">
-        	                                        <div class="row" style="margin: 0;">
-        	                                            <div class="col-sm-6 col-md-4 col-lg-4">
-        	                                                <div class="form-group">
-        	                                                    <input class="form-control" style="padding-left: 5px;" name="reportTaskName" type="text" placeholder="报表名称" data-moda="combination" data-type="string">
-        	                                                </div>
-        	                                            </div>
-        	                                            <div class="col-sm-6 col-md-4 col-lg-4">
-        	                                                <div class="form-group">
-        	                                                    <!--请保留name="status"和data-src="local", data-src属性指示数据来源于本地-->
-        	                                                    <input name="reportSendTypeName" type="hidden" placeholder="分发类型" data-moda="combination" data-src="local" data-type="checkbox">
-        	                                                </div>
-        	                                            </div>
-                                                    </div>
-                                                    <div class="row" style="margin: 0;">
-                                                        <div class="col-sm-6 col-md-4 col-lg-4">
-                                                            <div class="form-group">
-                                                                <input id="startDate" type="text" placeholder="开始日期" class="form-control input-sm" name="startTime" data-type="date" data-moda="combination">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6 col-md-4 col-lg-4">
-                                                            <div class="form-group">
-                                                                <input id="endDate" type="text" placeholder="结束日期" class="form-control input-sm" name="endTime" data-type="date" data-moda="combination">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-        	                                    </div>
-        	                                    <div class="col-sm-2 col-md-2 col-lg-2 responsive-alignment">
-                                                    <div class="pull-right">
-            	                                        <button id="btn-show-simple-search" type="button" class="btn btn-default pull-right" data-search-mode="simple">
-            	                                             基本
-            	                                        </button>
-            	                                        <button id="btn-combination-search" type="button" class="btn btn-primary pull-right"><i class="fa fa-search"></i>搜索</button>
-                                                    </div>
         	                                    </div>
         	                                </div>
         	                            </form>
@@ -159,13 +123,14 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="well">
                         <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
-                            <a href='user_new.html' class="btn btn-warning btn-sm pull-right" >
-                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改</span>
-                            </a>
-                            <a href='user_new.html' class="btn btn-success btn-sm pull-right" >
+                            <span class="font-lg text-primary pull-left">用户列表</span>
+                            <a href='#' class="btn btn-success btn-sm pull-right" id="deleteUserBtn"  data-security-code="2007">
                                 <i class="fa fa-lg fa-minus"></i> <span class="hidden-mobile hidden-tablet" >删除</span>
                             </a>
-                            <a href='user_new.html' class="btn btn-primary btn-sm pull-right" >
+                            <a href='#' class="btn btn-warning btn-sm pull-right" id="modifyUserBtn"  data-security-code="2008">
+                                <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改</span>
+                            </a>
+                            <a href='user_new.html' class="btn btn-primary btn-sm pull-right" data-security-code="2009">
                                 <i class="fa fa-lg fa-plus"></i> <span class="hidden-mobile hidden-tablet">增加</span>
                             </a>
                             <!--<div class="btn-group hidden-phone pull-right">-->

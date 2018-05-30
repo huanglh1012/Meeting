@@ -14,27 +14,9 @@
 var login = function () {
 
     var handleForm = function () {
-        updateFlag($('.dtms'));
-        var sysImageMap = {
-                dtms: "../img/login/systemLogo_01.png",
-                itms: "../img/login/systemLogo_02.png",
-                knowlege: "../img/login/systemLogo_03.png",
-                pms: "../img/login/systemLogo_04.png",
-                sys: "../img/login/systemLogo_05.png"
-            },
-            $title = $("#rightTitle img"),
-            $form = $("#loginForm"),
-            that = this;
-
-        $("#leftContent").on("click", ".simpleTile", function(e) {
-            $title.attr("src", sysImageMap[$(this).data("key")]);
-            $(this).addClass("selectedTile").siblings().removeClass("selectedTile");
-            updateFlag($(this));
-        });
-
         $("#loginForm").validate({
             rules:{
-                username:{
+                login:{
                     required:true
                 },
                 password:{
@@ -42,7 +24,7 @@ var login = function () {
                 }
             },
             messages: {
-                username:{
+                login:{
                     required:"用户名不能为空！！！"
                 },
                 password:{
@@ -51,21 +33,18 @@ var login = function () {
             },
             submitHandler: function (form) {
                 var obj = [];
-                obj.push(StringUtil.decorateRequestData('String',$("#username").val()));
-                obj.push(StringUtil.decorateRequestData('String',$("#password").val()));
-                var urlConfig = {controller:'controllerProxy',method:'callBackByRequest'
-                    ,proxyClass:'loginController',proxyMethod:'login',jsonString:MyJsonUtil.obj2str(obj)};
-                var baseUrl = '../'
+                var tmpFormData = DomUtil.getJSONObjectFromForm('loginForm', null);
+                obj.push(StringUtil.decorateRequestData('LoginDTO', tmpFormData));
                 $.ajax({
                     type:"POST",
-                    url:SMController.getUrl(urlConfig,baseUrl),
+                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'securityController',proxyMethod:'login',jsonString:MyJsonUtil.obj2str(obj)},
+                        '/Meeting/'),
                     dataType:"json",
                     success:function(result) {
                         if (result.success) {
-//                            $.pnotify({
-//                                text: result.msg
-//                            });
-                            window.location.href='../pages/user/user_list.html';
+                            localStorage.setItem("LoginDTO", JSON.stringify(result.msg.entityKeyValue));
+                            window.location.href='index.html';
                         } else {
                             bootbox.alert({
                                 title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
@@ -93,99 +72,49 @@ var login = function () {
                 document.getElementById("btnSubmit").click();
             }
         };
-
-        function updateFlag(target) {
-            $('.tileFlag').remove();
-            $("<div class=\"tileFlag\"></div>").appendTo(target).offset({
-                "top": target.offset().top + 3
-            });
-        }
     };
 
     var handleTop = function () {
         initTopEvent();
+        intSecurity();
         validateFrom();
 
         // 初始化表单提交事件
         function initTopEvent() {
+            var tmpLoginDTO= JSON.parse(localStorage.getItem("LoginDTO"));
+            if (tmpLoginDTO == null)
+                window.location.href = '../../login.html';
+
             // 设置登录名
-            $("#loginUser").text(CurrentLoginUser.data.user_fullname);
+            document.getElementById("loginUser").innerHTML = tmpLoginDTO.employeeName;
 
             // 退出登录
             $("#logout").click(function(e) {
-//                localStorage.removeItem("target_nav");
-//                localStorage.removeItem("username");
-//                localStorage.removeItem("globalResources");
-//                localStorage.removeItem("specificResources");
-//                localStorage.removeItem("roles");
-                $.ajax({
-                    type:'post',
-                    dataType:"json",
-                    url: SMController.getUrl({controller:'controllerProxy',method:'callBackByRequest',
-                        proxyClass:'loginController',proxyMethod:'userLogout',jsonString:null}),
-                    success:function(result){
-                        if(result.success){
-                            window.location.href="../login.html";
-                        }else{
-                            bootbox.alert({
-                                className:'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message:result.msg,
-                                title: "错误提示"
-                            });
-                        }
-                    }
-                });
+                // 将所有保存的数据删除
+                localStorage.clear();
             });
 
             // 提交表单
             $("#btn-modifiedPassword").on('click', function(e){
                 // 清除界面上的弹出框
                 clearSmallBox();
-                // 锁定，防止重复提交
-                if(!lockItms($('#btn-modifiedPassword').get(0))) {
-                    return;
-                }
-                if(!$("#password-form").valid()) {
-                    // 解锁
-                    unlockItms($('#btn-modifiedPassword').get(0));
-                    return;
-                }
-                $.ajax({
-                    url : $.url_root + '/user/changePassWord.jspa',
-                    type : 'post',
-                    dataType: "json",
-                    data : {
-                        "userDTO.password" : $("#password").val(),
-                        "userDTO.newPassword" : $("#newPassword").val()
-                    },
-                    success : function(data) {
-                        checkResult(data, {
-                            message : "密码更改成功",
-                            showBox : true,
-                            callback : function(){
-                                //修改成功后重置表单及清除格式
-                                resetOrClearForm();
-                                $("#modifyPasswordModal").modal("hide");
-                            }
-                        });
-                        // 解锁
-                        unlockItms($('#btn-modifiedPassword').get(0));
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        showOperationError(xhr, textStatus, errorThrown);
-                    }
-                });
+
             });
 
             //取消提交表单,表单填充域清空
             $("#btn-cancel , .close").on('click',function(e){
                 resetOrClearForm();
+            });
+        }
+
+        // 初始化用户权限
+        function intSecurity() {
+            var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+            var tmpSecurityCodeList = tmpEmployeeDTO.securityCodeList;
+            // 设置按钮权限
+            $("span[data-security-code],a[data-security-code]").each(function(i, v) {
+                if (tmpSecurityCodeList.indexOf(""+$(this).data('securityCode')) == -1)
+                    $(this).hide();
             });
         }
 

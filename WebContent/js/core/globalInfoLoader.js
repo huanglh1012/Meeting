@@ -23,19 +23,21 @@ function _get(name){
 }
 
 (function($){
-    //获取当前用户任务节点
-	$.ajax({ 
-    	type:'post',
-        dataType:"json",
-        async: false,
-        url:SMController.getUrl({controller:'controllerProxy',method:'callBackByRequest'
-            ,proxyClass:'loginController',proxyMethod:'getLoginInfo',jsonString:null}),
-        success:function(result){
-        	if(result.success){
-        		CurrentLoginUser.data = result.msg ;
-        	}else{
-        		 window.location.href='login.html';   		 
-        	}     
-        } 
-    });
+    var tmpLoginDTO = JSON.parse(localStorage.getItem("LoginDTO"));
+    if (tmpLoginDTO != null) {
+        var obj = [];
+        obj.push(StringUtil.decorateRequestData('String', tmpLoginDTO.employeeId));
+        //获取当前用户任务节点
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            async: false,
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getEmployeeDetailInfoByEmployeeId',jsonString:MyJsonUtil.obj2str(obj)}),
+            success:function(result){
+                localStorage.removeItem("EmployeeDTO");
+                localStorage.setItem("EmployeeDTO", JSON.stringify(result));
+            }
+        });
+    }
 })(jQuery);
