@@ -113,6 +113,31 @@ public class SecurityController  {
 	}
 	
 	/**
+	 * 更新用户密码信息
+	 * 
+	 * @param inEmployeeDTO
+	 *     用户信息
+	 *     
+	 * @return
+	 *     返回用户信息更新情况
+	 *     
+	 */
+	public AjaxResult updateEmployeePassword(EmployeeDTO inEmployeeDTO) {
+		ActionResult result = null;	
+		AjaxResult ajaxResult = new AjaxResult();
+		try {
+			result = this.securityService.updateEmployeePassword(inEmployeeDTO);
+			ajaxResult.setSuccess(result.getIsSuccessful());
+			ajaxResult.setMsg(result.getActionResultMessage());
+		} catch (Exception e) {
+			ajaxResult.setSuccess(false);
+			ajaxResult.setMsg(e.getMessage());
+		}	
+		
+		return ajaxResult;
+	}
+	
+	/**
 	 * 删除用户信息
 	 * 
 	 * @param inEmployeeId

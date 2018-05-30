@@ -41,6 +41,8 @@ public class EmployeeDTO extends BaseDTO {
 	
 	private String password;
 	
+	private String newPassword;
+	
 	private String confirmPassword;
 	
 	private String employeeName;
@@ -211,6 +213,14 @@ public class EmployeeDTO extends BaseDTO {
 
 	public void setSecurityCodeList(List<String> securityCodeList) {
 		this.securityCodeList = securityCodeList;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 
 }

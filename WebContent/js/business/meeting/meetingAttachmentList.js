@@ -92,7 +92,7 @@ var meetingAttachmentList = function () {
     var handleTable = function () {
         // 表头定义
         var tableHead = [
-            { "sTitle": '<input type="checkbox" id="filesCheckAll"/>',"bSortable":false,"sWidth": "12px" },
+            { "sTitle": '<input type="checkbox" id="filesCheckAll"/>',"bSortable":false,"sWidth": "30px" },
             { "sTitle": "附件ID", "mData": "attachmentId","bVisible":false},
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},

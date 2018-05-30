@@ -195,6 +195,18 @@ public class SecurityService extends BaseService {
 		return ActionResultUtil.getActionResult(tmpCuttentEmployeeEntity.getId(), "用户修改成功");
 	}
 	
+	public ActionResult updateEmployeePassword(EmployeeDTO inEmployeeDTO) throws Exception {
+		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, inEmployeeDTO.getEmployeeId());
+		if (!tmpEmployeeEntity.getPassword().equals(inEmployeeDTO.getPassword())) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "旧密码不正确，请重新输入";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		tmpEmployeeEntity.setPassword(inEmployeeDTO.getNewPassword());
+		this.securityDAO.update(tmpEmployeeEntity);
+		return ActionResultUtil.getActionResult(tmpEmployeeEntity.getId(), "密码修改成功");
+	}
+	
 	/**
 	 * 删除用户信息
 	 * 

@@ -245,10 +245,9 @@ var meetingRoomList = function () {
                     }),
                     dataType: "json",
                     success: function (result) {
-                        if (result.length > 0) {
-                            meetingRoomBookingTable.fnClearTable();
+                        meetingRoomBookingTable.fnClearTable();
+                        if (result.length > 0)
                             meetingRoomBookingTable.fnAddData(result);
-                        }
                     }
                 });
             }
