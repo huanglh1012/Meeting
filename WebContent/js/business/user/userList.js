@@ -118,11 +118,14 @@ var userList = function () {
         oTable =  $('#dt_issues').dataTable({
             "aoColumns": tableHead,
             "serverSide": true,
-            "bAutoWidth": false,
-            "responsive": true,
-            "ordering": true,
-            "order": [[ 2, "ASC" ]],
-            "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+            "aLengthMenu":[ 10, 25, 50,100],
+            "bAutoWidth" : true,
+//            "bSort": true,
+            ordering: true,
+            searching: true,
+            order: [[2, 'asc']],
+            //默认显示的分页数
+            "iDisplayLength": 10,
             "lengthChange": true,
             "paging": true,
             "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
@@ -131,24 +134,7 @@ var userList = function () {
                 type: "POST",
                 dataSrc: "data",
                 data: $.proxy(searchCommon.setDatatableData, searchCommon)
-            },
-            "columnDefs": [{
-                "targets": [0],
-                "render": function(data, type, full) {
-                    return '<a title="' + data + '" target="_blank" href="' + $.url_root + '/issue/viewIssueOfCard.jspa?issueId=' + full.issueId + '">' + data + '</a>';
-                }
-            }, {
-                "targets": [1],
-                "render": function(data, type, full) {
-                    return '<a class="without-decoration font-default" title="' + data + '" href="javascript:;">' + data + '</a>';
-                }
-            }, {
-                "targets": [2],
-                "render": function(data, type, full) {
-                    data = data || "";
-                    return '<a class="without-decoration font-default" title="' + data + '" href="javascript:;">' + data + '</a>';
-                }
-            }]
+            }
         });
 
         $('#dt_issues tbody').on('click','tr', function () {

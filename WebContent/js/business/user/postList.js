@@ -28,7 +28,9 @@ var postList = function () {
             "aLengthMenu":[ 10, 25, 50,100],
             "bAutoWidth" : true,
             //默认显示的分页数
-            "iDisplayLength": 25,
+            "iDisplayLength": 10,
+            "paging": true,
+            "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
             "oLanguage": { //国际化一些配置
                 "sLoadingRecords" : "正在获取数据，请稍候...",
                 "sLengthMenu" : "显示 _MENU_ 条",

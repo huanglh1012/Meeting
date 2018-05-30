@@ -479,7 +479,7 @@ var meetingList = function () {
                     // 管理员、领导、发起人、参与人可以查看会议信息
                     if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+
                         || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) > -1
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
                         window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;

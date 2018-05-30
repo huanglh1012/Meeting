@@ -111,6 +111,7 @@ var meetingAttachmentList = function () {
             "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
             "lengthChange": true,
             "paging": true,
+            "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
             "ajax": {
                 url: "../../controllerProxy.do?method=callBack",
                 type: "POST",
