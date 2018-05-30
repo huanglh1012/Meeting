@@ -106,7 +106,8 @@ var roleList = function () {
 
         $('#delete_role').on('click', function (e) {
             if(zTreeObj.getSelectedNodes()[0] != null) {
-                if (zTreeObj.getSelectedNodes()[0].id == '-1' || zTreeObj.getSelectedNodes()[0].id == '0') {
+                // 管理员和公司领导角色不能删除
+                if (zTreeObj.getSelectedNodes()[0].id == '-1' || zTreeObj.getSelectedNodes()[0].id == '0' || zTreeObj.getSelectedNodes()[0].id == '1') {
                     bootbox.alert({
                         className: 'span4 alert-error',
                         buttons: {
@@ -115,7 +116,7 @@ var roleList = function () {
                                 className: 'btn blue'
                             }
                         },
-                        message: "不允许删除管理员角色信息",
+                        message: "不允许删除管理员和公司领导角色信息",
                         callback: function () {
 
                         },

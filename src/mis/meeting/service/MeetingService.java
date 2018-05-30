@@ -126,9 +126,9 @@ public class MeetingService extends BaseService {
 		this.meetingDAO.deleteMeetingMember(tmpCurrentMeetingEntity.getMeetingId());
 		
 		// 清空短信通知信息
-		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingDTO.getMeetingId());
-		if (tmpMessageSendCenterEntity != null)
-			this.meetingDAO.delete(tmpMessageSendCenterEntity);
+//		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingDTO.getMeetingId());
+//		if (tmpMessageSendCenterEntity != null)
+//			this.meetingDAO.delete(tmpMessageSendCenterEntity);
 			
 		// 更新会议信息
 		MeetingDTO.dtoToEntity(inMeetingDTO, tmpCurrentMeetingEntity);
@@ -174,6 +174,10 @@ public class MeetingService extends BaseService {
 		tmpMessageSendCenterEntity.setMeetingId(null);
 		this.meetingDAO.update(tmpMessageSendCenterEntity);
 		
+		// 清空定时作业任务
+		if(QuarzManager.checkJobExists(inMeetingId, "meetingJobGroup"))
+			QuarzManager.deleteJob(inMeetingId, "meetingJobGroup");		
+				
 		// 删除会议信息
 		this.meetingDAO.delete(tmpMeetingEntity);
 		
@@ -192,6 +196,10 @@ public class MeetingService extends BaseService {
 		tmpMeetingEntity.setMeetingUploadEndTime(new Date());
 		this.meetingDAO.update(tmpMeetingEntity);
 		
+		// 清空定时作业任务
+		if(QuarzManager.checkJobExists(inMeetingId, "meetingJobGroup"))
+			QuarzManager.deleteJob(inMeetingId, "meetingJobGroup");	
+				
 		return ActionResultUtil.getActionResult(tmpMeetingEntity.getId(), "会议关闭成功");
 	}
 	
@@ -269,6 +277,7 @@ public class MeetingService extends BaseService {
 				BaseDTO.copyObjectPropertys(tmpAttachmentTempEntity, tmpAttachmentEntity);
 				tmpAttachmentEntity.setAttachmentRename(tmpAttachmentTempEntity.getAttachmentCreateId());
 				tmpAttachmentEntity.setEmployeeId(inMeetingDTO.getEmployeeId());
+				tmpAttachmentEntity.setAttachmentCreateTime(new Date());
 				this.attachmentDAO.insert(tmpAttachmentEntity);
 				outSaveMeetingAttachmentEntityList.add(tmpAttachmentEntity);
 				
@@ -284,14 +293,22 @@ public class MeetingService extends BaseService {
 	
 	public void saveMessageSendInfo(MeetingDTO inMeetingDTO) throws Exception {
 		// 保存消息发送信息
-		MessageSendCenterEntity tmpMessageSendCenterEntity = new MessageSendCenterEntity();
+		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingDTO.getMeetingId());;
 		if (inMeetingDTO.getMessageNoticeTime() != null) {
-			tmpMessageSendCenterEntity.setMeetingId(inMeetingDTO.getMeetingId());
-			tmpMessageSendCenterEntity.setSendMessage(inMeetingDTO.getMeetingSubject());
-			tmpMessageSendCenterEntity.setSendDatetime(inMeetingDTO.getMessageNoticeTime());
-			tmpMessageSendCenterEntity.setMessageSendStateId(String.valueOf(MessageSendStateEnum.UNSEND.ordinal()));
-			tmpMessageSendCenterEntity.setIsActive(inMeetingDTO.getIsSendMessageNotice());
-			this.meetingDAO.insert(tmpMessageSendCenterEntity);
+			if (tmpMessageSendCenterEntity == null) {
+				tmpMessageSendCenterEntity = new MessageSendCenterEntity();
+				tmpMessageSendCenterEntity.setMeetingId(inMeetingDTO.getMeetingId());
+				tmpMessageSendCenterEntity.setSendMessage(inMeetingDTO.getMeetingSubject());
+				tmpMessageSendCenterEntity.setSendDatetime(inMeetingDTO.getMessageNoticeTime());
+				tmpMessageSendCenterEntity.setMessageSendStateId(String.valueOf(MessageSendStateEnum.UNSEND.ordinal()));
+				tmpMessageSendCenterEntity.setIsActive(inMeetingDTO.getIsSendMessageNotice());
+				this.meetingDAO.insert(tmpMessageSendCenterEntity);
+			} else {
+				tmpMessageSendCenterEntity.setSendMessage(inMeetingDTO.getMeetingSubject());
+				tmpMessageSendCenterEntity.setSendDatetime(inMeetingDTO.getMessageNoticeTime());
+				tmpMessageSendCenterEntity.setIsActive(inMeetingDTO.getIsSendMessageNotice());
+				this.meetingDAO.update(tmpMessageSendCenterEntity);
+			}
 		}
 		
 		// 清空作业任务
@@ -316,8 +333,9 @@ public class MeetingService extends BaseService {
 					IntervalUnit.MINUTE,Integer.valueOf("1"),Integer.valueOf(1),tmpMessagePreNoticeTime);
 			QuarzManager.addTrigger2Job(tmpNoticeTrigger);
 			QuarzManager.addTrigger2Job(tmpPreNoticeTrigger);
-			// 发送短信信息
-			this.sendMeetingMessage(tmpShortMessageSendDTO);
+			// 如果通知时间大于当前操作时间，则发送短信信息
+			if (inMeetingDTO.getMessageNoticeTime().getTime() > new Date().getTime())
+				this.sendMeetingMessage(tmpShortMessageSendDTO);
 		}
 	}
 	

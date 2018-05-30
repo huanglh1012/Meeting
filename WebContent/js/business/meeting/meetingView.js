@@ -37,8 +37,11 @@ var meetingView = function () {
                         ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
                         var tmpJsonObject = JSON.parse(result);
+                        console.log(tmpJsonObject);
                         DomUtil.setFormElementsValueViaJSONObject('meetingForm',tmpJsonObject);
                         $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
+                        if (tmpJsonObject.isSendMessageNotice == 1)
+                            $('input[name="isSendMessageNotice"]').prop('checked',true);
                         if (tmpJsonObject.meetingFileList.length > 0)
                             meetingFilesTable.fnAddData(tmpJsonObject.meetingFileList);
                         if (tmpJsonObject.meetingRecordFileList.length > 0)
@@ -230,9 +233,10 @@ var meetingView = function () {
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
-                    // 如果不是发起人或者管理员，则只允许下载自己的会议材料
+                    // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
                     if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         selectMeetingRecordFiles.push(tmpRowData.attachmentId);
@@ -281,9 +285,10 @@ var meetingView = function () {
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingFilesTable.fnGetData(tr);
-                    // 如果不是发起人或者管理员，则只允许下载自己的会议材料
+                    // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
                     if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
                         || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         selectMeetingFiles.push(tmpRowData.attachmentId);

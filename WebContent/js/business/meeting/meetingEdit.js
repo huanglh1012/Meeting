@@ -41,7 +41,6 @@ var meetingEdit = function () {
                         if (tmpJsonObject.isSendMessageNotice == 1)
                             $('input[name="isSendMessageNotice"]').prop('checked',true);
                         $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
-                        $('#meetingCreator').select2('val',tmpJsonObject.meetingCreator);
                         $('#meetingRoomId').select2('val',tmpJsonObject.meetingRoomId);
                         $('#meetingCreatorDepartmentId').select2('val',tmpJsonObject.meetingCreatorDepartmentId);
                         if (tmpJsonObject.meetingFileList.length > 0)
@@ -49,9 +48,6 @@ var meetingEdit = function () {
                         if (tmpJsonObject.meetingRecordFileList.length > 0)
                             meetingRecordFilesTable.fnAddData(tmpJsonObject.meetingRecordFileList);
                         // 判断操作人是否为发起人员或者管理员，如果不是，则只允许上传，删除和下载自己的会议材料，不允许修改会议内容，不允许下载其他部门会议材料
-                        console.log(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList);
-                        console.log(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1'));
-                        console.log(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0'));
                         if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
                             || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
                             || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
@@ -191,6 +187,7 @@ var meetingEdit = function () {
     var handleForm = function () {
         var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
         // 隐藏域赋值
+        $("#meetingProposeTime").datetimepicker('setDate', new Date());
         $('input[name="meetingCreatorName"]').val(tmpEmployeeDTO.employeeName);
         $('input[name="meetingCreatorDepartmentName"]').val(tmpEmployeeDTO.departmentName);
         $("#createMeetingForm").validate({
@@ -267,8 +264,9 @@ var meetingEdit = function () {
             },
 
             submitHandler: function(form) { //验证通过时触发
+                if ($('input[name="meetingCreator"]').val() == "")
+                    $('input[name="meetingCreator"]').val(tmpEmployeeDTO.employeeId);
                 $('input[name="employeeId"]').val(tmpEmployeeDTO.employeeId);
-                $('input[name="meetingCreator"]').val(tmpEmployeeDTO.employeeId);
                 var meetingId = $('input[name="meetingId"]').val();
                 var isSendMessageNotice = $('input[name="isSendMessageNotice"]').prop('checked');
                 var addData = DomUtil.getJSONObjectFromForm('createMeetingForm', null);
@@ -450,23 +448,8 @@ var meetingEdit = function () {
                     "mRender": function (data, type, full ) {
                         return'<input type="checkbox" class="checkboxes"/>';
                     }
-                }/*, {   //第七列的值为链接
-                    "aTargets": [6],
-                    "mRender": function (data, type, full ) {
-                        return'<a class="delete btn mini green" ><i class="fa fa-trash-o"></i> 删除</a>';
-                    }
-                }*/
+                }
             ]
-//            "ajax": {
-//                type:"POST",
-//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingAttachmentInfoByMeetingId',jsonString:MyJsonUtil.obj2str(meetingFilesTableObj)}),
-//                dataType:"json",
-//                success:function(data) {
-//                    meetingFilesTable.fnClearTable();
-//                    meetingFilesTable.fnAddData(data);
-//                }
-//            }
         });
 
         meetingRecordFilesTable = $('#meetingRecordFiles').dataTable({
@@ -485,23 +468,8 @@ var meetingEdit = function () {
                     "mRender": function (data, type, full ) {
                         return'<input type="checkbox" class="checkboxes"/>';
                     }
-                }/*, {   //第七列的值为链接
-                 "aTargets": [6],
-                 "mRender": function (data, type, full ) {
-                 return'<a class="delete btn mini green" ><i class="fa fa-trash-o"></i> 删除</a>';
-                 }
-                 }*/
+                }
             ]
-//            "ajax": {
-//                type:"POST",
-//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingAttachmentInfoByMeetingId',jsonString:null}),
-//                dataType:"json",
-//                success:function(data) {
-//                    meetingFilesTable.fnClearTable();
-//                    meetingFilesTable.fnAddData(data);
-//                }
-//            }
         });
 
         //复选框全选
@@ -817,7 +785,6 @@ var meetingEdit = function () {
 
     return {
         init: function () {
-
             handleSelect2();
             handleTree();
             handleForm();
