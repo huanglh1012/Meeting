@@ -125,6 +125,8 @@ var login = function () {
                             $("#processStatus").text("密码修改成功，正在返回登陆页面...");
                             setTimeout(function(){
                                 $.unblockUI();
+                                // 将所有保存的数据删除
+                                localStorage.clear();
                                 window.location.href = '../../login.html';
                             }, 1500);
                         } else {
