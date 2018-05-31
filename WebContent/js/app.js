@@ -3,7 +3,7 @@
 	 * Description: All Global Vars
 	 */
 
-	var $socket;
+//	var $socket;
 
 	var $stompClient;
 
@@ -305,8 +305,8 @@ var app = function() {
 
         if($('#header').size() > 0) {
             // $socket = new SockJS("/eipd-itms/in/wst");
-            $socket = new SockJS(getUrlRoot(true) + "/in/wst");
-            $stompClient = Stomp.over($socket);
+//            $socket = new SockJS(getUrlRoot(true) + "/in/wst");
+//            $stompClient = Stomp.over($socket);
         }
     }
 

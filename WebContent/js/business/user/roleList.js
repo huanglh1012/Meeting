@@ -165,8 +165,7 @@ var roleList = function () {
                                             });
                                         }else{
                                             $.pnotify({
-                                                type:'error',
-                                                text: result.msg,
+                                                text: "角色已被引用，无法删除，请联系管理员.",
                                                 delay: 4000
                                             });
                                         }

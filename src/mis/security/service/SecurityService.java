@@ -520,6 +520,11 @@ public class SecurityService extends BaseService {
 			throw new RuntimeException(exceptionMessage);
 		}
 		
+		// 删除角色权限信息
+		List<RoleSecurityRfEntity> tmpRoleSecurityRefEntityList = this.securityDAO.getEntityList(RoleSecurityRfEntity.class, "roleId", inRoleId, null);
+		this.securityDAO.delete(tmpRoleSecurityRefEntityList);
+		
+		// 删除角色信息
 		this.securityDAO.delete(tmpRoleEntity);
 		
 		return ActionResultUtil.getActionResult(tmpRoleEntity.getId(), "角色删除成功");

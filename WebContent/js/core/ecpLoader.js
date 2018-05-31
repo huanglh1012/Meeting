@@ -29,27 +29,27 @@
 	 */
 	var _jsArray = [
         /********************** JS文件加载 ************************/
-        'js/libs/i18n/jquery.i18n.properties.min.js',
+//        'js/libs/i18n/jquery.i18n.properties.min.js',
         // BOOTSTRAP JS
         'js/bootstrap/bootstrap2.js',
         // JARVIS WIDGETS
-        'js/smartwidgets/jarvis.widget.min.js',
+//        'js/smartwidgets/jarvis.widget.min.js',
         // JQUERY VALIDATE -->
         'js/plugin/jquery-validate/jquery.validate.min.js',
         'js/plugin/jquery-dragTab/jquery.resizableColumns.js',
         // browser msie issue fix
-        'js/plugin/msie-fix/jquery.mb.browser.min.js',
+//        'js/plugin/msie-fix/jquery.mb.browser.min.js',
         // FastClick: For mobile devices
-        'js/plugin/fastclick/fastclick.js',
+//        'js/plugin/fastclick/fastclick.js',
         // websocket support
-        'js/plugin/sockjs/sockjs.js',
-        'js/plugin/stomp/dist/stomp.js',
+//        'js/plugin/sockjs/sockjs.js',
+//        'js/plugin/stomp/dist/stomp.js',
         'js/plugin/bootbox/bootbox.js',
         'js/plugin/jquery-pnotify/jquery.pnotify.js',
         'js/plugin/jquery-blockui/jquery.blockUI.js',
         // MAIN APP JS FILE
         'js/app.js',
-        'js/notification/SmartNotification.min.js',
+//        'js/notification/SmartNotification.min.js',
         'js/core/common.js',
 //        'js/core/componentConfig.js',
 //        'js/resetheight.js',
@@ -57,8 +57,8 @@
         'js/util/MyJsonUtil.js',
         'js/util/StringUtil.js',
         'js/util/DomUtil.js',
-        'js/util/Cookie.js',
-        'js/util/I18n.js',
+//        'js/util/Cookie.js',
+//        'js/util/I18n.js',
         'js/core/globalInfo.js',
         'js/core/globalInfoLoader.js',
         'js/login.js'
