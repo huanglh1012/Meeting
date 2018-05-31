@@ -16,9 +16,6 @@
     <link href="../../css/jquery.pnotify.default.css" media="screen" rel="stylesheet" type="text/css" >
     <link href="../../css/jquery.pnotify.default.icons.css" media="screen" rel="stylesheet" type="text/css" >
 
-    <!--<link href="../../css/dataTables.colVis.css" media="screen" rel="stylesheet" type="text/css">-->
-    <!--&lt;!&ndash; Date Picker &ndash;&gt;-->
-    <!--<link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">-->
     <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
     <style>
         .datatable tr .highlight {
@@ -45,7 +42,7 @@
         <!-- END RIBBON -->
 
         <!-- MAIN CONTENT -->
-        <div id="content" style="min-height: 600px">
+        <div id="content" class="pre-scrollable" style="min-height: 600px">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="well">
@@ -86,7 +83,6 @@
         </div>
     </div>
     <!-- 不能删除，查询所用 -->
-    <!-- the query mode, simple query or combinational query -->
     <input id="query-mode" type="hidden" value="simple">
     <div id="footer"></div>
 </body>
@@ -109,14 +105,7 @@
 <script src="../../js/core/ecpLoader.js"></script>
 <!-- JQUERY SELECT2 INPUT -->
 <script src="../../js/plugin/select2/select2.min.js"></script>
-<!-- bootstrap-datepicker-master -->
-<!--<script src="../../js/plugin/bootstrap-datepicker-master/bootstrap-datepicker.js"></script>-->
-<!--<script src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>-->
 <script src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
-<!--<script src="../../js/plugin/datatables10/dataTables.colReorder.js"></script>-->
-<!--<script src="../../js/plugin/datatables10/dataTables.colVis.min.js"></script>-->
-<!--<script src="../../js/plugin/datatables/ZeroClipboard.js"></script>-->
-<!--<script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>-->
 <script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
 <script src="../../js/core/searchCommon.js"></script>
 <script src="../../js/business/meeting/doMeetingList.js"></script>
@@ -129,14 +118,13 @@
 
     window.onload = function(){
         app.init();
-        app.internationalInit('UserManagement');
+//        app.internationalInit('UserManagement');
         doMeetingList.init();
     }
 
     // 不加载app.js其他浏览器会显示不了左侧导航的+-图标，火狐则可以正常显示
     loadScript("../../js/app.js", initTop);
     function initTop() {
-
     }
 </script>
 </html>

@@ -1,10 +1,10 @@
 /**
  * FileName: postList.js
  * File description: 用于加载职务列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -15,7 +15,6 @@ var postList = function () {
     var oTable = null;
     var selectTr = null;
     var handleTable = function () {
-        var selectTr = null;
         var tableHead = [
             { "sTitle": "职务ID", "mData": "postId","bVisible":false},
             { "sTitle": "职务","mData": "postName","type" :"string" },
@@ -55,7 +54,8 @@ var postList = function () {
                 dataType:"json",
                 success:function(data) {
                     oTable.fnClearTable();
-                    oTable.fnAddData(data);
+                    if (data.length > 0)
+                        oTable.fnAddData(data);
                 }
             }
         });
@@ -71,13 +71,6 @@ var postList = function () {
                 selectTr = oTable.fnGetData(this);
             }
         });
-
-        //双击每一行,查看数据
-//        $('#postList tbody').on('dblclick', 'tr', function () {
-//            var data = oTable.fnGetData( this );
-//            $('#myModal').modal('show',true);
-//            window.location.href='viewAlgorithm.html?encryptionAlgorithmId='+ data.encryptionAlgorithmId;
-//        });
 
         // "添加"按钮
         $('#post_add').click(function (e) {
@@ -128,8 +121,6 @@ var postList = function () {
                                         $.pnotify({
                                             text: result.msg
                                         });
-                                        //客户端”删除“
-                                        oTable.fnDeleteRow(selectTr);
                                     }else{
                                         $.pnotify({
                                             type:'error',
@@ -145,13 +136,11 @@ var postList = function () {
             }
         });
 
-
         function clearModalData(){
             $('#postId').val('');
             $('#postName').val('');
             $('#postSummary').val('');
         }
-
     };
 
     var handleButton = function() {
@@ -165,7 +154,6 @@ var postList = function () {
             addData['postId'] = postId;
             addData['postName'] = postName;
             addData['postSummary'] = postSummary;
-            console.log(addData);
 
             if (postName == '') {
                 bootbox.alert({
@@ -205,7 +193,6 @@ var postList = function () {
                         });
                     },
                     success: function (result) {
-                        console.log(result);
                         if (result.success) {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){

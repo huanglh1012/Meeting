@@ -17,23 +17,15 @@
 
 </head>
 <body>
-    <!-- Left panel : Navigation area -->
     <div id="top"></div>
     <div id="leftnav"></div>
-    <!-- END NAVIGATION -->
-
     <div id="main" role="main">
-        <!-- RIBBON -->
         <div id="ribbon">
-            <!-- breadcrumb -->
             <ol class="breadcrumb">
                 <li><a href="#" data-item-index="1">系统管理</a></li>
                 <li>短信中心设置</li>
             </ol>
-            <!-- end breadcrumb -->
         </div>
-        <!-- END RIBBON -->
-
         <!-- MAIN CONTENT -->
         <div id="content">
             <form id="shortMessageCenterForm" method="post" class="form-horizontal">
@@ -73,9 +65,6 @@
             </form>
         </div>
     </div>
-    <!-- 不能删除，查询所用 -->
-    <!-- the query mode, simple query or combinational query -->
-    <input id="query-mode" type="hidden" value="simple">
     <div id="footer"></div>
 </body>
 
@@ -95,8 +84,6 @@
     }
 </script>
 <script src="../../js/core/ecpLoader.js"></script>
-<!-- JQUERY BLOCK UI -->
-<!--<script type="text/javascript" src="../../js/plugin/jquery-blockui/jquery.blockUI.js"></script>-->
 <script src="../../js/business/system/messageCenterEdit.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -107,7 +94,6 @@
 
     window.onload = function(){
         app.init();
-        app.internationalInit('UserManagement');
         messageCenterEdit.init();
     }
 

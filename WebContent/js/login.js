@@ -1,10 +1,10 @@
 /**
  * FileName: login.js
  * File description: 用于加载和初始化登录页面的组件及内容
- * Copyright (c) 2016 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2016-11-02
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**

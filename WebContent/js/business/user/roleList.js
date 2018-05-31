@@ -1,10 +1,10 @@
 /**
  * FileName: roleList.js
  * File description: 用于加载角色列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -15,8 +15,6 @@ var roleList = function () {
     var zTreeObj = null;
     var setting = {
         view: {
-//                addHoverDom: addHoverDom,
-//                removeHoverDom: removeHoverDom,
             selectedMulti: false
         },
         check: {
@@ -169,7 +167,7 @@ var roleList = function () {
                                             $.pnotify({
                                                 type:'error',
                                                 text: result.msg,
-                                                delay: 8000
+                                                delay: 4000
                                             });
                                         }
                                     }
@@ -332,7 +330,7 @@ var roleList = function () {
                             $.pnotify({
                                 type:'error',
                                 text: result.msg,
-                                delay: 8000
+                                delay: 4000
                             });
                         }
                     }

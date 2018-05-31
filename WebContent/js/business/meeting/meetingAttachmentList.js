@@ -1,10 +1,10 @@
 /**
  * FileName: meetingAttachmentList.js
  * File description: 用于加载会议材料列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -130,30 +130,15 @@ var meetingAttachmentList = function () {
         $('#filesCheckAll').on('click', function (e) {
             var isCheck = $('#filesCheckAll').prop('checked');
             if(isCheck){
-                //先清空之前的选项
-//                selectFiles = [];
                 $('#dt_issues :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-//                var tmpTableNodes = oTable.fnGetNodes();
-//                for(var i = 0; i < tmpTableNodes.length; i++)
-//                    selectFiles.push(oTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#dt_issues :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-//                selectFiles = [];
             }
         });
-
-        //根据复选框的值来获得行数据
-//        $('#dt_issues tbody').on('click','tr', function () {
-//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-//            if(isCheck)
-//                selectFiles.push(oTable.fnGetData(this).attachmentId);
-//            else
-//                selectFiles.remove(oTable.fnGetData(this).attachmentId);
-//        });
     }
 
     var handleButton = function () {
@@ -195,6 +180,12 @@ var meetingAttachmentList = function () {
                 }
             });
             if (isDownload) {
+                $.blockUI({
+                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                        '</div>'
+                });
                 var obj = [];
                 obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
                 $.ajax({
@@ -204,7 +195,7 @@ var meetingAttachmentList = function () {
                         ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
                         jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
-                        console.log(result);
+                        $.unblockUI();
                         window.location.href = '../../../'+result;
                     }
                 });

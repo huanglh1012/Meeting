@@ -1,10 +1,10 @@
 /**
  * FileName: meetingEdit.js
  * File description: 用于加载和初始化会议配置页面的组件及内容
- * Copyright (c) 2016 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2016-10-18
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -18,8 +18,6 @@ var meetingEdit = function () {
     var searchLocationIndex = 0;
     var meetingRecordFilesTable = null;
     var meetingFilesTable = null;
-//    var selectMeetingRecordFiles = [];
-//    var selectMeetingFiles = [];
 
     var handlePageInfo = function () {
         var tmpUrl = document.URL;
@@ -68,30 +66,7 @@ var meetingEdit = function () {
             autoclose: true,
             format: "yyyy-mm-dd hh:ii"
         });
-
-//        $("#meetingProposeTime").datepicker({
-//            format: "yyyy-mm-dd",
-//            minViewMode: "days",
-//            todayHighlight : 1,
-//            autoclose: true
-//        }).on("changeDate", function(e) {
-//                if ($(e.target).data("type") === "start") {
-//                    $("#endDate").datepicker("setStartDate", e.date);
-//                } else {
-//                    $("#startDate").datepicker("setEndDate", e.date);
-//                }
-//            });
     }
-
-//    var handleTimePickers = function () {
-//        if (jQuery().timepicker) {
-//            $('.timepicker-24').timepicker({
-//                minuteStep: 1,
-//                showSeconds: true,
-//                showMeridian: false
-//            });
-//        }
-//    }
 
     var handleSelect2 = function () {
         $.ajax({
@@ -105,11 +80,6 @@ var meetingEdit = function () {
                     allowClear:true,
                     data:result
                 });
-//                $('#meetingCreator').select2({
-//                    placeholder: "请选择发起人",
-//                    allowClear:true,
-//                    data:result
-//                });
             }
         });
 
@@ -126,27 +96,11 @@ var meetingEdit = function () {
                 });
             }
         });
-
-//        $.ajax({
-//            type:'post',
-//            dataType:"json",
-//            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null}),
-//            success:function(result){
-//                $('#meetingCreatorDepartmentId').select2({
-//                    placeholder: "请选择部门",
-//                    allowClear:true,
-//                    data:result
-//                });
-//            }
-//        });
     }
 
     var handleTree = function() {
         var setting = {
             view: {
-//                addHoverDom: addHoverDom,
-//                removeHoverDom: removeHoverDom,
                 selectedMulti: false,
                 fontCss: function (treeId, treeNode) {
                     return treeNode.highlight == true ? {color:"red", "font-weight": "bold"} : {color:"#000", "font-weight": "normal"};
@@ -163,9 +117,6 @@ var meetingEdit = function () {
             edit: {
                 enable: false
             }
-//            callback : {
-//                onClick : zTreeOnClickRight
-//            }
         };
 
         $.ajax({
@@ -218,13 +169,10 @@ var meetingEdit = function () {
                 meetingCreator:{
                     required: true
                 },
-//                meetingCreatorDepartmentId:{
-//                    required: true
-//                },
                 meetingParticipantNames:{
                     required: true
                 }
-            }, // Messages for form
+            },
             messages: {
                 meetingSubject:{
                     required:"会议主题不能为空！！！"
@@ -352,8 +300,7 @@ var meetingEdit = function () {
                         }
                     });
                 }
-            }, // Do not change code below
-
+            },
             errorPlacement: function(error, element) {
                 error.appendTo(element.parent());
             }
@@ -376,7 +323,7 @@ var meetingEdit = function () {
                     $.blockUI({
                         message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
                             '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
-                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请稍后...</span></div>' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请耐心等候...</span></div>' +
                             '</div>'
                     });
                 },
@@ -418,8 +365,7 @@ var meetingEdit = function () {
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
             { "sTitle": "上传部门", "mData": "departmentName"},
-            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}//,
-//            { "sTitle": "操作"}
+            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}
         ];
 
         var meetingRecordFilesTableHead = [
@@ -428,8 +374,7 @@ var meetingEdit = function () {
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
             { "sTitle": "上传部门", "mData": "departmentName"},
-            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}//,
-//            { "sTitle": "操作"}
+            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}
         ];
 
         meetingFilesTable = $('#meetingFiles').dataTable({
@@ -476,19 +421,13 @@ var meetingEdit = function () {
         $('#meetingFilesCheckAll').on('click', function (e) {
             var isCheck = $('#meetingFilesCheckAll').prop('checked');
             if(isCheck){
-                //先清空之前的选项
-//                selectMeetingFiles = [];
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-//                var tmpTableNodes = meetingFilesTable.fnGetNodes();
-//                for(var i = 0; i < tmpTableNodes.length; i++)
-//                    selectMeetingFiles.push(meetingFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-//                selectMeetingFiles = [];
             }
         });
 
@@ -496,38 +435,15 @@ var meetingEdit = function () {
         $('#meetingRecordFilesCheckAll').on('click', function (e) {
             var isCheck = $('#meetingRecordFilesCheckAll').prop('checked');
             if(isCheck){
-                //先清空之前的选项
-//                selectMeetingRecordFiles = [];
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-                var tmpTableNodes = meetingRecordFilesTable.fnGetNodes();
-//                for(var i = 0; i < tmpTableNodes.length; i++)
-//                    selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-//                selectMeetingRecordFiles = [];
             }
         });
-
-        //根据复选框的值来获得行数据
-//        $('#meetingFiles tbody').on('click','tr', function () {
-//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-//            if(isCheck)
-//                selectMeetingFiles.push(meetingFilesTable.fnGetData(this).attachmentId);
-//            else
-//                selectMeetingFiles.remove(meetingFilesTable.fnGetData(this).attachmentId);
-//        });
-//
-//        $('#meetingRecordFiles tbody').on('click','tr', function () {
-//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-//            if(isCheck)
-//                selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(this).attachmentId);
-//            else
-//                selectMeetingRecordFiles.remove(meetingRecordFilesTable.fnGetData(this).attachmentId);
-//        });
     }
 
     var handleButton = function() {
@@ -563,7 +479,6 @@ var meetingEdit = function () {
             {
                 var tmpNodeList = zTreeObj.getNodesByParamFuzzy("name", tmpKeywords, null);
                 for( var i = 0; i < tmpNodeList.length; i++) {
-//                zTreeObj.selectNode(tmpNodeList[i]);
                     tmpNodeList[i].highlight = true;
                     zTreeObj.updateNode(tmpNodeList[i]);
                 }
@@ -624,7 +539,14 @@ var meetingEdit = function () {
                         $('#imageError').removeClass('hidden').find("label").append("上传文件类型不对！");
                     }
                 }
+                $.blockUI({
+                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在上传文件，请稍候...</span></div>' +
+                        '</div>'
+                });
             }).on('fileuploaddone',function (e, data) {
+                $.unblockUI();
                 var tmpFileData = data.result.files[0];
                 var tempAttachmentObject = {};
                 tempAttachmentObject.attachmentId = tmpFileData.id;
@@ -711,7 +633,14 @@ var meetingEdit = function () {
                     $('#imageError').removeClass('hidden').find("label").append("上传文件类型不对！");
                 }
             }
+            $.blockUI({
+                message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                    '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                    '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在上传文件，请稍候...</span></div>' +
+                    '</div>'
+            });
         }).on('fileuploaddone',function (e, data) {
+            $.unblockUI();
             var tmpFileData = data.result.files[0];
             var tempAttachmentObject = {};
             tempAttachmentObject.attachmentId = tmpFileData.id;
@@ -789,7 +718,6 @@ var meetingEdit = function () {
             handleTree();
             handleForm();
             handleDatePickers();
-//            handleTimePickers();
             handleTable();
             handleButton();
             handlePageInfo();

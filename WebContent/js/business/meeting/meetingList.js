@@ -1,10 +1,10 @@
 /**
  * FileName: meetingList.js
  * File description: 用于加载会议列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -213,7 +213,7 @@ var meetingList = function () {
                                                         $.pnotify({
                                                             type:'error',
                                                             text: result.msg,
-                                                            delay: 8000
+                                                            delay: 4000
                                                         });
                                                     }
                                                 }
@@ -294,7 +294,7 @@ var meetingList = function () {
                                                 $.pnotify({
                                                     type:'error',
                                                     text: result.msg,
-                                                    delay: 8000
+                                                    delay: 4000
                                                 });
                                             }
                                         }
@@ -364,7 +364,7 @@ var meetingList = function () {
                                                         $.pnotify({
                                                             type:'error',
                                                             text: result.msg,
-                                                            delay: 8000
+                                                            delay: 4000
                                                         });
                                                     }
                                                 }
@@ -504,23 +504,12 @@ var meetingList = function () {
     }
 
     return {
-        _select2InitValue: {
-            meetingStateId: [{
-                "id": "0",
-                "text": "已发起"
-            }, {
-                "id": "1",
-                "text": "已结束"
-            }]
-        },
         init: function () {
             handleButton();
             handleSelect2();
-//            searchCommon.select2InitValue = handleSelect2();
             searchCommon.tableAjaxParam.proxyClass = "meetingController";
             searchCommon.tableAjaxParam.proxyMethod = "getMeetingListByCondition";
             searchCommon.bindingSearchEvent();
-//            searchCommon.init();
             common.loadDatatableSettings();
             handleDatePicker();
             handleTable();

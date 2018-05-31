@@ -1,10 +1,10 @@
 /**
  * FileName: messageCenterEdit.js
  * File description: 用于加载消息中心设置页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -20,7 +20,6 @@ var messageCenterEdit = function () {
             url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                 ,proxyClass:'shortMessageController',proxyMethod:'getShortMessageCenterInfo',jsonString:null}),
             success:function(result){
-                console.log(result);
                 if (result != '')
                     DomUtil.setFormElementsValueViaJSONObject('shortMessageCenterForm',JSON.parse(result));
             }

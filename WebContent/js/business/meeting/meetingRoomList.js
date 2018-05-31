@@ -1,10 +1,10 @@
 /**
  * FileName: meetingRoomList.js
  * File description: 用于加载会议材料列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -70,7 +70,7 @@ var meetingRoomList = function () {
                                         $.pnotify({
                                             type:'error',
                                             text: result.msg,
-                                            delay: 8000
+                                            delay: 4000
                                         });
                                     }
                                 }
@@ -109,8 +109,6 @@ var meetingRoomList = function () {
                 });
             } else {
                 obj.push(StringUtil.decorateRequestData('MeetingRoomDTO', addData));
-                //进度条
-//                $('#progressBar').modal('show', true);
                 $.ajax({
                     type: "POST",
                     url: SMController.getUrl({
@@ -277,17 +275,7 @@ var meetingRoomList = function () {
                     "sNext" : "下一页",
                     "sLast" : "最后一页"
                 }
-            }//,
-//            "ajax": {
-//                type:"POST",
-//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingRoomBookingListByRoomId',jsonString:MyJsonUtil.obj2str(obj)}),
-//                dataType:"json",
-//                success:function(data) {
-//                    meetingRoomBookingTable.fnClearTable();
-//                    meetingRoomBookingTable.fnAddData(data);
-//                }
-//            }
+            }
         });
     }
 

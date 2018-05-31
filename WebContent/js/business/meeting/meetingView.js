@@ -1,10 +1,10 @@
 /**
  * FileName: meetingView.js
  * File description: 用于加载和初始化会议配置页面的组件及内容
- * Copyright (c) 2016 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2016-10-18
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -18,8 +18,6 @@ var meetingView = function () {
     var searchLocationIndex = 0;
     var meetingRecordFilesTable = null;
     var meetingFilesTable = null;
-//    var selectMeetingRecordFiles = [];
-//    var selectMeetingFiles = [];
 
     var handlePageInfo = function () {
         var tmpUrl = document.URL;
@@ -37,7 +35,6 @@ var meetingView = function () {
                         ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
                         var tmpJsonObject = JSON.parse(result);
-                        console.log(tmpJsonObject);
                         DomUtil.setFormElementsValueViaJSONObject('meetingForm',tmpJsonObject);
                         $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
                         if (tmpJsonObject.isSendMessageNotice == 1)
@@ -58,22 +55,6 @@ var meetingView = function () {
             format: "yyyy-mm-dd hh:ii:ss"
         });
     }
-    
-    var handleSelect2 = function () {
-//        $.ajax({
-//            type:'post',
-//            dataType:"json",
-//            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                ,proxyClass:'securityController',proxyMethod:'getEmployeeList',jsonString:null}),
-//            success:function(result){
-//                $('#meetingPresenter').select2({
-//                    placeholder: "请选择主持人",
-//                    allowClear:true,
-//                    data:result
-//                });
-//            }
-//        });
-    }
 
     var handleTable = function () {
         // 表头定义
@@ -83,8 +64,7 @@ var meetingView = function () {
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
             { "sTitle": "上传部门", "mData": "departmentName"},
-            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}//,
-//            { "sTitle": "操作"}
+            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}
         ];
 
         var meetingRecordFilesTableHead = [
@@ -93,8 +73,7 @@ var meetingView = function () {
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
             { "sTitle": "上传部门", "mData": "departmentName"},
-            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}//,
-//            { "sTitle": "操作"}
+            { "sTitle": "上传时间", "mData": "attachmentCreateTime"}
         ];
 
         meetingFilesTable = $('#meetingFiles').dataTable({
@@ -113,23 +92,8 @@ var meetingView = function () {
                     "mRender": function (data, type, full ) {
                         return'<input type="checkbox" class="checkboxes"/>';
                     }
-                }/*, {   //第七列的值为链接
-                    "aTargets": [6],
-                    "mRender": function (data, type, full ) {
-                        return'<a class="delete btn mini green" ><i class="fa fa-trash-o"></i> 删除</a>';
-                    }
-                }*/
+                }
             ]
-//            "ajax": {
-//                type:"POST",
-//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingAttachmentInfoByMeetingId',jsonString:MyJsonUtil.obj2str(meetingFilesTableObj)}),
-//                dataType:"json",
-//                success:function(data) {
-//                    meetingFilesTable.fnClearTable();
-//                    meetingFilesTable.fnAddData(data);
-//                }
-//            }
         });
 
         meetingRecordFilesTable = $('#meetingRecordFiles').dataTable({
@@ -148,42 +112,21 @@ var meetingView = function () {
                     "mRender": function (data, type, full ) {
                         return'<input type="checkbox" class="checkboxes"/>';
                     }
-                }/*, {   //第七列的值为链接
-                 "aTargets": [6],
-                 "mRender": function (data, type, full ) {
-                 return'<a class="delete btn mini green" ><i class="fa fa-trash-o"></i> 删除</a>';
-                 }
-                 }*/
+                }
             ]
-//            "ajax": {
-//                type:"POST",
-//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingAttachmentInfoByMeetingId',jsonString:null}),
-//                dataType:"json",
-//                success:function(data) {
-//                    meetingFilesTable.fnClearTable();
-//                    meetingFilesTable.fnAddData(data);
-//                }
-//            }
         });
 
         //复选框全选
         $('#meetingFilesCheckAll').on('click', function (e) {
             var isCheck = $('#meetingFilesCheckAll').prop('checked');
             if(isCheck){
-                //先清空之前的选项
-//                selectMeetingFiles = [];
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-//                var tmpTableNodes = meetingFilesTable.fnGetNodes();
-//                for(var i = 0; i < tmpTableNodes.length; i++)
-//                    selectMeetingFiles.push(meetingFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-//                selectMeetingFiles = [];
             }
         });
 
@@ -191,38 +134,15 @@ var meetingView = function () {
         $('#meetingRecordFilesCheckAll').on('click', function (e) {
             var isCheck = $('#meetingRecordFilesCheckAll').prop('checked');
             if(isCheck){
-                //先清空之前的选项
-//                selectMeetingRecordFiles = [];
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-//                var tmpTableNodes = meetingRecordFilesTable.fnGetNodes();
-//                for(var i = 0; i < tmpTableNodes.length; i++)
-//                    selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#meetingRecordFiles :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-//                selectMeetingRecordFiles = [];
             }
         });
-
-        //根据复选框的值来获得行数据
-//        $('#meetingFiles tbody').on('click','tr', function () {
-//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-//            if(isCheck)
-//                selectMeetingFiles.push(meetingFilesTable.fnGetData(this).attachmentId);
-//            else
-//                selectMeetingFiles.remove(meetingFilesTable.fnGetData(this).attachmentId);
-//        });
-//
-//        $('#meetingRecordFiles tbody').on('click','tr', function () {
-//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-//            if(isCheck)
-//                selectMeetingRecordFiles.push(meetingRecordFilesTable.fnGetData(this).attachmentId);
-//            else
-//                selectMeetingRecordFiles.remove(meetingRecordFilesTable.fnGetData(this).attachmentId);
-//        });
     }
 
     var handleButton = function() {
@@ -263,6 +183,12 @@ var meetingView = function () {
                 }
             });
             if (isDownload) {
+                $.blockUI({
+                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                        '</div>'
+                });
                 var obj = [];
                 obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
                 $.ajax({
@@ -272,6 +198,7 @@ var meetingView = function () {
                         ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
                         jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
+                        $.unblockUI();
                         window.location.href = '../../../'+result;
                     }
                 });
@@ -315,7 +242,12 @@ var meetingView = function () {
                 }
             });
             if (isDownload) {
-                console.log(selectMeetingFiles);
+                $.blockUI({
+                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                        '</div>'
+                });
                 var obj = [];
                 obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
                 $.ajax({
@@ -325,6 +257,7 @@ var meetingView = function () {
                         ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
                         jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
+                        $.unblockUI();
                         window.location.href = '../../../'+result;
                     }
                 });
@@ -334,8 +267,6 @@ var meetingView = function () {
 
     return {
         init: function () {
-//            handleSelect2();
-//            handleDatePickers();
             handleTable();
             handleButton();
             handlePageInfo();

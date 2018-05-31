@@ -171,8 +171,10 @@ public class MeetingService extends BaseService {
 		
 		// 更新短信通知信息
 		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingId);
-		tmpMessageSendCenterEntity.setMeetingId(null);
-		this.meetingDAO.update(tmpMessageSendCenterEntity);
+		if (tmpMessageSendCenterEntity != null) {
+			tmpMessageSendCenterEntity.setMeetingId(null);
+			this.meetingDAO.update(tmpMessageSendCenterEntity);
+		}
 		
 		// 清空定时作业任务
 		if(QuarzManager.checkJobExists(inMeetingId, "meetingJobGroup"))

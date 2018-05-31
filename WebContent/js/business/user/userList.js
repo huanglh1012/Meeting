@@ -1,10 +1,10 @@
 /**
  * FileName: userList.js
  * File description: 用于加载用户列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -20,8 +20,6 @@ var userList = function () {
             ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
         $('input[name="postId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
             ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null});
-//        $('input[name="roleId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-//            ,proxyClass:'securityController',proxyMethod:'getRoleList',jsonString:null});
     }
 
     var handleDatePicker = function () {
@@ -85,7 +83,7 @@ var userList = function () {
                                         $.pnotify({
                                             type:'error',
                                             text: result.msg,
-                                            delay: 8000
+                                            delay: 4000
                                         });
                                     }
                                 }
@@ -147,17 +145,6 @@ var userList = function () {
                 selectTr = oTable.fnGetData(this);
             }
         });
-
-//        var table = $('#dt_issues').DataTable(),
-//            colvis = new $.fn.dataTable.ColVis(table, {
-//                buttonText: "显示 / 隐藏 列",
-//                bRestore: true,
-//                sRestore: "显示全部"
-//            });
-//
-//        $("#dt_issues").resizableColumns({
-//            store: window.store
-//        });
     }
 
     return {

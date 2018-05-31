@@ -1,10 +1,10 @@
 /**
  * FileName: doMeetingList.js
  * File description: 用于加载待办会议列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -109,7 +109,7 @@ var doMeetingList = function () {
                                             $.pnotify({
                                                 type:'error',
                                                 text: result.msg,
-                                                delay: 8000
+                                                delay: 4000
                                             });
                                         }
                                     }
@@ -174,7 +174,7 @@ var doMeetingList = function () {
                                                 $.pnotify({
                                                     type:'error',
                                                     text: result.msg,
-                                                    delay: 8000
+                                                    delay: 4000
                                                 });
                                             }
                                         }
@@ -231,7 +231,7 @@ var doMeetingList = function () {
                                             $.pnotify({
                                                 type:'error',
                                                 text: result.msg,
-                                                delay: 8000
+                                                delay: 4000
                                             });
                                         }
                                     }
