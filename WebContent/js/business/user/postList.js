@@ -123,9 +123,8 @@ var postList = function () {
                                         });
                                     }else{
                                         $.pnotify({
-                                            type:'error',
-                                            text: result.msg,
-                                            delay: 8000
+                                            text: "职务已被使用，无法删除",
+                                            delay: 4000
                                         });
                                     }
                                 }

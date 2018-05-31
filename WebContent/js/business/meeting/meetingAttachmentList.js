@@ -107,7 +107,7 @@ var meetingAttachmentList = function () {
             "serverSide": true,
             "bAutoWidth": false,
             "responsive": true,
-            "ordering": true,
+//            "ordering": true,
             "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
             "lengthChange": true,
             "paging": true,

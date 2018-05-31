@@ -116,8 +116,7 @@ var departmentList = function () {
                                         });
                                     }else{
                                         $.pnotify({
-                                            type:'error',
-                                            text: result.msg,
+                                            text: "部门已被使用，无法删除.",
                                             delay: 4000
                                         });
                                     }
