@@ -1,10 +1,10 @@
 /**
  * FileName: searchCommon.js
  * File description: 用于简单和复杂查询页面的组件及内容
- * Copyright (c) 2016 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-20
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -309,7 +309,6 @@ var searchCommon = function () {
                         obj.isEntityField = true;
                         obj.isCaseSensitive = false;
                         obj.fieldName = $(this).attr("name");
-                        console.log($(this).data("type"));
                         if ($(this).data('type') === "checkbox") {
                             obj.type = "checkbox";
                             obj.checkboxCondition = inputValue;

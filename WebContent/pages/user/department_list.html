@@ -20,23 +20,15 @@
     <link rel="stylesheet" href="../../css/ztree.css" type="text/css">
 </head>
 <body>
-    <!-- Left panel : Navigation area -->
     <div id="top"></div>
     <div id="leftnav"></div>
-    <!-- END NAVIGATION -->
-
     <div id="main" role="main">
-        <!-- RIBBON -->
         <div id="ribbon">
-            <!-- breadcrumb -->
             <ol class="breadcrumb">
-                <li><a href="/dashboard_cardpro.jspa" data-item-index="1">权限管理</a></li>
+                <li><a href="#" data-item-index="1">权限管理</a></li>
                 <li>部门列表</li>
             </ol>
-            <!-- end breadcrumb -->
         </div>
-        <!-- END RIBBON -->
-
         <!-- MAIN CONTENT -->
         <div id="content">
             <div class="row">
@@ -61,7 +53,6 @@
                                         部门结构
                                     </label>
                                     <div id="departmentTree" class="ztree" style="min-height: 100px">
-                                        <!--<ul  class="ztree"></ul>-->
                                     </div>
                                 </div>
                             </div>
@@ -98,17 +89,14 @@
                                         <button type="button" class="btn btn-primary" id="submitDepartment">确定</button>
                                         <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
                                     </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- 不能删除，查询所用 -->
-    <!-- the query mode, simple query or combinational query -->
-    <input id="query-mode" type="hidden" value="simple">
     <div id="footer"></div>
 </body>
 
@@ -128,20 +116,6 @@
     }
 </script>
 <script src="../../js/core/ecpLoader.js"></script>
-<!-- JQUERY SELECT2 INPUT -->
-<script src="../../js/plugin/select2/select2.min.js"></script>
-<!-- bootstrap-datepicker-master -->
-<script src="../../js/plugin/bootstrap-datepicker-master/bootstrap-datepicker.js"></script>
-<script src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>
-<script src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
-<script src="../../js/plugin/datatables10/dataTables.colReorder.js"></script>
-<script src="../../js/plugin/datatables10/dataTables.colVis.min.js"></script>
-<script src="../../js/plugin/datatables/ZeroClipboard.js"></script>
-<script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
-<script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
-<script src="../../js/core/searchCommon.js"></script>
-
-<script type="text/javascript" src="../../js/plugin/jquery-blockui/jquery.blockUI.js"></script>
 <script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.excheck.js"></script>
 <script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.exedit.js"></script>
@@ -156,7 +130,6 @@
 
     window.onload = function(){
         app.init();
-        app.internationalInit('UserManagement');
         departmentList.init();
     }
 

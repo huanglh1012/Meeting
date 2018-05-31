@@ -12,8 +12,8 @@ public class MySqlLpageImpl implements LimitPage {
 		StringBuffer paginationSQL = new StringBuffer(" SELECT * FROM ( ");
 		paginationSQL.append(" SELECT temp.* ,(@rownum:=@rownum+1) num FROM ( ");
 		paginationSQL.append(sql);
-		paginationSQL.append(") temp, (select(@rownum:=0)) B where (@rownum:=@rownum+1) < " + (start+limit));
-		paginationSQL.append(" ) temp2 WHERE num >= " + start);
+		paginationSQL.append(") temp, (select(@rownum:=0)) B)temp2 where num < " + (start+limit));
+		paginationSQL.append(" and num >= " + start);
 		return paginationSQL.toString();
 	}
 

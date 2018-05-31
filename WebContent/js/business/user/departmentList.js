@@ -1,10 +1,10 @@
 /**
  * FileName: departmentList.js
  * File description: 用于加载部门列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -16,8 +16,6 @@ var departmentList = function () {
     var selectedTreeNode = null;
     var setting = {
         view: {
-//                addHoverDom: addHoverDom,
-//                removeHoverDom: removeHoverDom,
             selectedMulti: false
         },
         check: {
@@ -31,9 +29,6 @@ var departmentList = function () {
         edit: {
             enable: false
         }
-//        callback : {
-//            onClick : zTreeOnClickRight
-//        }
     };
 
     var handleButton = function() {
@@ -42,7 +37,6 @@ var departmentList = function () {
             if(zTreeObj.getSelectedNodes().length > 0) {
                 var treeId = zTreeObj.getSelectedNodes()[0].id;
                 var treeName = zTreeObj.getSelectedNodes()[0].name;
-
                 $('input[name="parentDepartmentId"]').val(treeId);
                 $('input[name="parentDepartmentName"]').val(treeName);
                 $('#departmentModal').modal('show',true);
@@ -60,12 +54,10 @@ var departmentList = function () {
                 var treePid = zTreeObj.getSelectedNodes()[0].pId;
                 var treeName = zTreeObj.getSelectedNodes()[0].name;
                 var isParent = zTreeObj.getSelectedNodes()[0].isParent;
-
                 var parentNode = zTreeObj.getSelectedNodes()[0].getParentNode();
                 if (parentNode != null){
                     $('input[name="parentDepartmentName"]').val(parentNode.name);
                 }
-
                 $('input[name="departmentId"]').val(treeId);
                 $('input[name="parentDepartmentId"]').val(treePid);
                 $('input[name="departmentName"]').val(treeName);
@@ -126,7 +118,7 @@ var departmentList = function () {
                                         $.pnotify({
                                             type:'error',
                                             text: result.msg,
-                                            delay: 8000
+                                            delay: 4000
                                         });
                                     }
                                 }
@@ -161,7 +153,6 @@ var departmentList = function () {
             addData['parentDepartmentId'] = parentDepartmentId;
             addData['departmentName'] = departmentName;
             addData['isParent'] = isParent;
-
             if (departmentName == '') {
                 bootbox.alert({
                     className: 'span4 alert-error',

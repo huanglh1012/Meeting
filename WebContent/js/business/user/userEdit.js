@@ -1,10 +1,10 @@
 /**
  * FileName: userEdit.js
  * File description: 用于加载和初始化自动化规则配置页面的组件及内容
- * Copyright (c) 2016 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2016-10-18
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -28,7 +28,6 @@ var userEdit = function () {
                     url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                         ,proxyClass:'securityController',proxyMethod:'getEmployeeInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
-                        console.log(result);
                         DomUtil.setFormElementsValueViaJSONObject('userForm',JSON.parse(result));
                     }
                 });

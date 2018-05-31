@@ -16,9 +16,6 @@
     <link href="../../css/jquery.pnotify.default.css" media="screen" rel="stylesheet" type="text/css" >
     <link href="../../css/jquery.pnotify.default.icons.css" media="screen" rel="stylesheet" type="text/css" >
 
-    <link href="../../css/dataTables.colVis.css" media="screen" rel="stylesheet" type="text/css">
-    <!-- Date Picker -->
-    <link href="../../css/datepicker3.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
     <style>
         .datatable tr .highlight {
@@ -27,23 +24,15 @@
     </style>
 </head>
 <body>
-    <!-- Left panel : Navigation area -->
     <div id="top"></div>
     <div id="leftnav"></div>
-    <!-- END NAVIGATION -->
-
     <div id="main" role="main">
-        <!-- RIBBON -->
         <div id="ribbon">
-            <!-- breadcrumb -->
             <ol class="breadcrumb">
-                <li><a href="/dashboard_cardpro.jspa" data-item-index="1">会议管理</a></li>
+                <li><a href="#" data-item-index="1">会议管理</a></li>
                 <li>会议室设置</li>
             </ol>
-            <!-- end breadcrumb -->
         </div>
-        <!-- END RIBBON -->
-
         <!-- MAIN CONTENT -->
         <div id="content">
             <div class="row">
@@ -113,7 +102,6 @@
         </div>
     </div>
     <!-- 不能删除，查询所用 -->
-    <!-- the query mode, simple query or combinational query -->
     <input id="query-mode" type="hidden" value="simple">
     <div id="footer"></div>
 </body>
@@ -136,17 +124,9 @@
 <script src="../../js/core/ecpLoader.js"></script>
 <!-- JQUERY SELECT2 INPUT -->
 <script src="../../js/plugin/select2/select2.min.js"></script>
-<!-- bootstrap-datepicker-master -->
-<script src="../../js/plugin/bootstrap-datepicker-master/bootstrap-datepicker.js"></script>
-<script src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>
 <script src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
-<script src="../../js/plugin/datatables10/dataTables.colReorder.js"></script>
-<script src="../../js/plugin/datatables10/dataTables.colVis.min.js"></script>
-<script src="../../js/plugin/datatables/ZeroClipboard.js"></script>
-<script src="../../js/plugin/datatables/media/js/TableTools.min.js"></script>
 <script src="../../js/plugin/datatables10/DT_bootstrap.js"></script>
 <script src="../../js/core/searchCommon.js"></script>
-<script type="text/javascript" src="../../js/plugin/jquery-blockui/jquery.blockUI.js"></script>
 <script src="../../js/business/meeting/meetingRoomList.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -157,7 +137,6 @@
 
     window.onload = function(){
         app.init();
-        app.internationalInit('UserManagement');
         meetingRoomList.init();
     }
 

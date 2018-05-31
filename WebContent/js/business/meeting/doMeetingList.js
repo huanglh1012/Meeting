@@ -1,10 +1,10 @@
 /**
  * FileName: doMeetingList.js
  * File description: 用于加载待办会议列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -109,7 +109,7 @@ var doMeetingList = function () {
                                             $.pnotify({
                                                 type:'error',
                                                 text: result.msg,
-                                                delay: 8000
+                                                delay: 4000
                                             });
                                         }
                                     }
@@ -174,7 +174,7 @@ var doMeetingList = function () {
                                                 $.pnotify({
                                                     type:'error',
                                                     text: result.msg,
-                                                    delay: 8000
+                                                    delay: 4000
                                                 });
                                             }
                                         }
@@ -231,7 +231,7 @@ var doMeetingList = function () {
                                             $.pnotify({
                                                 type:'error',
                                                 text: result.msg,
-                                                delay: 8000
+                                                delay: 4000
                                             });
                                         }
                                     }
@@ -278,7 +278,9 @@ var doMeetingList = function () {
             "aLengthMenu":[ 10, 25, 50,100],
             "bAutoWidth" : true,
             //默认显示的分页数
-            "iDisplayLength": 25,
+            "iDisplayLength": 10,
+            "paging": true,
+            "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
             "oLanguage": { //国际化一些配置
                 "sLoadingRecords" : "正在获取数据，请稍候...",
                 "sLengthMenu" : "显示 _MENU_ 条",
@@ -315,7 +317,9 @@ var doMeetingList = function () {
             "aLengthMenu":[ 10, 25, 50,100],
             "bAutoWidth" : true,
             //默认显示的分页数
-            "iDisplayLength": 25,
+            "iDisplayLength": 10,
+            "paging": true,
+            "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
             "oLanguage": { //国际化一些配置
                 "sLoadingRecords" : "正在获取数据，请稍候...",
                 "sLengthMenu" : "显示 _MENU_ 条",

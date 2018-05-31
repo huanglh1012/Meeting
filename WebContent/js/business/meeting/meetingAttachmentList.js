@@ -1,10 +1,10 @@
 /**
  * FileName: meetingAttachmentList.js
  * File description: 用于加载会议材料列表页面的组件及内容
- * Copyright (c) 2017 Eastcompeace, Inc. All Rights Reserved.
+ * Copyright (c) 2018 Kia, Inc. All Rights Reserved.
  *
- * @author <a href="mailto:zengqingyue@eastcompeace.com">zengqingyue</a>
- * @DateTime: 2017-11-21
+ * @author <a href="mailto:kiatsang@163.com">kia</a>
+ * @DateTime: 2018-05-21
  */
 
 /**
@@ -92,7 +92,7 @@ var meetingAttachmentList = function () {
     var handleTable = function () {
         // 表头定义
         var tableHead = [
-            { "sTitle": '<input type="checkbox" id="filesCheckAll"/>',"bSortable":false,"sWidth": "12px" },
+            { "sTitle": '<input type="checkbox" id="filesCheckAll"/>',"bSortable":false,"sWidth": "30px" },
             { "sTitle": "附件ID", "mData": "attachmentId","bVisible":false},
             { "sTitle": "材料名称","mData": "attachmentName"},
             { "sTitle": "上传人", "mData": "employeeName"},
@@ -111,6 +111,7 @@ var meetingAttachmentList = function () {
             "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
             "lengthChange": true,
             "paging": true,
+            "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-4'i><'col-sm-8 text-right'p>><'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12'l>>>",
             "ajax": {
                 url: "../../controllerProxy.do?method=callBack",
                 type: "POST",
@@ -129,30 +130,15 @@ var meetingAttachmentList = function () {
         $('#filesCheckAll').on('click', function (e) {
             var isCheck = $('#filesCheckAll').prop('checked');
             if(isCheck){
-                //先清空之前的选项
-//                selectFiles = [];
                 $('#dt_issues :checkbox').each(function(){
                     $(this).prop("checked","true");
                 });
-//                var tmpTableNodes = oTable.fnGetNodes();
-//                for(var i = 0; i < tmpTableNodes.length; i++)
-//                    selectFiles.push(oTable.fnGetData(tmpTableNodes[i]).attachmentId);//fnGetData获取一行的数据
             }else{
                 $('#dt_issues :checkbox').each(function(){
                     $(this).removeAttr("checked");
                 });
-//                selectFiles = [];
             }
         });
-
-        //根据复选框的值来获得行数据
-//        $('#dt_issues tbody').on('click','tr', function () {
-//            var isCheck = this.getElementsByTagName('input').item(0).checked ;
-//            if(isCheck)
-//                selectFiles.push(oTable.fnGetData(this).attachmentId);
-//            else
-//                selectFiles.remove(oTable.fnGetData(this).attachmentId);
-//        });
     }
 
     var handleButton = function () {
@@ -194,6 +180,12 @@ var meetingAttachmentList = function () {
                 }
             });
             if (isDownload) {
+                $.blockUI({
+                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                        '</div>'
+                });
                 var obj = [];
                 obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
                 $.ajax({
@@ -203,7 +195,7 @@ var meetingAttachmentList = function () {
                         ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
                         jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
-                        console.log(result);
+                        $.unblockUI();
                         window.location.href = '../../../'+result;
                     }
                 });

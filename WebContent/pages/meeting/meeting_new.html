@@ -25,14 +25,13 @@
     <div id="leftnav"></div>
     <div id="main" role="main">
         <div id="ribbon">
-            <!-- breadcrumb -->
             <ol class="breadcrumb">
-                <li><a href="/dashboard_cardpro.jspa"/>会议管理</a></li>
-                <li><a href="/issue/issues_list_card.jspa">会议列表</a></li>
+                <li><a href="#"/>会议管理</a></li>
+                <li><a href="#">会议列表</a></li>
                 <li>编辑会议</li>
             </ol>
         </div>
-        <div id="content">
+        <div id="content" class="pre-scrollable" style="min-height: 600px">
             <form id="createMeetingForm" method="post" class="form-horizontal">
                 <div class="jarviswidget well">
                     <div class="widget-body widget-hide-overflow">
@@ -42,8 +41,6 @@
                             </div>
                         </div>
                         <hr class="simple">
-                        <!-- <form action="" id="checkout-form" class="" novalidate="novalidate"> -->
-                        <!--row-->
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tile">
                                 <div class="form-group">
@@ -142,7 +139,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <input name="meetingParticipants" type="hidden">
-                                        <textarea class="form-control required-validation" rows="3" name="meetingParticipantNames" style="resize: none;" readonly></textarea>
+                                        <textarea class="form-control required-validation" rows="6" name="meetingParticipantNames" style="resize: none;" readonly></textarea>
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -166,25 +163,10 @@
                                                 <span>会议记录上传</span>
                                                 <input id="meetingRecordFileUploadBtn" type="file" name="files[]" multiple>
                                             </span>
-                                            <!--<span class="btn btn-success fileinput-button">-->
-                                                <!--<i class="glyphicon glyphicon-download"></i>-->
-                                                <!--<span>会议记录全部下载</span>-->
-                                                <!--<input id="meetingRecordFileDownloadBtn">-->
-                                            <!--</span>-->
                                         </div>
                                     </div>
                                     <br>
                                     <div class="chat-body no-padding profile-message">
-                                        <!--<table id="meetingRecordFiles" class="table table-hover table-noborder">-->
-                                            <!--<tbody>-->
-                                            <!--<th>材料名称</th>-->
-                                            <!--<th>上传人</th>-->
-                                            <!--<th>上传部门</th>-->
-                                            <!--<th>上传时间</th>-->
-                                            <!--<th>操作</th>-->
-                                            <!--</tbody>-->
-                                        <!--</table>-->
-                                        <!--<div id="fileAttachements_tmp" style="display: none">-->
                                         <table id="meetingRecordFiles" width="100%;" style="width: 100%;" class="table table-striped table-hover compact fixedTable dt-responsive no-wrap table-bordered">
                                         </table>
                                     </div>
@@ -207,25 +189,10 @@
                                                 <span>上传</span>
                                                 <input id="meetingFileUploadBtn" type="file" name="files[]" multiple>
                                             </span>
-                                            <!--<span class="btn btn-success fileinput-button">-->
-                                                <!--<i class="glyphicon glyphicon-download"></i>-->
-                                                <!--<span>下载</span>-->
-                                                <!--<input id="meetingFileDownloadBtn">-->
-                                            <!--</span>-->
                                         </div>
                                     </div>
                                     <br>
                                     <div class="chat-body no-padding profile-message">
-                                        <!--<table id="meetingFiles" class="table table-hover table-noborder">-->
-                                            <!--<tbody>-->
-                                            <!--<th>材料名称</th>-->
-                                            <!--<th>上传人</th>-->
-                                            <!--<th>上传部门</th>-->
-                                            <!--<th>上传时间</th>-->
-                                            <!--<th>操作</th>-->
-                                            <!--</tbody>-->
-                                        <!--</table>-->
-                                        <!--<div id="fileAttachements_tmp2" style="display: none">-->
                                         <table id="meetingFiles" width="100%;" style="width: 100%;" class="table table-striped table-hover compact fixedTable dt-responsive no-wrap table-bordered">
                                         </table>
                                     </div>
@@ -264,8 +231,8 @@
                                             <button type="button" class="btn btn-primary" id="departmentEmployeeConfirmBtn">确定</button>
                                             <button type="button" class="btn btn-default"  data-dismiss="modal">取消</button>
                                         </div>
-                                    </div><!-- /.modal-content -->
-                                </div><!-- /.modal -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                 </div>
@@ -291,8 +258,6 @@
 </script>
 
 <script type="text/javascript" src="../../js/core/ecpLoader.js"></script>
-<!-- JQUERY BLOCK UI -->
-<script type="text/javascript" src="../../js/plugin/jquery-blockui/jquery.blockUI.js"></script>
 <!-- JQUERY SELECT2 INPUT -->
 <script type="text/javascript" src="../../js/plugin/select2/select2.min.js"></script>
 <!-- JQUERY UI + Bootstrap Slider -->
@@ -307,13 +272,13 @@
 <script type="text/javascript" src="../../js/plugin/bootstrap-timepicker/bootstrap-timepicker.js"></script>
 <script type="text/javascript" src="../../js/plugin/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="../../js/plugin/bootstrap-datetimepicker/locals/bootstrap-datetimepicker.zh-CN.js"></script>
-<script src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script type="text/javascript" src="../../js/plugin/bootstrap-datepicker-master/locales/bootstrap-datepicker.zh-CN.js"></script>
 
 <script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.excheck.js"></script>
 <script type="text/javascript" src="../../js/libs/ztree/jquery.ztree.exedit.js"></script>
 
-<script src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
+<script type="text/javascript" src="../../js/plugin/datatables10/jquery.dataTables.js"></script>
 
 <script type="text/javascript" src="../../js/util/JSUtil.js"></script>
 <script type="text/javascript" src="../../js/util/Map.js"></script>
