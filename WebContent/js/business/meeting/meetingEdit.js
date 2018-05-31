@@ -332,7 +332,8 @@ var meetingEdit = function () {
                         $("#processStatus").text("提交成功，正在返回上一页面...");
                         setTimeout(function(){
                             $.unblockUI();
-                            window.location.href = 'meeting_list.html';
+                            history.back();
+//                            window.location.href = 'meeting_list.html';
                         }, 1500);
 
                     } else {

@@ -49,6 +49,7 @@ public class MeetingConstant {
 	.append(" AND C.EMPLOYEE_ID = D.EMPLOYEE_ID ")
 	.append(" AND D.DEPARTMENT_ID = E.DEPARTMENT_ID ")
 	.append(" AND B.MEETING_STATE_ID = F.MEETING_STATE_ID ")
+	.append(" ORDER BY C.ATTACHMENT_CREATE_TIME DESC ")
 	.toString();
 	
 	public static final String SQL_GET_MEETING_ATTACHMENT_LIST_BY_MEETING_ID = new StringBuilder("")
@@ -84,6 +85,7 @@ public class MeetingConstant {
 	.append(" FROM MEETING A, MEETING_ROOM B, MEETING_STATE C ")
 	.append(" WHERE A.MEETING_ROOM_ID = B.MEETING_ROOM_ID ")
 	.append(" AND A.MEETING_STATE_ID = C.MEETING_STATE_ID ")
+	.append(" ORDER BY A.MEETING_START_TIME DESC ")
 	.toString();
 	
 	public static final String SQL_GET_MEETING_INFO_BY_MEETING_ID = new StringBuilder("SELECT * FROM (")
@@ -100,6 +102,7 @@ public class MeetingConstant {
 	.append(SQL_GET_MEETING_LIST_BY_CONDITION)
 	.append(") A, MEETING_MEMBER_RF B ")
 	.append(" WHERE A.MEETING_ID = B.MEETING_ID ")
+	.append(" AND A.MEETING_STATE_ID = '0' ")
 	.append(" AND B.EMPLOYEE_ID = ? ")
 	.toString();
 }

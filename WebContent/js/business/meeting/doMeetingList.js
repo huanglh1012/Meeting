@@ -14,9 +14,29 @@
 var doMeetingList = function () {
     var participantMeetingTable = null;
     var creatorMeetingTable = null;
+    var participantMeetingSelectTr = null;
     var creatorMeetingSelectTr = null;
-
     var handleButton = function () {
+        $('#modifyJoinMeetingBtn').on('click', function (e) {
+            if (participantMeetingSelectTr == null) {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请选择需要修改的会议信息',
+                    callback: function() {
+                    },
+                    title: "错误提示"
+                });
+            }else{
+                window.location.href='meeting_new.html?meetingId='+ participantMeetingSelectTr.meetingId;
+            }
+        });
+
         $('#modifyMeetingBtn').on('click', function (e) {
             if (creatorMeetingSelectTr == null) {
                 bootbox.alert({
@@ -347,6 +367,17 @@ var doMeetingList = function () {
                     if (data.length > 0)
                         creatorMeetingTable.fnAddData(data);
                 }
+            }
+        });
+
+        $('#joinMeetingList tbody').on('click','tr', function () {
+            if ($(this).hasClass("highlight")){
+                $(this).removeClass("highlight");
+                participantMeetingSelectTr = null;
+            } else {
+                participantMeetingTable.$('tr.highlight').removeClass("highlight");
+                $(this).addClass("highlight");
+                participantMeetingSelectTr = participantMeetingTable.fnGetData(this);
             }
         });
 
