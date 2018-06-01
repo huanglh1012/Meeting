@@ -44,6 +44,9 @@ public class MeetingDTO extends BaseDTO{
 	private Date meetingStartTime;
 	@JsonSerialize(using=JsonDateSerializer.class)
 	@JsonDeserialize(using=JsonDateDeSerializer.class)
+	private Date oldMeetingStartTime;
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeSerializer.class)
 	private Date meetingEndTime;
 	@JsonSerialize(using=JsonDateSerializer.class)
 	@JsonDeserialize(using=JsonDateDeSerializer.class)
@@ -348,6 +351,14 @@ public class MeetingDTO extends BaseDTO{
 
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
+	}
+
+	public Date getOldMeetingStartTime() {
+		return oldMeetingStartTime;
+	}
+
+	public void setOldMeetingStartTime(Date oldMeetingStartTime) {
+		this.oldMeetingStartTime = oldMeetingStartTime;
 	}
 	
 }
