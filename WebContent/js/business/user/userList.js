@@ -81,8 +81,7 @@ var userList = function () {
                                         });
                                     }else{
                                         $.pnotify({
-                                            type:'error',
-                                            text: result.msg,
+                                            text: "该用户已被使用，无法删除",
                                             delay: 4000
                                         });
                                     }
@@ -119,7 +118,7 @@ var userList = function () {
             "aLengthMenu":[ 10, 25, 50,100],
             "bAutoWidth" : true,
 //            "bSort": true,
-            ordering: true,
+//            ordering: true,
             searching: true,
             order: [[2, 'asc']],
             //默认显示的分页数

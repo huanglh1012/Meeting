@@ -116,7 +116,7 @@ public class MeetingService extends BaseService {
 	
 	public ActionResult updateMeeting(MeetingDTO inMeetingDTO) throws Exception {
         MeetingEntity tmpCurrentMeetingEntity = this.meetingDAO.getEntity(MeetingEntity.class, "meetingId", inMeetingDTO.getMeetingId());
-		if (tmpCurrentMeetingEntity == null) {
+        if (tmpCurrentMeetingEntity == null) {
 			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "没有会议可更新";
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 			throw new RuntimeException(exceptionMessage);
@@ -124,13 +124,9 @@ public class MeetingService extends BaseService {
 		
 		// 清空与会人员信息
 		this.meetingDAO.deleteMeetingMember(tmpCurrentMeetingEntity.getMeetingId());
-		
-		// 清空短信通知信息
-//		MessageSendCenterEntity tmpMessageSendCenterEntity = this.meetingDAO.getEntity(MessageSendCenterEntity.class, "meetingId", inMeetingDTO.getMeetingId());
-//		if (tmpMessageSendCenterEntity != null)
-//			this.meetingDAO.delete(tmpMessageSendCenterEntity);
 			
 		// 更新会议信息
+		inMeetingDTO.setOldMeetingStartTime(tmpCurrentMeetingEntity.getMeetingStartTime());
 		MeetingDTO.dtoToEntity(inMeetingDTO, tmpCurrentMeetingEntity);
 		this.meetingDAO.update(tmpCurrentMeetingEntity);
 		
@@ -317,27 +313,41 @@ public class MeetingService extends BaseService {
 		if(QuarzManager.checkJobExists(inMeetingDTO.getMeetingId(), "meetingJobGroup"))
 			QuarzManager.deleteJob(inMeetingDTO.getMeetingId(), "meetingJobGroup");		
 		
+		// 发送信息  1.会议时间开始前10分钟，发送一次  2.提醒时间到了，发送一次  3.发起会议或者修改会议时，发送一次 
 		if (inMeetingDTO.getIsSendMessageNotice() == 1) {
-			// 添加定时任务
 			ShortMessageSendDTO tmpShortMessageSendDTO = new ShortMessageSendDTO();
 			BaseDTO.copyObjectPropertys(inMeetingDTO, tmpShortMessageSendDTO);
 			tmpShortMessageSendDTO.setMessageSendCenterId(tmpMessageSendCenterEntity.getMessageSendCenterId());
+			
+			// 添加作业任务
 			Map<String,Object> tmpJobMap = new HashMap<String,Object>();
 			tmpJobMap.put("shortMessageSendDTO", tmpShortMessageSendDTO);
-			Date tmpMessagePreNoticeTime = new Date(inMeetingDTO.getMeetingStartTime().getTime() - 600000);
 			JobEntity tmpJobEntity = new JobEntity(inMeetingDTO.getMeetingId(), "meetingJobGroup", MeetingMessageSendJob.class);
 			QuarzManager.createSimpleJob(tmpJobEntity, tmpJobMap, true);
-			Trigger tmpNoticeTrigger = MyTriggerUtils.newSimpleCountTrigger(inMeetingDTO.getMeetingId(), "meetingJobGroup", 
-					inMeetingDTO.getMeetingId() + "NoticeTrigger", "meetingTriggerGroup",
-					IntervalUnit.MINUTE,Integer.valueOf("1"),Integer.valueOf(1), inMeetingDTO.getMessageNoticeTime());
-			Trigger tmpPreNoticeTrigger = MyTriggerUtils.newSimpleCountTrigger(inMeetingDTO.getMeetingId(), "meetingJobGroup", 
-					inMeetingDTO.getMeetingId() + "PreNoticeTrigger", "meetingTriggerGroup",
-					IntervalUnit.MINUTE,Integer.valueOf("1"),Integer.valueOf(1),tmpMessagePreNoticeTime);
-			QuarzManager.addTrigger2Job(tmpNoticeTrigger);
-			QuarzManager.addTrigger2Job(tmpPreNoticeTrigger);
-			// 如果通知时间大于当前操作时间，则发送短信信息
-			if (inMeetingDTO.getMessageNoticeTime().getTime() > new Date().getTime())
+			
+			// 如果会议时间大于当前时间，则添加定时任务
+			if (inMeetingDTO.getMeetingStartTime().after(new Date())) {
+				Date tmpPreMeetingStartTime = new Date(inMeetingDTO.getMeetingStartTime().getTime() - 600000);
+				Trigger tmpPreNoticeTrigger = MyTriggerUtils.newSimpleCountTrigger(inMeetingDTO.getMeetingId(), "meetingJobGroup", 
+						inMeetingDTO.getMeetingId() + "PreNoticeTrigger", "meetingTriggerGroup",
+						IntervalUnit.MINUTE,Integer.valueOf("1"),Integer.valueOf(1),tmpPreMeetingStartTime);
+				QuarzManager.addTrigger2Job(tmpPreNoticeTrigger);
+			}
+			
+			// 如果通知时间大于当前时间，则添加定时任务
+			if (inMeetingDTO.getMessageNoticeTime().after(new Date())) {
+				// 提醒时间到了，发送消息
+				Trigger tmpNoticeTrigger = MyTriggerUtils.newSimpleCountTrigger(inMeetingDTO.getMeetingId(), "meetingJobGroup", 
+						inMeetingDTO.getMeetingId() + "NoticeTrigger", "meetingTriggerGroup",
+						IntervalUnit.MINUTE,Integer.valueOf("1"),Integer.valueOf(1), inMeetingDTO.getMessageNoticeTime());
+				QuarzManager.addTrigger2Job(tmpNoticeTrigger);
+			}
+			
+			// 发起会议或者修改会议时,如果会议开始时间与旧开始时间不同,则发送短息
+			if (!inMeetingDTO.getMeetingStartTime().equals(inMeetingDTO.getOldMeetingStartTime())) {
+				// 发起会议或者修改会议时，发送消息
 				this.sendMeetingMessage(tmpShortMessageSendDTO);
+			}
 		}
 	}
 	
