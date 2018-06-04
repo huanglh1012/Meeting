@@ -132,7 +132,7 @@ var roleList = function () {
                                 className: 'btn'
                             }
                         },
-                        message: '确定删除这一行吗 ?',
+                        message: '确定删除【'+zTreeObj.getSelectedNodes()[0].name+'】角色吗 ?',
                         title: "消息提示",
                         callback: function(result) {
                             if(result) {

@@ -61,7 +61,7 @@ var userList = function () {
                             className: 'btn'
                         }
                     },
-                    message: '确定删除该用户信息吗 ?',
+                    message: '确定删除【'+selectTr.employeeName+'】用户吗 ?',
                     title: "消息提示",
                     callback: function(result) {
                         if(result) {

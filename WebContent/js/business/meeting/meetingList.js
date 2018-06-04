@@ -75,7 +75,7 @@ var meetingList = function () {
     }
 
     var handleButton = function () {
-        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+        var tmpEmployeeDTO = JSON.parse(sessionStorage.getItem("EmployeeDTO"));
 
         $('#modifyMeetingBtn').on('click', function (e) {
             if (selectTr == null) {
@@ -272,7 +272,7 @@ var meetingList = function () {
                                     className: 'btn'
                                 }
                             },
-                            message: '确定删除该会议信息吗 ?',
+                            message: '确定删除【'+selectTr.meetingSubject+'】会议吗 ?',
                             title: "消息提示",
                             callback: function(result) {
                                 if(result) {
@@ -342,7 +342,7 @@ var meetingList = function () {
                                             className: 'btn'
                                         }
                                     },
-                                    message: '确定删除该会议信息吗 ?',
+                                    message: '确定删除【'+selectTr.meetingSubject+'】会议吗 ?',
                                     title: "消息提示",
                                     callback: function(result) {
                                         if(result) {
@@ -406,6 +406,59 @@ var meetingList = function () {
                 });
             }
         });
+
+        $('#viewMeetingBtn').on('click', function (e) {
+            if (selectTr == null) {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请选择需要查看的会议信息',
+                    callback: function() {
+                    },
+                    title: "错误提示"
+                });
+            }else{
+                var obj = [];
+                obj.push(StringUtil.decorateRequestData('String',selectTr.meetingId));
+                $.ajax({
+                    type:'post',
+                    Type:"json",
+                    async:false,
+                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
+                    success:function(result){
+                        var tmpJsonObject = JSON.parse(result);
+                        // 管理员、领导、发起人、参与人可以查看会议信息
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                            || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
+                            window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
+                        } else {
+                            bootbox.alert({
+                                className:'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message:'你不是该会议的参与者或发起人或管理员，没有权限查看该会议',
+                                callback: function() {
+                                },
+                                title: "错误提示"
+                            });
+                        }
+                    }
+                });
+            }
+        });
     }
 
     var handleDatePicker = function () {
@@ -465,42 +518,42 @@ var meetingList = function () {
             }
         });
 
-        $('#dt_issues tbody').on('dblclick','tr', function () {
-            var obj = [];
-            obj.push(StringUtil.decorateRequestData('String',oTable.fnGetData(this).meetingId));
-            $.ajax({
-                type:'post',
-                Type:"json",
-                async:false,
-                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                    ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
-                success:function(result){
-                    var tmpJsonObject = JSON.parse(result);
-                    // 管理员、领导、发起人、参与人可以查看会议信息
-                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
-                        || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
-                        window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
-                    } else {
-                        bootbox.alert({
-                            className:'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message:'你不是该会议的参与者或发起人或管理员，没有权限查看该会议',
-                            callback: function() {
-                            },
-                            title: "错误提示"
-                        });
-                    }
-                }
-            });
-        });
+//        $('#dt_issues tbody').on('dblclick','tr', function () {
+//            var obj = [];
+//            obj.push(StringUtil.decorateRequestData('String',oTable.fnGetData(this).meetingId));
+//            $.ajax({
+//                type:'post',
+//                Type:"json",
+//                async:false,
+//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
+//                success:function(result){
+//                    var tmpJsonObject = JSON.parse(result);
+//                    // 管理员、领导、发起人、参与人可以查看会议信息
+//                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+//                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+//                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+//                        || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) > -1
+//                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
+//                        window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
+//                    } else {
+//                        bootbox.alert({
+//                            className:'span4 alert-error',
+//                            buttons: {
+//                                ok: {
+//                                    label: '确定',
+//                                    className: 'btn blue'
+//                                }
+//                            },
+//                            message:'你不是该会议的参与者或发起人或管理员，没有权限查看该会议',
+//                            callback: function() {
+//                            },
+//                            title: "错误提示"
+//                        });
+//                    }
+//                }
+//            });
+//        });
     }
 
     return {

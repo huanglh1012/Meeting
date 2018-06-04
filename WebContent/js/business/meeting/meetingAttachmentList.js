@@ -151,14 +151,14 @@ var meetingAttachmentList = function () {
                     var tr = $(this).parents('tr');
                     var tmpRowData = oTable.fnGetData(tr);
                     // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
-                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         selectMeetingRecordFiles.push(tmpRowData.attachmentId);
                     } else {
-                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
+                        if (tmpRowData.employeeId != JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) {
                             bootbox.alert({
                                 className: 'span4 alert-error',
                                 buttons: {
@@ -180,23 +180,101 @@ var meetingAttachmentList = function () {
                 }
             });
             if (isDownload) {
-                $.blockUI({
-                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
-                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
-                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
-                        '</div>'
+                if (selectMeetingRecordFiles.length == 0) {
+                    bootbox.alert({
+                        className:'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
+                        },
+                        message:'请勾选需要下载的记录',
+                        callback: function() {
+                        },
+                        title: "错误提示"
+                    });
+                }else{
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                            '</div>'
+                    });
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
+                    $.ajax({
+                        type:'post',
+                        dataType:"json",
+                        url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                            ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                            jsonString:MyJsonUtil.obj2str(obj)}),
+                        success:function(result){
+                            $.unblockUI();
+                            window.location.href = '../../../'+result;
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#viewMeetingBtn').on('click', function (e) {
+            var selectMeetingRecordFiles = [];
+            $('#dt_issues :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "") {
+                    var tr = $(this).parents('tr');
+                    var tmpRowData = oTable.fnGetData(tr);
+                    selectMeetingRecordFiles.push(tmpRowData);
+                }
+            });
+
+            if (selectMeetingRecordFiles.length != 1 ) {
+                bootbox.alert({
+                    className:'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message:'请勾选一条需要查看的记录',
+                    callback: function() {
+                    },
+                    title: "错误提示"
                 });
+            }else{
                 var obj = [];
-                obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
+                obj.push(StringUtil.decorateRequestData('String',selectMeetingRecordFiles[0].meetingId));
                 $.ajax({
                     type:'post',
-                    dataType:"json",
-                    url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                        ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
-                        jsonString:MyJsonUtil.obj2str(obj)}),
+                    Type:"json",
+                    async:false,
+                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
-                        $.unblockUI();
-                        window.location.href = '../../../'+result;
+                        var tmpJsonObject = JSON.parse(result);
+                        // 管理员、领导、发起人、参与人可以查看会议信息
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                            || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
+                            window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
+                        } else {
+                            bootbox.alert({
+                                className:'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message:'你不是该会议的参与者或发起人或管理员，没有权限查看该会议',
+                                callback: function() {
+                                },
+                                title: "错误提示"
+                            });
+                        }
                     }
                 });
             }

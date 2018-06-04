@@ -103,7 +103,7 @@ var postList = function () {
                             className: 'btn'
                         }
                     },
-                    message: '确定删除这一行吗 ?',
+                    message: '确定删除【'+selectTr.postName+'】职务吗 ?',
                     title: "消息提示",
                     callback: function(result) {
                         if(result) {

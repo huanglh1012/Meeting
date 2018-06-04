@@ -43,7 +43,7 @@ var login = function () {
                     dataType:"json",
                     success:function(result) {
                         if (result.success) {
-                            localStorage.setItem("LoginDTO", JSON.stringify(result.msg.entityKeyValue));
+                            sessionStorage.setItem("LoginDTO", JSON.stringify(result.msg.entityKeyValue));
                             window.location.href='index.html';
                         } else {
                             bootbox.alert({
@@ -81,7 +81,7 @@ var login = function () {
 
         // 初始化表单提交事件
         function initTopEvent() {
-            var tmpLoginDTO= JSON.parse(localStorage.getItem("LoginDTO"));
+            var tmpLoginDTO= JSON.parse(sessionStorage.getItem("LoginDTO"));
             if (tmpLoginDTO == null)
                 window.location.href = '../../login.html';
 
@@ -92,12 +92,13 @@ var login = function () {
             $("#logout").click(function(e) {
                 // 将所有保存的数据删除
                 localStorage.clear();
+                sessionStorage.clear();
             });
 
             // 提交表单
             $("#btn-modifiedPassword").on('click', function(e){
                 var obj = [];
-                var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+                var tmpEmployeeDTO = JSON.parse(sessionStorage.getItem("EmployeeDTO"));
                 var addData = DomUtil.getJSONObjectFromForm('password-form', null);
                 addData.employeeId = tmpEmployeeDTO.employeeId;
                 obj.push(StringUtil.decorateRequestData('EmployeeDTO', addData));
@@ -127,6 +128,7 @@ var login = function () {
                                 $.unblockUI();
                                 // 将所有保存的数据删除
                                 localStorage.clear();
+                                sessionStorage.clear();
                                 window.location.href = '../../login.html';
                             }, 1500);
                         } else {
@@ -158,7 +160,7 @@ var login = function () {
 
         // 初始化用户权限
         function intSecurity() {
-            var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+            var tmpEmployeeDTO = JSON.parse(sessionStorage.getItem("EmployeeDTO"));
             var tmpSecurityCodeList = tmpEmployeeDTO.securityCodeList;
             // 设置按钮权限
             $("span[data-security-code],a[data-security-code]").each(function(i, v) {
