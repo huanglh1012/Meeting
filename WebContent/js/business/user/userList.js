@@ -96,6 +96,115 @@ var userList = function () {
                 });
             }
         });
+
+        $('#modifyPasswordBtn').on('click', function (e) {
+            if (selectTr == null) {
+                $.pnotify({
+                    text: '请选择需要修改密码的用户信息'
+                });
+            }else{
+                clearModalData();
+                $('#modifyUserPasswordModal').modal('show',true);
+            }
+        });
+
+        $('#modifyPasswordConfirmBtn').on('click', function (e) {
+            var newPassword = $('input[name="newEmployeePassword"]').val();
+            var passwordConfirm = $('input[name="employeePasswordConfirm"]').val();
+            if (newPassword == '' || passwordConfirm == '') {
+                bootbox.alert({
+                    className: 'span4 alert-error',
+                    buttons: {
+                        ok: {
+                            label: '确定',
+                            className: 'btn blue'
+                        }
+                    },
+                    message: "密码不能为空",
+                    callback: function () {
+
+                    },
+                    title: "错误提示"
+                });
+            } else {
+                if (newPassword != passwordConfirm) {
+                    bootbox.alert({
+                        className: 'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
+                        },
+                        message: "密码不一致, 请确保确认密码和新密码一致!",
+                        callback: function () {
+
+                        },
+                        title: "错误提示"
+                    });
+                } else {
+                    var obj = [];
+                    var addData = {};
+                    addData.newPassword = newPassword;
+                    addData.passwordConfirm = passwordConfirm;
+                    addData.employeeId = selectTr.employeeId;
+                    obj.push(StringUtil.decorateRequestData('EmployeeDTO', addData));
+
+                    $.ajax({
+                        type: "POST",
+                        url: SMController.getUrl({
+                            controller: 'controllerProxy',
+                            method: 'callBack',
+                            proxyClass: 'securityController',
+                            proxyMethod: 'modifyPassword',
+                            jsonString: MyJsonUtil.obj2str(obj)
+                        }),
+                        dataType: "json",
+                        beforeSend: function(jqXHR, settings) {
+                            $.blockUI({
+                                message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                    '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                    '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请稍后...</span></div>' +
+                                    '</div>'
+                            });
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                                $("#processStatus").text("密码修改成功，正在返回上一页面...");
+                                setTimeout(function(){
+                                    $.unblockUI();
+                                    $('#modifyUserPasswordModal').modal('hide');
+                                    $.pnotify({
+                                        text: result.msg
+                                    });
+                                }, 1500);
+                            } else {
+                                $.unblockUI();
+                                bootbox.alert({
+                                    className: 'span4 alert-error',
+                                    buttons: {
+                                        ok: {
+                                            label: '确定',
+                                            className: 'btn blue'
+                                        }
+                                    },
+                                    message: result.msg,
+                                    callback: function () {
+
+                                    },
+                                    title: "错误提示"
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        function clearModalData(){
+            $('input[name="newEmployeePassword"]').val('');
+            $('input[name="employeePasswordConfirm"]').val('');
+        }
     }
 
     var handleTable = function () {

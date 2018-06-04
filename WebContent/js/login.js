@@ -102,54 +102,71 @@ var login = function () {
                 var addData = DomUtil.getJSONObjectFromForm('password-form', null);
                 addData.employeeId = tmpEmployeeDTO.employeeId;
                 obj.push(StringUtil.decorateRequestData('EmployeeDTO', addData));
-
-                $.ajax({
-                    type: "POST",
-                    url: SMController.getUrl({
-                        controller: 'controllerProxy',
-                        method: 'callBack',
-                        proxyClass: 'securityController',
-                        proxyMethod: 'updateEmployeePassword',
-                        jsonString: MyJsonUtil.obj2str(obj)
-                    }),
-                    dataType: "json",
-                    beforeSend: function(jqXHR, settings) {
-                        $.blockUI({
-                            message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
-                                '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
-                                '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请稍后...</span></div>' +
-                                '</div>'
-                        });
-                    },
-                    success: function (result) {
-                        if (result.success) {
-                            $("#processStatus").text("密码修改成功，正在返回登陆页面...");
-                            setTimeout(function(){
-                                $.unblockUI();
-                                // 将所有保存的数据删除
-                                localStorage.clear();
-                                sessionStorage.clear();
-                                window.location.href = '../../login.html';
-                            }, 1500);
-                        } else {
-                            $.unblockUI();
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: result.msg,
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
+                console.log(addData);
+                if (addData.newPassword != '' && addData.passoword != ''&& addData.passwordConfirm != '') {
+                    $.ajax({
+                        type: "POST",
+                        url: SMController.getUrl({
+                            controller: 'controllerProxy',
+                            method: 'callBack',
+                            proxyClass: 'securityController',
+                            proxyMethod: 'updateEmployeePassword',
+                            jsonString: MyJsonUtil.obj2str(obj)
+                        }),
+                        dataType: "json",
+                        beforeSend: function(jqXHR, settings) {
+                            $.blockUI({
+                                message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                    '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                    '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在处理，请稍后...</span></div>' +
+                                    '</div>'
                             });
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                                $("#processStatus").text("密码修改成功，正在返回登陆页面重新登录...");
+                                setTimeout(function(){
+                                    $.unblockUI();
+                                    // 将所有保存的数据删除
+                                    localStorage.clear();
+                                    sessionStorage.clear();
+                                    window.location.href = '../../login.html';
+                                }, 1500);
+                            } else {
+                                $.unblockUI();
+                                bootbox.alert({
+                                    className: 'span4 alert-error',
+                                    buttons: {
+                                        ok: {
+                                            label: '确定',
+                                            className: 'btn blue'
+                                        }
+                                    },
+                                    message: result.msg,
+                                    callback: function () {
+
+                                    },
+                                    title: "错误提示"
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    bootbox.alert({
+                        className: 'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
+                        },
+                        message: "密码不能为空",
+                        callback: function () {
+
+                        },
+                        title: "错误提示"
+                    });
+                }
             });
 
             //取消提交表单,表单填充域清空
@@ -205,7 +222,7 @@ var login = function () {
                     },
                     passwordConfirm: {
                         required: '请再次输入密码',
-                        equalTo: '输入与上次不一致, 请确保确认密码和新密码一致!'
+                        equalTo: '密码不一致, 请确保确认密码和新密码一致!'
                     }
                 },
                 highlight: function(element, errorClass) {

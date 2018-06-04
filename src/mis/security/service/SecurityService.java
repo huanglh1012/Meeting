@@ -199,12 +199,24 @@ public class SecurityService extends BaseService {
 	
 	public ActionResult updateEmployeePassword(EmployeeDTO inEmployeeDTO) throws Exception {
 		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, inEmployeeDTO.getEmployeeId());
-		if (!tmpEmployeeEntity.getPassword().equals(inEmployeeDTO.getPassword())) {
+		if (!MD5Utils.isEqualsToMd5(inEmployeeDTO.getPassword(), tmpEmployeeEntity.getPassword())) {
 			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "旧密码不正确，请重新输入";
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
 			throw new RuntimeException(exceptionMessage);
 		}
-		tmpEmployeeEntity.setPassword(inEmployeeDTO.getNewPassword());
+		tmpEmployeeEntity.setPassword(MD5Utils.getMD5String(inEmployeeDTO.getNewPassword()));
+		this.securityDAO.update(tmpEmployeeEntity);
+		return ActionResultUtil.getActionResult(tmpEmployeeEntity.getId(), "密码修改成功");
+	}
+	
+	public ActionResult modifyPassword(EmployeeDTO inEmployeeDTO) throws Exception {
+		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, inEmployeeDTO.getEmployeeId());
+		if (tmpEmployeeEntity == null) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "未能获取用户数据，联系技术支持人员处理";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		tmpEmployeeEntity.setPassword(MD5Utils.getMD5String(inEmployeeDTO.getNewPassword()));
 		this.securityDAO.update(tmpEmployeeEntity);
 		return ActionResultUtil.getActionResult(tmpEmployeeEntity.getId(), "密码修改成功");
 	}

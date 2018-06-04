@@ -28,6 +28,7 @@ var userEdit = function () {
                     url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                         ,proxyClass:'securityController',proxyMethod:'getEmployeeInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
+                        $('#passwordDiv').hide();
                         DomUtil.setFormElementsValueViaJSONObject('userForm',JSON.parse(result));
                     }
                 });

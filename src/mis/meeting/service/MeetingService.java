@@ -127,6 +127,7 @@ public class MeetingService extends BaseService {
 			
 		// 更新会议信息
 		inMeetingDTO.setOldMeetingStartTime(tmpCurrentMeetingEntity.getMeetingStartTime());
+		inMeetingDTO.setOldMeetingRoomId(tmpCurrentMeetingEntity.getMeetingRoomId());
 		MeetingDTO.dtoToEntity(inMeetingDTO, tmpCurrentMeetingEntity);
 		this.meetingDAO.update(tmpCurrentMeetingEntity);
 		
@@ -343,10 +344,11 @@ public class MeetingService extends BaseService {
 				QuarzManager.addTrigger2Job(tmpNoticeTrigger);
 			}
 			
-			// 发起会议或者修改会议时,如果会议开始时间与旧开始时间不同,则发送短息
-			if (!inMeetingDTO.getMeetingStartTime().equals(inMeetingDTO.getOldMeetingStartTime())) {
-				// 发起会议或者修改会议时，发送消息
-				this.sendMeetingMessage(tmpShortMessageSendDTO);
+			// 发起会议或者修改会议时,如果会议旧开始时间或者旧会议室ID发生变化时,则发送短息
+			if (!inMeetingDTO.getMeetingStartTime().equals(inMeetingDTO.getOldMeetingStartTime())
+					|| !inMeetingDTO.getMeetingRoomId().equals(inMeetingDTO.getOldMeetingRoomId())) {
+				if (inMeetingDTO.getMeetingStartTime().after(new Date())) 
+					this.sendMeetingMessage(tmpShortMessageSendDTO);
 			}
 		}
 	}
