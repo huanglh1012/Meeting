@@ -25,6 +25,7 @@ import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.utils.ActionResultUtil;
 import ecp.bsp.system.commons.utils.LoggerUtil;
+import ecp.bsp.system.commons.utils.MD5Utils;
 import ecp.bsp.system.commons.utils.StringUtils;
 import ecp.bsp.system.core.BaseService;
 
@@ -47,8 +48,7 @@ public class SecurityService extends BaseService {
 	 * @return 返回用户登陆状态
 	 */
 	public ActionResult login(LoginDTO inLoginDTO) {
-		// 将密码转化为md5码
-		String tmpPasswordMd5 = "";
+		
 		// 用户是否存在
 		EmployeeEntity tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, "login", inLoginDTO.getLogin());
 		if (tmpEmployeeEntity == null) {
@@ -57,8 +57,9 @@ public class SecurityService extends BaseService {
 			throw new RuntimeException(exceptionMessage);
 		}
 		
-		// 密码是否正确
-		tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, new String[] {"login", "password"}, new Object[] {inLoginDTO.getLogin(), inLoginDTO.getPassword()});
+		// 密码是否正确，将密码转化为md5码
+		String tmpPasswordMd5 = MD5Utils.getMD5String(inLoginDTO.getPassword());
+		tmpEmployeeEntity = this.securityDAO.getEntity(EmployeeEntity.class, new String[] {"login", "password"}, new Object[] {inLoginDTO.getLogin(), tmpPasswordMd5});
 		if (tmpEmployeeEntity == null) {
 			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "'" + inLoginDTO.getLogin() + "'用户的密码错误";
 			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
@@ -106,6 +107,7 @@ public class SecurityService extends BaseService {
 		
 		EmployeeEntity tmpNewEmployeeEntity = new EmployeeEntity();
 		EmployeeDTO.dtoToEntity(inEmployeeDTO, tmpNewEmployeeEntity);
+		tmpNewEmployeeEntity.setPassword(MD5Utils.getMD5String(inEmployeeDTO.getPassword()));
 		this.securityDAO.insert(tmpNewEmployeeEntity);
 		
 		EmployeeRoleRfEntity tmpEmployeeRoleRfEntity = null;
