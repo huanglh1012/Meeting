@@ -31,6 +31,10 @@ var meetingRoomList = function () {
                 $('input[name=meetingRoomId]').val(selectTr.meetingRoomId);
                 $('input[name=meetingRoomName]').val(selectTr.meetingRoomName);
                 $('input[name=meetingRoomAddress]').val(selectTr.meetingRoomAddress);
+            } else {
+                $.pnotify({
+                    text: '请选择需要修改的会议室信息'
+                });
             }
         });
 
@@ -77,6 +81,10 @@ var meetingRoomList = function () {
                         }
                     }
                 });
+            } else {
+                $.pnotify({
+                    text: '请选择需要删除的会议室信息'
+                });
             }
         });
 
@@ -92,20 +100,7 @@ var meetingRoomList = function () {
             addData['meetingRoomAddress'] = meetingRoomAddress;
 
             if (meetingRoomName == '' || meetingRoomAddress == '') {
-                bootbox.alert({
-                    className: 'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message: "会议室名称和地址不能为空",
-                    callback: function () {
-
-                    },
-                    title: "错误提示"
-                });
+                $('#errorTips').text("会议室名称和地址不能为空");
             } else {
                 obj.push(StringUtil.decorateRequestData('MeetingRoomDTO', addData));
                 $.ajax({
@@ -140,20 +135,7 @@ var meetingRoomList = function () {
 
                         } else {
                             $.unblockUI();
-                            bootbox.alert({
-                                title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
-                                message:result.msg,
-                                className:'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
-                                        className: 'btn blue'
-                                    }
-                                },
-                                callback: function() {
-
-                                }
-                            });
+                            $('#errorTips').text(result.msg);
                         }
                     }
                 });
@@ -161,6 +143,7 @@ var meetingRoomList = function () {
         });
 
         function clearModalData(){
+            $('#errorTips').text("");
             $('input[name=meetingRoomId]').val('');
             $('input[name=meetingRoomName]').val('');
             $('input[name=meetingRoomAddress]').val('');

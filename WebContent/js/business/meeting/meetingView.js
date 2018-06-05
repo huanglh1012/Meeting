@@ -161,41 +161,18 @@ var meetingView = function () {
                         || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         selectMeetingRecordFiles.push(tmpRowData.attachmentId);
                     } else {
-                        if (tmpRowData.employeeId != JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许下载自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
-                            });
-                            isDownload = false;
-                            return false;
-                        }
+                        $.pnotify({
+                            text: '只允许下载自己的会议材料'
+                        });
+                        isDownload = false;
+                        return false;
                     }
                 }
             });
             if (isDownload) {
                 if (selectMeetingRecordFiles.length == 0) {
-                    bootbox.alert({
-                        className:'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message:'请勾选需要下载的记录',
-                        callback: function() {
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
                     });
                 }else{
                     $.blockUI({
@@ -236,41 +213,18 @@ var meetingView = function () {
                         || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         selectMeetingFiles.push(tmpRowData.attachmentId);
                     } else {
-                        if (tmpRowData.employeeId != JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许下载自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
-                            });
-                            isDownload = false;
-                            return false;
-                        }
+                        $.pnotify({
+                            text: '只允许下载自己的会议材料'
+                        });
+                        isDownload = false;
+                        return false;
                     }
                 }
             });
             if (isDownload) {
                 if (selectMeetingFiles.length == 0) {
-                    bootbox.alert({
-                        className:'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message:'请勾选需要下载的记录',
-                        callback: function() {
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
                     });
                 }else{
                     $.blockUI({

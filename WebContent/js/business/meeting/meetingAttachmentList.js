@@ -150,6 +150,7 @@ var meetingAttachmentList = function () {
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = oTable.fnGetData(tr);
+                    console.log(tmpRowData);
                     // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
                     if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
                         || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
@@ -159,19 +160,8 @@ var meetingAttachmentList = function () {
                         selectMeetingRecordFiles.push(tmpRowData.attachmentId);
                     } else {
                         if (tmpRowData.employeeId != JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许下载自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
+                            $.pnotify({
+                                text: '只允许下载自己的会议材料'
                             });
                             isDownload = false;
                             return false;
@@ -181,18 +171,8 @@ var meetingAttachmentList = function () {
             });
             if (isDownload) {
                 if (selectMeetingRecordFiles.length == 0) {
-                    bootbox.alert({
-                        className:'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message:'请勾选需要下载的记录',
-                        callback: function() {
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
                     });
                 }else{
                     $.blockUI({
@@ -229,18 +209,8 @@ var meetingAttachmentList = function () {
             });
 
             if (selectMeetingRecordFiles.length != 1 ) {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请勾选一条需要查看的记录',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请勾选一条需要查看的记录'
                 });
             }else{
                 var obj = [];
@@ -261,18 +231,8 @@ var meetingAttachmentList = function () {
                             || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
                             window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
                         } else {
-                            bootbox.alert({
-                                className:'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message:'你不是该会议的参与者或发起人或管理员，没有权限查看该会议',
-                                callback: function() {
-                                },
-                                title: "错误提示"
+                            $.pnotify({
+                                text: '你不是管理员和领导角色或者不是该会议的参与者和发起人，没有权限查看该会议'
                             });
                         }
                     }

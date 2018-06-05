@@ -226,19 +226,8 @@ var meetingEdit = function () {
                 var isSendMessageNotice = $('input[name="isSendMessageNotice"]').prop('checked');
                 var addData = DomUtil.getJSONObjectFromForm('createMeetingForm', null);
                 if (isSendMessageNotice && addData.messageNoticeTime == '') {
-                    bootbox.alert({
-                        className: 'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message: "短信提醒时间不能为空",
-                        callback: function () {
-
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '短信提醒时间不能为空'
                     });
                 } else {
                     // 添加会议记录附件表格记录
@@ -581,19 +570,8 @@ var meetingEdit = function () {
                         || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         tmpDeleteFile.push(tmpRowData);
                     } else {
-                        bootbox.alert({
-                            className: 'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message: "只允许删除自己的会议材料",
-                            callback: function () {
-
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '只允许删除自己的会议材料'
                         });
                         isDelete = false;
                         return false;
@@ -602,19 +580,8 @@ var meetingEdit = function () {
             });
             if (isDelete) {
                 if (tmpDeleteFile.length == 0) {
-                    bootbox.alert({
-                        className: 'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message: "请选择需要删除的材料信息",
-                        callback: function () {
-
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '请选择需要删除的材料信息'
                     });
                 } else {
                     bootbox.confirm({
@@ -711,19 +678,8 @@ var meetingEdit = function () {
                         || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         tmpDeleteFile.push(tmpRowData);
                     } else {
-                        bootbox.alert({
-                            className: 'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message: "只允许删除自己的会议材料",
-                            callback: function () {
-
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '只允许删除自己的会议材料'
                         });
                         isDelete = false;
                         return false;
@@ -732,19 +688,8 @@ var meetingEdit = function () {
             });
             if (isDelete) {
                 if (tmpDeleteFile.length == 0) {
-                    bootbox.alert({
-                        className: 'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message: "请选择需要删除的材料信息",
-                        callback: function () {
-
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '请选择需要删除的材料信息'
                     });
                 } else {
                     bootbox.confirm({
@@ -808,37 +753,15 @@ var meetingEdit = function () {
                             || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                             selectMeetingRecordFiles.push(tmpRowData.attachmentId);
                         } else {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许下载自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
+                            $.pnotify({
+                                text: '只允许下载自己的会议材料'
                             });
                             isDownload = false;
                             return false;
                         }
                     } else {
-                        bootbox.alert({
-                            className: 'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message: "只允许下载已上传保存后的会议材料",
-                            callback: function () {
-
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '只允许下载已上传保存后的会议材料'
                         });
                         isDownload = false;
                         return false;
@@ -848,18 +771,8 @@ var meetingEdit = function () {
 
             if (isDownload) {
                 if (selectMeetingRecordFiles.length == 0) {
-                    bootbox.alert({
-                        className:'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message:'请勾选需要下载的记录',
-                        callback: function() {
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
                     });
                 }else{
                     $.blockUI({
@@ -902,37 +815,15 @@ var meetingEdit = function () {
                             || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                             selectMeetingFiles.push(tmpRowData.attachmentId);
                         } else {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许下载自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
+                            $.pnotify({
+                                text: '只允许下载自己的会议材料'
                             });
                             isDownload = false;
                             return false;
                         }
                     } else {
-                        bootbox.alert({
-                            className: 'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message: "只允许下载已上传保存后的会议材料",
-                            callback: function () {
-
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '只允许下载已上传保存后的会议材料'
                         });
                         isDownload = false;
                         return false;
@@ -941,18 +832,8 @@ var meetingEdit = function () {
             });
             if (isDownload) {
                 if (selectMeetingFiles.length == 0) {
-                    bootbox.alert({
-                        className:'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message:'请勾选需要下载的记录',
-                        callback: function() {
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
                     });
                 }else{
                     $.blockUI({

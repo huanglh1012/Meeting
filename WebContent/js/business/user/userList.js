@@ -112,36 +112,10 @@ var userList = function () {
             var newPassword = $('input[name="newEmployeePassword"]').val();
             var passwordConfirm = $('input[name="employeePasswordConfirm"]').val();
             if (newPassword == '' || passwordConfirm == '') {
-                bootbox.alert({
-                    className: 'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message: "密码不能为空",
-                    callback: function () {
-
-                    },
-                    title: "错误提示"
-                });
+                $('#errorTips').text("新密码和确认密码不能为空");
             } else {
                 if (newPassword != passwordConfirm) {
-                    bootbox.alert({
-                        className: 'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message: "密码不一致, 请确保确认密码和新密码一致!",
-                        callback: function () {
-
-                        },
-                        title: "错误提示"
-                    });
+                    $('#errorTips').text("密码不一致, 请确保确认密码和新密码一致");
                 } else {
                     var obj = [];
                     var addData = {};
@@ -202,6 +176,7 @@ var userList = function () {
         });
 
         function clearModalData(){
+            $('#errorTips').text("");
             $('input[name="newEmployeePassword"]').val('');
             $('input[name="employeePasswordConfirm"]').val('');
         }

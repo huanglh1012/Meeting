@@ -78,7 +78,7 @@ public class ShortMessageService extends BaseService {
 	
 	public ShortMessageResultDTO sendMessage(String inSendTelePhones, String inMessageParam) throws Exception {
 		ShortMessageCenterDTO tmpShortMessageCenterDTO  = this.getShortMessageCenterInfo();
-		tmpShortMessageCenterDTO.setCenterPhoneNumber(inSendTelePhones);
+		tmpShortMessageCenterDTO.setSendMessagePhoneNumber(inSendTelePhones);
 		tmpShortMessageCenterDTO.setMessageParam(inMessageParam);
 		return this.sendMessage(tmpShortMessageCenterDTO);
 	}

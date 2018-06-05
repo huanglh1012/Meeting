@@ -19,18 +19,8 @@ var doMeetingList = function () {
     var handleButton = function () {
         $('#viewJoinMeetingBtn').on('click', function (e) {
             if (participantMeetingSelectTr == null) {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要查看的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要查看的会议信息'
                 });
             }else{
                 window.location.href='meeting_view.html?meetingId='+ participantMeetingSelectTr.meetingId;
@@ -39,18 +29,8 @@ var doMeetingList = function () {
 
         $('#modifyJoinMeetingBtn').on('click', function (e) {
             if (participantMeetingSelectTr == null) {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要修改的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要修改的会议信息'
                 });
             }else{
                 window.location.href='meeting_new.html?meetingId='+ participantMeetingSelectTr.meetingId;
@@ -59,18 +39,8 @@ var doMeetingList = function () {
 
         $('#viewMeetingBtn').on('click', function (e) {
             if (creatorMeetingSelectTr == null) {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要查看的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要查看的会议信息'
                 });
             }else{
                 window.location.href='meeting_view.html?meetingId='+ creatorMeetingSelectTr.meetingId;
@@ -79,18 +49,8 @@ var doMeetingList = function () {
 
         $('#modifyMeetingBtn').on('click', function (e) {
             if (creatorMeetingSelectTr == null) {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要修改的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要修改的会议信息'
                 });
             }else{
                 if (creatorMeetingSelectTr.meetingStateId == '1') {
@@ -99,18 +59,8 @@ var doMeetingList = function () {
                         || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1) {
                         window.location.href='meeting_new.html?meetingId='+ creatorMeetingSelectTr.meetingId;
                     } else {
-                        bootbox.alert({
-                            className:'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message:'该会议已关闭，不允许修改',
-                            callback: function() {
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '该会议已关闭，不允许修改'
                         });
                     }
                 } else {
@@ -122,18 +72,8 @@ var doMeetingList = function () {
         $('#closeMeetingBtn').on('click', function (e) {
             if(creatorMeetingSelectTr != null){
                 if (creatorMeetingSelectTr.meetingStateId == '1') {
-                    bootbox.alert({
-                        className:'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message:'该会议已关闭',
-                        callback: function() {
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '该会议已关闭'
                     });
                 } else {
                     bootbox.confirm({
@@ -179,18 +119,8 @@ var doMeetingList = function () {
                     });
                 }
             } else {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要关闭的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要关闭的会议信息'
                 });
             }
         });
@@ -243,18 +173,8 @@ var doMeetingList = function () {
                             }
                         });
                     } else {
-                        bootbox.alert({
-                            className:'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message:'该会议已关闭，不允许删除',
-                            callback: function() {
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '该会议已关闭，不允许删除'
                         });
                     }
                 } else {
@@ -301,18 +221,8 @@ var doMeetingList = function () {
                     });
                 }
             } else {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要删除的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要删除的会议信息'
                 });
             }
         });

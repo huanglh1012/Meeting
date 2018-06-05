@@ -3,48 +3,47 @@
 /* Created on:     2018-06-05 9:56:56                           */
 /*==============================================================*/
 
-
-drop table if exists ATTACHMENT;
-
-drop table if exists ATTACHMENT_CATEGORY;
-
 drop table if exists ATTACHMENT_TEMP;
 
-drop table if exists DEPARTMENT;
+drop table if exists SHORT_MESSAGE_SEND_LOG;
 
-drop table if exists EMPLOYEE;
-
-drop table if exists EMPLOYEE_ROLE_RF;
-
-drop table if exists MEETING;
-
-drop table if exists MEETING_ATTACHMENT;
-
-drop table if exists MEETING_MEMBER_RF;
-
-drop table if exists MEETING_MEMBER_ROLE;
-
-drop table if exists MEETING_ROOM;
-
-drop table if exists MEETING_STATE;
+drop table if exists SHORT_MESSAGE_CENTER;
 
 drop table if exists MESSAGE_SEND_CENTER;
 
 drop table if exists MESSAGE_SEND_STATE;
 
-drop table if exists POST;
+drop table if exists MEETING_ATTACHMENT;
 
-drop table if exists ROLE;
+drop table if exists ATTACHMENT;
+
+drop table if exists ATTACHMENT_CATEGORY;
+
+drop table if exists MEETING_MEMBER_RF;
+
+drop table if exists MEETING_MEMBER_ROLE;
+
+drop table if exists MEETING;
+
+drop table if exists MEETING_ROOM;
+
+drop table if exists MEETING_STATE;
+
+drop table if exists EMPLOYEE_ROLE_RF;
 
 drop table if exists ROLE_SECURITY_RF;
 
+drop table if exists EMPLOYEE;
+
+drop table if exists ROLE;
+
 drop table if exists SECURITY;
+
+drop table if exists POST;
 
 drop table if exists SEX;
 
-drop table if exists SHORT_MESSAGE_CENTER;
-
-drop table if exists SHORT_MESSAGE_SEND_LOG;
+drop table if exists DEPARTMENT;
 
 /*==============================================================*/
 /* Table: ATTACHMENT                                            */
