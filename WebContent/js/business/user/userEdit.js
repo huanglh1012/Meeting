@@ -99,6 +99,9 @@ var userEdit = function () {
                 password: {
                     required: true
                 },
+                confirmPassword: {
+                    required: true
+                },
                 telephone: {
                     required: true
                 },
@@ -121,6 +124,9 @@ var userEdit = function () {
                 },
                 password:{
                     required:"密码不能为空！！！"
+                },
+                confirmPassword:{
+                    required:"确认密码不能为空！！！"
                 },
                 telephone:{
                     required:"电话不能为空！！！"
@@ -158,7 +164,7 @@ var userEdit = function () {
                                 className: 'btn blue'
                             }
                         },
-                        message: "密码不一致，请重新输入",
+                        message: "确认密码与密码不一致，请重新输入",
                         callback: function () {
 
                         },

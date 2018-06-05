@@ -19,6 +19,12 @@
     <link rel="stylesheet" type="text/css" href="../../css/datetimepicker.css" />
 
     <link href="../../css/dataTables.colVis.min.css" media="screen" rel="stylesheet" type="text/css">
+    <style>
+        .modal-body{
+            max-height:400px;
+            overflow-y:auto;
+        }
+    </style>
 </head>
 <body>
     <div id="top"></div>
@@ -226,16 +232,16 @@
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                             <h4 class="modal-title" id="myModalLabel">选择人员</h4>
                                         </div>
+                                        <div class="input-group" style="padding: 5px">
+                                            <input class="form-control" type="text" name="searchEmployeeText">
+                                            <div class="input-group-btn">
+                                                <button id="searchEmployeeBtn" type="button" class="btn btn-primary">
+                                                    <i class="fa fa-fw fa-search "></i>搜索
+                                                </button>
+                                            </div>
+                                        </div>
                                         <div class="modal-body">
                                             <div class="row">
-                                                <div class="input-group">
-                                                    <input class="form-control" type="text" name="searchEmployeeText">
-                                                    <div class="input-group-btn">
-                                                        <button id="searchEmployeeBtn" type="button" class="btn btn-primary">
-                                                            <i class="fa fa-fw fa-search "></i>搜索
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <div id="departmentEmployeeTree" class="ztree" style="min-height: 100px"></div>
                                             </div>
                                         </div>

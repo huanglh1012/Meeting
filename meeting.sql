@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018-05-29 20:52:45                          */
+/* Created on:     2018-06-05 9:56:56                           */
 /*==============================================================*/
 
 
@@ -315,9 +315,13 @@ create table SHORT_MESSAGE_CENTER
 (
    SHORT_MESSAGE_CENTER_ID varchar(32) not null,
    SHORT_MESSAGE_CENTER_NAME varchar(128) not null,
-   CENTER_PHONE_NUMBER  varchar(128) not null,
-   SEND_MESSAGE_PHONE_NUMBER varchar(128) not null,
+   SEND_URL             varchar(256) not null,
+   CALLER_ID            varchar(256) not null,
+   CALLER_PASSWORD      varchar(256) not null,
+   MESSAGE_TEMPLATE_ID  varchar(256) not null,
    MESSAGE_MODEL        varchar(1024),
+   CENTER_PHONE_NUMBER  varchar(128),
+   SEND_MESSAGE_PHONE_NUMBER varchar(128),
    primary key (SHORT_MESSAGE_CENTER_ID)
 );
 

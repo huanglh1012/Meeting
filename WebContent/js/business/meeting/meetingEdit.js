@@ -38,13 +38,20 @@ var meetingEdit = function () {
                         DomUtil.setFormElementsValueViaJSONObject('createMeetingForm',tmpJsonObject);
                         if (tmpJsonObject.isSendMessageNotice == 1)
                             $('input[name="isSendMessageNotice"]').prop('checked',true);
+                        // 初始化下拉框
                         $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
                         $('#meetingRoomId').select2('val',tmpJsonObject.meetingRoomId);
                         $('#meetingCreatorDepartmentId').select2('val',tmpJsonObject.meetingCreatorDepartmentId);
+                        // 初始化材料表格
                         if (tmpJsonObject.meetingFileList.length > 0)
                             meetingFilesTable.fnAddData(tmpJsonObject.meetingFileList);
                         if (tmpJsonObject.meetingRecordFileList.length > 0)
                             meetingRecordFilesTable.fnAddData(tmpJsonObject.meetingRecordFileList);
+                        // 初始化树形控件
+                        var tmpTreeData = tmpJsonObject.meetingParticipants.split(',');
+                        for(var i = 0;i < tmpTreeData.length; i++){
+                            zTreeObj.checkNode(zTreeObj.getNodesByParam("id", tmpTreeData[i],null)[0],true, true);
+                        }
                         // 判断操作人是否为发起人员或者管理员，如果不是，则只允许上传，删除和下载自己的会议材料，不允许修改会议内容，不允许下载其他部门会议材料
                         if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
                             || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
@@ -778,6 +785,193 @@ var meetingEdit = function () {
                                     }
                                 });
                             }
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#meetingRecordFileDownloadBtn').on('click', function (e) {
+            var isDownload = true;
+            var selectMeetingRecordFiles = [];
+            $('#meetingRecordFiles :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "") {
+                    var tr = $(this).parents('tr');
+                    var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
+                    // 只允许下载已上传保存后的会议材料
+                    if (tmpRowData.attachmentCreateId != null) {
+                        // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                            selectMeetingRecordFiles.push(tmpRowData.attachmentId);
+                        } else {
+                            bootbox.alert({
+                                className: 'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message: "只允许下载自己的会议材料",
+                                callback: function () {
+
+                                },
+                                title: "错误提示"
+                            });
+                            isDownload = false;
+                            return false;
+                        }
+                    } else {
+                        bootbox.alert({
+                            className: 'span4 alert-error',
+                            buttons: {
+                                ok: {
+                                    label: '确定',
+                                    className: 'btn blue'
+                                }
+                            },
+                            message: "只允许下载已上传保存后的会议材料",
+                            callback: function () {
+
+                            },
+                            title: "错误提示"
+                        });
+                        isDownload = false;
+                        return false;
+                    }
+                }
+            });
+
+            if (isDownload) {
+                if (selectMeetingRecordFiles.length == 0) {
+                    bootbox.alert({
+                        className:'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
+                        },
+                        message:'请勾选需要下载的记录',
+                        callback: function() {
+                        },
+                        title: "错误提示"
+                    });
+                }else{
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                            '</div>'
+                    });
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
+                    $.ajax({
+                        type:'post',
+                        dataType:"json",
+                        url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                            ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                            jsonString:MyJsonUtil.obj2str(obj)}),
+                        success:function(result){
+                            $.unblockUI();
+                            window.location.href = '../../../'+result;
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#meetingFileDownloadBtn').on('click', function (e) {
+            var isDownload = true;
+            var selectMeetingFiles = [];
+            $('#meetingFiles :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "") {
+                    var tr = $(this).parents('tr');
+                    var tmpRowData = meetingFilesTable.fnGetData(tr);
+                    // 只允许下载已上传保存后的会议材料
+                    if (tmpRowData.attachmentCreateId != null) {
+                        // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                            selectMeetingFiles.push(tmpRowData.attachmentId);
+                        } else {
+                            bootbox.alert({
+                                className: 'span4 alert-error',
+                                buttons: {
+                                    ok: {
+                                        label: '确定',
+                                        className: 'btn blue'
+                                    }
+                                },
+                                message: "只允许下载自己的会议材料",
+                                callback: function () {
+
+                                },
+                                title: "错误提示"
+                            });
+                            isDownload = false;
+                            return false;
+                        }
+                    } else {
+                        bootbox.alert({
+                            className: 'span4 alert-error',
+                            buttons: {
+                                ok: {
+                                    label: '确定',
+                                    className: 'btn blue'
+                                }
+                            },
+                            message: "只允许下载已上传保存后的会议材料",
+                            callback: function () {
+
+                            },
+                            title: "错误提示"
+                        });
+                        isDownload = false;
+                        return false;
+                    }
+                }
+            });
+            if (isDownload) {
+                if (selectMeetingFiles.length == 0) {
+                    bootbox.alert({
+                        className:'span4 alert-error',
+                        buttons: {
+                            ok: {
+                                label: '确定',
+                                className: 'btn blue'
+                            }
+                        },
+                        message:'请勾选需要下载的记录',
+                        callback: function() {
+                        },
+                        title: "错误提示"
+                    });
+                }else{
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                            '</div>'
+                    });
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
+                    $.ajax({
+                        type:'post',
+                        dataType:"json",
+                        url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                            ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                            jsonString:MyJsonUtil.obj2str(obj)}),
+                        success:function(result){
+                            $.unblockUI();
+                            window.location.href = '../../../'+result;
                         }
                     });
                 }

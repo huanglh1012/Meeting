@@ -12,6 +12,44 @@
  * @type {messageCenterEdit}
  */
 var messageCenterEdit = function () {
+    var handleButton = function () {
+        $('#testMessageSendBtn').on('click', function (e) {
+            var obj = [];
+            var tmpFormData = DomUtil.getJSONObjectFromForm('shortMessageCenterForm', null);
+            obj.push(StringUtil.decorateRequestData('ShortMessageCenterDTO', tmpFormData));
+            $.ajax({
+                type: "POST",
+                url: SMController.getUrl({
+                    controller: 'controllerProxy',
+                    method: 'callBack',
+                    proxyClass: 'shortMessageController',
+                    proxyMethod: 'testSendMessage',
+                    jsonString: MyJsonUtil.obj2str(obj)
+                }),
+                dataType: "json",
+                beforeSend: function(jqXHR, settings) {
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在发送测试短信...</span></div>' +
+                            '</div>'
+                    });
+                },
+                success: function (result) {
+                    if (result.success) {
+                        $("#processStatus").text("测试短息发送完成...");
+                        $.unblockUI();
+                        $('#messageSendResult').text("测试短息发送完成,返回结果："+result.msg.entityKeyValue.messageSendResult);
+
+                    } else {
+                        $.unblockUI();
+                        $('#messageSendResult').text("测试短息发送失败,请检查短信模板参数和消息电话号码是否不为空，或分割符号是否为英文逗号");
+                    }
+                }
+            });
+        });
+    }
+
     var handlePageInfo = function () {
         $.ajax({
             type:'post',
@@ -38,22 +76,34 @@ var messageCenterEdit = function () {
                 shortMessageCenterName: {
                     required: true
                 },
-                centerPhoneNumber: {
+                sendUrl: {
                     required: true
                 },
-                sendMessagePhoneNumber: {
+                callerId: {
+                    required: true
+                },
+                callerPassword: {
+                    required: true
+                },
+                messageTemplateId: {
                     required: true
                 }
             }, // Messages for form
             messages: {
                 shortMessageCenterName:{
-                    required:"短信中心名称！！！"
+                    required:"短信中心名称不能为空"
                 },
-                centerPhoneNumber:{
-                    required:"短信中心号码！！！"
+                sendUrl:{
+                    required:"短信中心发送接口不能为空"
                 },
-                sendMessagePhoneNumber:{
-                    required:"信息发送号码！！！"
+                callerId:{
+                    required:"调用者ID不能为空"
+                },
+                callerPassword:{
+                    required:"调用者密码不能为空"
+                },
+                messageTemplateId:{
+                    required:"消息发送模板ID不能为空"
                 }
             },
 
@@ -116,6 +166,7 @@ var messageCenterEdit = function () {
 
     return {
         init: function () {
+            handleButton();
             handleForm();
             handlePageInfo();
         }

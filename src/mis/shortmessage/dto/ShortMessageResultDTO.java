@@ -6,6 +6,7 @@ public class ShortMessageResultDTO {
 	private String code;
 	private List<String> sId;
 	private String messageSendResult;
+	private String shortMessageCenterId;
 	public String getCode() {
 		return code;
 	}
@@ -23,6 +24,12 @@ public class ShortMessageResultDTO {
 	}
 	public void setMessageSendResult(String messageSendResult) {
 		this.messageSendResult = messageSendResult;
+	}
+	public String getShortMessageCenterId() {
+		return shortMessageCenterId;
+	}
+	public void setShortMessageCenterId(String shortMessageCenterId) {
+		this.shortMessageCenterId = shortMessageCenterId;
 	}
 	
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import mis.shortmessage.constant.ShortMessageConst;
 import mis.shortmessage.dao.ShortMessageDAO;
 import mis.shortmessage.dto.ShortMessageCenterDTO;
 import mis.shortmessage.dto.ShortMessageResultDTO;
@@ -26,7 +25,6 @@ import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.utils.ActionResultUtil;
 import ecp.bsp.system.commons.utils.LoggerUtil;
-import ecp.bsp.system.commons.utils.PropertiesUtil;
 import ecp.bsp.system.core.BaseService;
 
 @Service
@@ -73,19 +71,28 @@ public class ShortMessageService extends BaseService {
 		return this.shortMessageDAO.getShortMessageCenterInfo();
 	}
 	
-	public ShortMessageResultDTO sendMessage(String inSendTelePhones, String inMessageParam) {
+	public ActionResult testSendMessage(ShortMessageCenterDTO inShortMessageCenterDTO) throws Exception {
+		ShortMessageResultDTO tmpShortMessageResultDTO = this.sendMessage(inShortMessageCenterDTO);
+		return ActionResultUtil.getActionResult(tmpShortMessageResultDTO, "发送测试短信成功");
+	}
+	
+	public ShortMessageResultDTO sendMessage(String inSendTelePhones, String inMessageParam) throws Exception {
+		ShortMessageCenterDTO tmpShortMessageCenterDTO  = this.getShortMessageCenterInfo();
+		tmpShortMessageCenterDTO.setCenterPhoneNumber(inSendTelePhones);
+		tmpShortMessageCenterDTO.setMessageParam(inMessageParam);
+		return this.sendMessage(tmpShortMessageCenterDTO);
+	}
+	
+	public ShortMessageResultDTO sendMessage(ShortMessageCenterDTO inShortMessageCenterDTO) throws Exception {
 		try {
-			PropertiesUtil tmpPropertiesUtil = new PropertiesUtil(ShortMessageConst.PROPERTIES_NAME_FILE_DIR_PATH);
-			String tmpSendUrl= tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_SEND_URL);
-			String tmpCallerId = tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_CALLER_ID);
-			String tmpPassword = tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_PASSOWRD);
-			String tmpTmplateId = tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_TEMPLATE_ID);
-			String tmpCollectPostSMS = "<SMSEntity callerId=\"" + tmpCallerId + "\">" + "<password>" + tmpPassword + "</password>" + 
-				    "<templateId>" + tmpTmplateId + "</templateId>" + "<param>" + inMessageParam + "</param>" 
-					+ "<phone>" + inSendTelePhones + "</phone>"+ "</SMSEntity>";
+			String tmpCollectPostSMS = "<SMSEntity callerId=\"" + inShortMessageCenterDTO.getCallerId() + "\">" 
+					+ "<password>" + inShortMessageCenterDTO.getCallerPassword() + "</password>" 
+					+ "<templateId>" + inShortMessageCenterDTO.getMessageTemplateId() + "</templateId>" 
+					+ "<param>" + inShortMessageCenterDTO.getMessageParam() + "</param>" 
+					+ "<phone>" + inShortMessageCenterDTO.getSendMessagePhoneNumber() + "</phone>"+ "</SMSEntity>";
 			
 			// 第一步：建立连接
-			URL tmpPostUrl = new URL(tmpSendUrl);
+			URL tmpPostUrl = new URL(inShortMessageCenterDTO.getSendUrl());
 			
 			// 第二步：根据拼凑的URL，打开连接，URL.openConnection函数会根据URL的类型
 			HttpURLConnection tmpHttpURLConnection = (HttpURLConnection) tmpPostUrl.openConnection();
@@ -123,6 +130,7 @@ public class ShortMessageService extends BaseService {
 				tmpShortMessageResultDTO.setCode(tmpResult);
 			}
 			tmpShortMessageResultDTO.setMessageSendResult(tmpResult);
+			tmpShortMessageResultDTO.setShortMessageCenterId(inShortMessageCenterDTO.getShortMessageCenterId());
 			
 			return tmpShortMessageResultDTO;
 		} catch (MalformedURLException e) {

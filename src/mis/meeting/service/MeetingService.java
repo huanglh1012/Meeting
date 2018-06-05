@@ -517,7 +517,7 @@ public class MeetingService extends BaseService {
 		// 保存消息发送日志
 		ShortMessageSendLogEntity tmpShortMessageSendLogEntity = new ShortMessageSendLogEntity();
 		tmpShortMessageSendLogEntity.setMessageSendCenterId(inShortMessageSendDTO.getMessageSendCenterId());
-		tmpShortMessageSendLogEntity.setShortMessageCenterId(null);
+		tmpShortMessageSendLogEntity.setShortMessageCenterId(tmpShortMessageResultDTO.getShortMessageCenterId());
 		tmpShortMessageSendLogEntity.setMessageSendParam(tmpMessageParam);
 		tmpShortMessageSendLogEntity.setMessageSendTelephone(tmpMeetingDTO.getTelephone());
 		tmpShortMessageSendLogEntity.setMessageSendResult(tmpShortMessageResultDTO.getMessageSendResult());
