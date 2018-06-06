@@ -150,23 +150,32 @@ var meetingAttachmentList = function () {
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = oTable.fnGetData(tr);
-                    console.log(tmpRowData);
-                    // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
-                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
-                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
-                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
-                        selectMeetingRecordFiles.push(tmpRowData.attachmentId);
-                    } else {
-                        if (tmpRowData.employeeId != JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) {
-                            $.pnotify({
-                                text: '只允许下载自己的会议材料'
-                            });
-                            isDownload = false;
-                            return false;
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('String',tmpRowData.meetingId));
+                    $.ajax({
+                        type:'post',
+                        Type:"json",
+                        async:false,
+                        url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                            ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
+                        success:function(result){
+                            var tmpJsonObject = JSON.parse(result);
+                            // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
+                            if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                                || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                                || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                                || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator
+                                || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                                selectMeetingRecordFiles.push(tmpRowData.attachmentId);
+                            } else {
+                                $.pnotify({
+                                    text: '只允许下载自己的会议材料'
+                                });
+                                isDownload = false;
+                                return false;
+                            }
                         }
-                    }
+                    });
                 }
             });
             if (isDownload) {
