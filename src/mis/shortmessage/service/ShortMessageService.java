@@ -7,7 +7,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -71,8 +74,43 @@ public class ShortMessageService extends BaseService {
 		return this.shortMessageDAO.getShortMessageCenterInfo();
 	}
 	
-	public ActionResult testSendMessage(ShortMessageCenterDTO inShortMessageCenterDTO) throws Exception {
+	public ActionResult testSendMessage(ShortMessageCenterDTO inShortMessageCenterDTO) throws Exception {	
+		// 判断输入数据合法性
+		if (inShortMessageCenterDTO.getMessageParam() == null || inShortMessageCenterDTO.getMessageModel() == null) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "模板内容和模板参数不能为空，请重新输入.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		if (inShortMessageCenterDTO.getSendMessagePhoneNumber() == null) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "信息发送号码不能为空，请重新输入.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		
+		// 检查模板变量和模板参数合法性
+		Pattern tmpPattern = Pattern.compile("\\{@(\\w+)\\}");  
+		Matcher tmpMatcher = tmpPattern.matcher(inShortMessageCenterDTO.getMessageModel());
+		List<String> tmpVariableParamList = new ArrayList<String>();
+		while(tmpMatcher.find()){
+			tmpVariableParamList.add(tmpMatcher.group(1));
+		}
+		String[] tmpMessageParam = inShortMessageCenterDTO.getMessageParam().split(",");
+		if (tmpMessageParam.length != tmpVariableParamList.size()) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "模板内容的变量值个数与模板参数的参数个数不一致，请重新输入.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		
+		// 将模板变量替换成模板参数值
+		for (int i = 0; i < tmpMessageParam.length; i++) {
+			String tmpVariableParam = "{@" + tmpVariableParamList.get(i) + "}";
+			inShortMessageCenterDTO.setMessageModel(inShortMessageCenterDTO.getMessageModel().replace(tmpVariableParam, tmpMessageParam[i]));
+		}
+		inShortMessageCenterDTO.setMessageParam(inShortMessageCenterDTO.getMessageModel());
+		
+		// 发送信息
 		ShortMessageResultDTO tmpShortMessageResultDTO = this.sendMessage(inShortMessageCenterDTO);
+		
 		return ActionResultUtil.getActionResult(tmpShortMessageResultDTO, "发送测试短信成功");
 	}
 	

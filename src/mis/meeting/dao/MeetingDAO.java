@@ -13,6 +13,7 @@ import mis.meeting.dto.MeetingRoomDTO;
 import mis.meeting.entity.MeetingEntity;
 import mis.meeting.entity.MeetingStateEntity;
 import mis.meeting.myenum.MeetingStateEnum;
+import ecp.bsp.system.commons.utils.StringUtils;
 import ecp.bsp.system.core.BaseDAO;
 import ecp.bsp.system.framework.file.data.dto.AttachmentDTO;
 
@@ -137,10 +138,10 @@ public class MeetingDAO extends BaseDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public MeetingDTO getMeetingEmployeeInfo(String inMeetingId) {
+	public String getMeetingEmployeePhoneInfo(String inMeetingId) {
 		List<MeetingDTO> tmpMeetingDTOist = (List<MeetingDTO>) this.query(MeetingConstant.SQL_GET_EMPLOYEE_PHONE_INFO_BY_MEETING_ID, 
 				new Object[] {inMeetingId}, MeetingDTO.class);
-		return tmpMeetingDTOist.size() > 0 ? tmpMeetingDTOist.get(0) : null;
+		return tmpMeetingDTOist.size() > 0 ? tmpMeetingDTOist.get(0).getTelephone() : StringUtils.EMPTY_STRING;
 	}
 
 }

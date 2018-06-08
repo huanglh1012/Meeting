@@ -14,7 +14,7 @@
     <link href="../../css/common.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/demo.css" media="screen" rel="stylesheet" type="text/css">
     <link href="../../css/navigation.css" media="screen" rel="stylesheet" type="text/css">
-
+    <link href="../../css/query-builder.default.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
     <div id="top"></div>
@@ -32,8 +32,11 @@
                 <div class="well">
                     <div class="widget-body-toolbar" style="padding:1px 13px 10px 0;">
                         <span class="font-lg text-primary pull-left">短信中心信息</span>
-                        <a href='#' class="btn btn-info pull-right" id="testMessageSendBtn" data-security-code="30012">
-                            <i class="glyphicon glyphicon-send"></i> <span class="hidden-mobile hidden-tablet" >测试</span>
+                        <a href='#' class="btn btn-success pull-right" id="testMessageSendBtn" data-security-code="30012">
+                            <i class="glyphicon glyphicon-send"></i> <span class="hidden-mobile hidden-tablet" >短信发送测试</span>
+                        </a>
+                        <a href='#' class="btn btn-warning pull-right" id="addTemplateBtn">
+                            <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet" >修改模板变量</span>
                         </a>
                         <button type="submit" class="btn btn-primary pull-right"  data-security-code="30011">
                             <i class="glyphicon glyphicon-floppy-saved"></i>&nbsp; 保存
@@ -90,10 +93,10 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">
-                            短信模板内容
+                            短信模板变量
                         </label>
                         <div class="col-sm-10">
-                            <input class="form-control" name="messageModel" style="width: 100%">
+                            <input class="form-control required-validation" name="messageModel" style="width: 100%" placeholder="模板变量个数须与集团网的配置的模板变量个数保持一致" readonly>
                         </div>
                     </div>
                     <div class="form-group">
@@ -101,7 +104,7 @@
                             短信模板参数
                         </label>
                         <div class="col-sm-10">
-                            <input class="form-control" name="messageParam" placeholder="多个参数情况，请使用英文逗号隔开" style="width: 100%">
+                            <input class="form-control" name="messageParam" placeholder="模板参数个数需与模板变量个数保持一致，参数之间请使用英文逗号隔开(测试所用)" style="width: 100%">
                         </div>
                     </div>
                     <div class="form-group">
@@ -109,12 +112,55 @@
                             信息发送号码
                         </label>
                         <div class="col-sm-10">
-                            <input class="form-control" name="sendMessagePhoneNumber" placeholder="多个号码情况，请使用英文逗号隔开" style="width: 100%">
+                            <input class="form-control" name="sendMessagePhoneNumber" placeholder="号码之间使用英文逗号隔开(测试所用)" style="width: 100%">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-offset-2 col-sm-10 control-label text-danger text-align-left font-lg" id="messageSendResult">
                         </label>
+                    </div>
+                    <!--<div id="templateModal" class="modal hide fade in" style="width: 930px;">-->
+                        <!--<div class="modal-header">-->
+                            <!--<a class="close" data-dismiss="modal"></a>-->
+                            <!--<h3>模板规则</h3>-->
+                        <!--</div>-->
+                        <!--<div class="modal-body">-->
+                            <!--<p style="color:red">-->
+                                <!--注意：<br>-->
+                                <!--1. 如果匹配的文件名中含有特殊字符且不是点"."、横杆"-"、下划线"_"以及中文括号、中括号、双引号、单引号时，需添加“特殊字符”规则；-->
+                                <!--<br>-->
+                                <!--2. 如果匹配的文件名中含有确定的中文、英文、数字时，需添加“变量长度”规则；-->
+                            <!--</p>-->
+                            <!--<div class="col-md-10" >-->
+                                <!--<div id="builder"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="modal-footer">-->
+                            <!--<a href="javascript:;" class="confirm btn green"  data-dismiss="modal" >确定</a>-->
+                            <!--<a class="btn" data-dismiss="modal">取消</a>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div  class="modal fade" id="templateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: -200px">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">编辑模板规则</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p style="color:red">
+                                    注意：<br>
+                                    变量值的规则个数须与集团网使用模板的变量个数保持一致，否则会出现短信发送失败的情况。<br>
+                                    详细请登录gd.10086.cn/group进行查看
+                                    </p>
+                                    <div class="col-md-12" >
+                                        <div id="builder"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a type="button" class="btn btn-primary" id="confirmTemplateBtn">确定</a>
+                                    <a type="button" class="btn btn-default"  data-dismiss="modal">取消</a>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </form>
@@ -139,6 +185,9 @@
     }
 </script>
 <script src="../../js/core/ecpLoader.js"></script>
+<script src="../../js/plugin/jquerybuilder/moment.min.js" type="text/javascript"></script>
+<script src="../../js/plugin/jquerybuilder/query-builder.standalone.min.js" type="text/javascript"></script>
+<script src="../../js/plugin/jquerybuilder/query-builder.cn.js" type="text/javascript"></script>
 <script src="../../js/business/system/messageCenterEdit.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){

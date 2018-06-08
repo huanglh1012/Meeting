@@ -1,12 +1,15 @@
 package mis.meeting.service;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -23,6 +26,7 @@ import mis.meeting.job.MeetingMessageSendJob;
 import mis.meeting.myenum.AttachmentCategoryEnum;
 import mis.meeting.myenum.MeetingMemberRoleEnum;
 import mis.meeting.myenum.MeetingStateEnum;
+import mis.shortmessage.dto.ShortMessageCenterDTO;
 import mis.shortmessage.dto.ShortMessageResultDTO;
 import mis.shortmessage.dto.ShortMessageSendDTO;
 import mis.shortmessage.entity.MessageSendCenterEntity;
@@ -507,19 +511,18 @@ public class MeetingService extends BaseService {
 	}
 
 	public void sendMeetingMessage(ShortMessageSendDTO inShortMessageSendDTO) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
-		
 		MeetingRoomEntity tmpMeetingRoomEntity = this.attachmentDAO.getEntity(MeetingRoomEntity.class, inShortMessageSendDTO.getMeetingRoomId());
-		String tmpMessageParam = "各位,"+sdf.format(inShortMessageSendDTO.getMeetingStartTime()) + "在" + tmpMeetingRoomEntity.getMeetingRoomName() + "-" + tmpMeetingRoomEntity.getMeetingRoomAddress();
-		MeetingDTO tmpMeetingDTO = this.meetingDAO.getMeetingEmployeeInfo(inShortMessageSendDTO.getMeetingId());
+		inShortMessageSendDTO.setMeetingRoomName(tmpMeetingRoomEntity.getMeetingRoomName() + "-" + tmpMeetingRoomEntity.getMeetingRoomAddress());
+		String tmpMessageParam = this.getMessageParam(inShortMessageSendDTO);
+		String tmpMeetingEmployeePhone = this.meetingDAO.getMeetingEmployeePhoneInfo(inShortMessageSendDTO.getMeetingId());
 		// 发送信息
-		ShortMessageResultDTO tmpShortMessageResultDTO = this.shortMessageService.sendMessage(tmpMeetingDTO.getTelephone(), tmpMessageParam);
+		ShortMessageResultDTO tmpShortMessageResultDTO = this.shortMessageService.sendMessage(tmpMeetingEmployeePhone, tmpMessageParam);
 		// 保存消息发送日志
 		ShortMessageSendLogEntity tmpShortMessageSendLogEntity = new ShortMessageSendLogEntity();
 		tmpShortMessageSendLogEntity.setMessageSendCenterId(inShortMessageSendDTO.getMessageSendCenterId());
 		tmpShortMessageSendLogEntity.setShortMessageCenterId(tmpShortMessageResultDTO.getShortMessageCenterId());
 		tmpShortMessageSendLogEntity.setMessageSendParam(tmpMessageParam);
-		tmpShortMessageSendLogEntity.setMessageSendTelephone(tmpMeetingDTO.getTelephone());
+		tmpShortMessageSendLogEntity.setMessageSendTelephone(tmpMeetingEmployeePhone);
 		tmpShortMessageSendLogEntity.setMessageSendResult(tmpShortMessageResultDTO.getMessageSendResult());
 		tmpShortMessageSendLogEntity.setMessageSendTime(new Date());
 		tmpShortMessageSendLogEntity.setMessageSendCount(1);
@@ -529,4 +532,41 @@ public class MeetingService extends BaseService {
 			tmpShortMessageSendLogEntity.setMessageSendStateId(String.valueOf(MessageSendStateEnum.SEND_FAILED.ordinal()));
 		this.meetingDAO.insert(tmpShortMessageSendLogEntity);
 	}
+	
+	public String getMessageParam(ShortMessageSendDTO inShortMessageSendDTO) throws Exception {
+		ShortMessageCenterDTO tmpShortMessageCenterDTO  = this.shortMessageService.getShortMessageCenterInfo();
+		// 将模板变量替换成字段值
+		Pattern tmpPattern = Pattern.compile("\\{@(\\w+)\\}");  
+		Matcher tmpMatcher = tmpPattern.matcher(tmpShortMessageCenterDTO.getMessageModel());
+		String tmpFieldValue = StringUtils.EMPTY_STRING;
+		String tmpParamValue = tmpShortMessageCenterDTO.getMessageModel();
+		while(tmpMatcher.find()){
+			tmpFieldValue = this.getFieldValueByFieldName(tmpMatcher.group(1),inShortMessageSendDTO);
+			tmpParamValue = tmpParamValue.replace("{@" + tmpMatcher.group(1) + "}", tmpFieldValue);
+		}
+		
+		return tmpParamValue;
+	}
+	
+	private String getFieldValueByFieldName(String fieldName, Object object) {  
+      try {  
+          Field field = object.getClass().getDeclaredField(fieldName);  
+          // 设置对象的访问权限，保证对private的属性的访问  
+          field.setAccessible(true);  
+          Object tmpFieldValue = field.get(object);
+          Class<?> tmpFieldType = field.getType();
+          // 恢复访问控制权限
+          field.setAccessible(false);
+          if (tmpFieldType == String.class) {
+        	  return  (String)tmpFieldValue; 
+          }  else if (tmpFieldType == Date.class) {
+        	  SimpleDateFormat tmpSimpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日HH时mm分");
+        	  return  (String)tmpSimpleDateFormat.format(tmpFieldValue); 
+          } else {
+        	  return StringUtils.EMPTY_STRING; 
+          }
+      } catch (Exception e) {  
+    	  return StringUtils.EMPTY_STRING;  
+      }   
+  } 
 }

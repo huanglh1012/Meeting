@@ -318,7 +318,7 @@ create table SHORT_MESSAGE_CENTER
    CALLER_ID            varchar(256) not null,
    CALLER_PASSWORD      varchar(256) not null,
    MESSAGE_TEMPLATE_ID  varchar(256) not null,
-   MESSAGE_MODEL        varchar(1024),
+   MESSAGE_MODEL        varchar(1024) not null,
    CENTER_PHONE_NUMBER  varchar(128),
    SEND_MESSAGE_PHONE_NUMBER varchar(128),
    primary key (SHORT_MESSAGE_CENTER_ID)

@@ -43,10 +43,67 @@ var messageCenterEdit = function () {
 
                     } else {
                         $.unblockUI();
-                        $('#messageSendResult').text("测试短息发送失败,请检查短信模板参数和消息电话号码是否不为空，或分割符号是否为英文逗号");
+                        $('#messageSendResult').text(result.msg);
+//                        $('#messageSendResult').text("测试短息发送失败,请检查短信模板参数和消息电话号码是否不为空，或分割符号是否为英文逗号");
                     }
                 }
             });
+        });
+
+        //"报表规则"添加对话框
+        $('#addTemplateBtn').on('click', function (e) {
+            $('#templateModal').modal('show',true);
+            $('#builder').queryBuilder('reset');
+        });
+
+        $('#confirmTemplateBtn').on('click', function() {
+            var tmpRules = $('#builder').queryBuilder('getRules').rules;
+            var tmpTemplateRuleExpression = '';
+            for(var i = 0;i < tmpRules.length; i++){
+                if (tmpTemplateRuleExpression != '') {
+                    tmpTemplateRuleExpression +=','
+                }
+                tmpTemplateRuleExpression = tmpTemplateRuleExpression + '{@' +tmpRules[i].value + '}';
+            }
+            $('input[name="messageModel"]').val(tmpTemplateRuleExpression);
+            $('#builder').queryBuilder('reset');
+            $('#templateModal').modal('hide');
+        });
+    }
+
+    var handleJqueryBuilder = function () {
+        var rules_basic = {
+            condition: 'AND',
+            rules: [{
+                id: 'variableValue',
+                operator: 'equal',
+                value: '0'
+            }]
+        };
+        $('#builder').queryBuilder({
+            plugins: ['bt-tooltip-errors'],
+            filters: [{
+                id: 'variableValue',
+                label: '变量值',
+                type: 'string',
+                input: 'select',
+                values: {
+                    '0': '----',
+                    'meetingSubject': '会议主题',
+                    'meetingRoomName': '会议地点',
+                    'meetingStartTime': '会议开始时间',
+                    'meetingEndTime': '会议结束时间',
+                    'meetingProposeTime': '会议发起时间',
+                    'meetingCreatorName': '发起人',
+                    'meetingCreatorDepartmentName': '发起部门',
+                    'meetingAttentions': '会议注意事项'
+                },
+                operators: ['equal']
+            }],
+            allow_groups:false,
+            lang_code:'cn',
+            conditions:['AND'],
+            rules: rules_basic
         });
     }
 
@@ -167,6 +224,7 @@ var messageCenterEdit = function () {
     return {
         init: function () {
             handleButton();
+            handleJqueryBuilder();
             handleForm();
             handlePageInfo();
         }
