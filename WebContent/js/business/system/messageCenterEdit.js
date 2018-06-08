@@ -60,10 +60,11 @@ var messageCenterEdit = function () {
             var tmpRules = $('#builder').queryBuilder('getRules').rules;
             var tmpTemplateRuleExpression = '';
             for(var i = 0;i < tmpRules.length; i++){
-                if (tmpTemplateRuleExpression != '') {
-                    tmpTemplateRuleExpression +=','
+                if (tmpRules[i].value != '0') {
+                    if (tmpTemplateRuleExpression != '')
+                        tmpTemplateRuleExpression +=','
+                    tmpTemplateRuleExpression = tmpTemplateRuleExpression + '{@' +tmpRules[i].value + '}';
                 }
-                tmpTemplateRuleExpression = tmpTemplateRuleExpression + '{@' +tmpRules[i].value + '}';
             }
             $('input[name="messageModel"]').val(tmpTemplateRuleExpression);
             $('#builder').queryBuilder('reset');
@@ -144,6 +145,9 @@ var messageCenterEdit = function () {
                 },
                 messageTemplateId: {
                     required: true
+                },
+                messageModel: {
+                    required: true
                 }
             }, // Messages for form
             messages: {
@@ -161,6 +165,9 @@ var messageCenterEdit = function () {
                 },
                 messageTemplateId:{
                     required:"消息发送模板ID不能为空"
+                },
+                messageModel:{
+                    required:"短信模板变量不能为空"
                 }
             },
 
