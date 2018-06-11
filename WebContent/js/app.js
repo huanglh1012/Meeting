@@ -978,10 +978,12 @@ var app = function() {
 
 			function new_handler(e, w, h) {
 				var elem = $(this), data = $.data(this, str_data);
-				data.w = w !== undefined ? w : elem.width();
-				data.h = h !== undefined ? h : elem.height();
+                if (data != undefined  || data != null) {
+                    data.w = w !== undefined ? w : elem.width();
+                    data.h = h !== undefined ? h : elem.height();
 
-				old_handler.apply(this, arguments);
+                    old_handler.apply(this, arguments);
+                }
 			};
 			if ($.isFunction(handleObj)) {
 				old_handler = handleObj;
@@ -1317,57 +1319,57 @@ function loadScript(scriptName, callback) {
 //	}
 //})();
 
-function checkResult(data, objSuccess, callbackError) {
-	var options={
-			'showBox':true,
-			'message':"操作成功",
-			'callback' : function(){}
-	};
-	jQuery.extend(options, objSuccess);
-
-	if(data.success) {
-		if(options.showBox)
-	    {
-			$.smallBox({
-			    title : "信息",
-			    content : "",
-			    color : $boxColors.green,
-			    iconSmall : "fa fa-times",
-				    timeout : 3000
-		   });
-	   }
-
-		if (typeof options.callback == "function") {
-			options.callback(data);
-	     }
-		return;
-	}
-
-	if (typeof callbackError == "function") {
-		callbackError();
-		// return;
-	}
-
-	var errorMsg;
-	try{
-		errorMsg = eval(data.errorMessage);
-	}catch(ex){
-
-		errorMsg = common.placeholderConversion({
-  			  "msg":"错误",
-			  "args":[data.errorMessage]
-		});
-	}
-
-	$.smallBox({
-	    title : errorMsg,
-	    content : "",
-	    color : $boxColors.red,
-	    iconSmall : "fa fa-times",
-	    timeout : 3000
-	});
-	return;
-}
+//function checkResult(data, objSuccess, callbackError) {
+//	var options={
+//			'showBox':true,
+//			'message':"操作成功",
+//			'callback' : function(){}
+//	};
+//	jQuery.extend(options, objSuccess);
+//
+//	if(data.success) {
+//		if(options.showBox)
+//	    {
+//			$.smallBox({
+//			    title : "信息",
+//			    content : "",
+//			    color : $boxColors.green,
+//			    iconSmall : "fa fa-times",
+//				    timeout : 3000
+//		   });
+//	   }
+//
+//		if (typeof options.callback == "function") {
+//			options.callback(data);
+//	     }
+//		return;
+//	}
+//
+//	if (typeof callbackError == "function") {
+//		callbackError();
+//		// return;
+//	}
+//
+//	var errorMsg;
+//	try{
+//		errorMsg = eval(data.errorMessage);
+//	}catch(ex){
+//
+//		errorMsg = common.placeholderConversion({
+//  			  "msg":"错误",
+//			  "args":[data.errorMessage]
+//		});
+//	}
+//
+//	$.smallBox({
+//	    title : errorMsg,
+//	    content : "",
+//	    color : $boxColors.red,
+//	    iconSmall : "fa fa-times",
+//	    timeout : 3000
+//	});
+//	return;
+//}
 
 ///*
 // 全局函数
