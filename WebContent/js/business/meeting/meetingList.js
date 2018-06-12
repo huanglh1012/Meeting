@@ -165,6 +165,7 @@ var meetingList = function () {
                                                     ,proxyClass:'meetingController',proxyMethod:'closeMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                                 success:function(result){
                                                     if(result.success){
+                                                        selectTr = null;
                                                         oTable.api().ajax.reload();
                                                         $.pnotify({
                                                             text: '会议关闭成功'
@@ -226,6 +227,7 @@ var meetingList = function () {
                                             ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                         success:function(result){
                                             if(result.success){
+                                                selectTr = null;
                                                 oTable.api().ajax.reload();
                                                 $.pnotify({
                                                     text: '会议删除成功'
@@ -286,6 +288,7 @@ var meetingList = function () {
                                                     ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                                 success:function(result){
                                                     if(result.success){
+                                                        selectTr = null;
                                                         oTable.api().ajax.reload();
                                                         $.pnotify({
                                                             text: '会议删除成功'

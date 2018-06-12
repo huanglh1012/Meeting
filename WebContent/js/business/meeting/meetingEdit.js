@@ -48,10 +48,10 @@ var meetingEdit = function () {
                         if (tmpJsonObject.meetingRecordFileList.length > 0)
                             meetingRecordFilesTable.fnAddData(tmpJsonObject.meetingRecordFileList);
                         // 初始化树形控件
-                        var tmpTreeData = tmpJsonObject.meetingParticipants.split(',');
-                        for(var i = 0;i < tmpTreeData.length; i++){
-                            zTreeObj.checkNode(zTreeObj.getNodesByParam("id", tmpTreeData[i],null)[0],true, true);
-                        }
+//                        var tmpTreeData = tmpJsonObject.meetingParticipants.split(',');
+//                        for(var i = 0;i < tmpTreeData.length; i++){
+//                            zTreeObj.checkNode(zTreeObj.getNodesByParam("id", tmpTreeData[i],null)[0],true, true);
+//                        }
                         // 判断操作人是否为发起人员或者管理员，如果不是，则只允许上传，删除和下载自己的会议材料，不允许修改会议内容，不允许下载其他部门会议材料
                         if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
                             || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
@@ -269,7 +269,6 @@ var meetingEdit = function () {
                         url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                             ,proxyClass:'meetingController',proxyMethod:'isMeetingExistByPlanDatetimeRang',jsonString:MyJsonUtil.obj2str(obj)}),
                         success:function(result){
-                            console.log(result);
                             if (!result.success) {
                                 bootbox.confirm({
                                     buttons: {
@@ -447,6 +446,11 @@ var meetingEdit = function () {
         $('#meetingJoiner').on('click', function (e) {
             $('input[name="searchEmployeeText"]').val('');
             $('#meetingJoinerModal').modal('show',true);
+            // 初始化树形控件
+            var tmpTreeData = $('input[name="meetingParticipants"]').val().split(',');
+            for(var i = 0;i < tmpTreeData.length; i++){
+                zTreeObj.checkNode(zTreeObj.getNodesByParam("id", tmpTreeData[i],null)[0],true, true);
+            }
         });
 
         $('#searchEmployeeBtn').on('click', function (e) {
@@ -513,7 +517,6 @@ var meetingEdit = function () {
                 tmpMeetingParticipantNames += tmpDepartmentEmployeeMapKeys[i] + ":" + tmpDepartmentEmployeeMap.get(tmpDepartmentEmployeeMapKeys[i]) + "\n";
             }
 
-            console.log(tmpMeetingParticipantNames);
             $('input[name="meetingParticipants"]').val(tmpMeetingParticipantIds);
             $('textarea[name="meetingParticipantNames"]').val(tmpMeetingParticipantNames);
 
@@ -599,6 +602,12 @@ var meetingEdit = function () {
                         title: "消息提示",
                         callback: function(result) {
                             if(result) {
+                                $.blockUI({
+                                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在删除文件...</span></div>' +
+                                        '</div>'
+                                });
                                 $('#meetingRecordFiles :checkbox').each(function(){
                                     if($(this).prop("checked") && $(this).prop("id") == "") {
                                         var tr = $(this).parents('tr');
@@ -621,6 +630,7 @@ var meetingEdit = function () {
                                         });
                                     }
                                 });
+                                $.unblockUI();
                             }
                         }
                     });
@@ -707,6 +717,12 @@ var meetingEdit = function () {
                         title: "消息提示",
                         callback: function(result) {
                             if(result) {
+                                $.blockUI({
+                                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在删除文件...</span></div>' +
+                                        '</div>'
+                                });
                                 $('#meetingFiles :checkbox').each(function(){
                                     if($(this).prop("checked") && $(this).prop("id") == "") {
                                         var tr = $(this).parents('tr');
@@ -729,6 +745,7 @@ var meetingEdit = function () {
                                         });
                                     }
                                 });
+                                $.unblockUI();
                             }
                         }
                     });

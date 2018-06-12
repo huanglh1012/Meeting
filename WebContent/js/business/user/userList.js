@@ -75,6 +75,7 @@ var userList = function () {
                                     ,proxyClass:'securityController',proxyMethod:'deleteEmployee',jsonString:MyJsonUtil.obj2str(obj)}),
                                 success:function(result){
                                     if(result.success){
+                                        selectTr = null;
                                         oTable.api().ajax.reload();
                                         $.pnotify({
                                             text: result.msg

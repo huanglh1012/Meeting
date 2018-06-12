@@ -123,6 +123,7 @@ var postList = function () {
                                     ,proxyClass:'securityController',proxyMethod:'deletePost',jsonString:MyJsonUtil.obj2str(obj)}),
                                 success:function(result){
                                     if(result.success){
+                                        selectTr = null;
                                         oTable.api().ajax.reload();
                                         $.pnotify({
                                             text: result.msg
@@ -192,6 +193,7 @@ var postList = function () {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
+                                selectTr = null;
                                 $('#myModal').modal('hide');
                                 oTable.api().ajax.reload();
                                 $.pnotify({

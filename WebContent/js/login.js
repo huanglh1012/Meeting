@@ -267,12 +267,12 @@ var login = function () {
                                     }, 1500);
                                 } else {
                                     $.unblockUI();
-                                    $('#errorTips').text(result.msg);
+                                    $('#passwordErrorTips').text(result.msg);
                                 }
                             }
                         });
                     } else {
-                        $('#errorTips').text("新密码和确认密码不一致，请重新输入");
+                        $('#passwordErrorTips').text("新密码和确认密码不一致，请重新输入");
                     }
                 }
             });

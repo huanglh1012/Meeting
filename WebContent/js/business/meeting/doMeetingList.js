@@ -101,6 +101,7 @@ var doMeetingList = function () {
                                         ,proxyClass:'meetingController',proxyMethod:'closeMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                     success:function(result){
                                         if(result.success){
+                                            creatorMeetingSelectTr = null;
                                             creatorMeetingTable.api().ajax.reload();
                                             $.pnotify({
                                                 text: result.msg
@@ -156,6 +157,7 @@ var doMeetingList = function () {
                                             ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                         success:function(result){
                                             if(result.success){
+                                                creatorMeetingSelectTr = null;
                                                 creatorMeetingTable.api().ajax.reload();
                                                 $.pnotify({
                                                     text: result.msg
@@ -203,6 +205,7 @@ var doMeetingList = function () {
                                         ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                     success:function(result){
                                         if(result.success){
+                                            creatorMeetingSelectTr = null;
                                             creatorMeetingTable.api().ajax.reload();
                                             $.pnotify({
                                                 text: result.msg

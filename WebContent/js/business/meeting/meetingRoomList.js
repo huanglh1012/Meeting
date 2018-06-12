@@ -66,6 +66,7 @@ var meetingRoomList = function () {
                                     ,proxyClass:'meetingController',proxyMethod:'deleteMeetingRoom',jsonString:MyJsonUtil.obj2str(obj)}),
                                 success:function(result){
                                     if(result.success){
+                                        selectTr = null;
                                         meetingRoomTable.api().ajax.reload();
                                         $.pnotify({
                                             text: result.msg
@@ -126,6 +127,7 @@ var meetingRoomList = function () {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
+                                selectTr = null;
                                 $('#meetingRoomModal').modal('hide');
                                 meetingRoomTable.api().ajax.reload();
                                 $.pnotify({

@@ -899,6 +899,7 @@ var app = function() {
             handleNotificationInit();
             handleLoginInit();
             handlePageInit();
+            login.initTop();
         },
         internationalInit: function(entityName,baseUrl) {
             // 国际化资源加载
