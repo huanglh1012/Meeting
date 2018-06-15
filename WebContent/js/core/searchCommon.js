@@ -115,7 +115,6 @@ var searchCommon = function () {
     // 初始化数据源非来自远程的select2插件，主要针对input[data-url]元素
     function _initLocalSearchSelector ($select2Container, datas, disabled) { // items为数组，下拉列表项
         datas = (datas instanceof Array || datas instanceof Object ? datas : (typeof searchCommon.select2InitValue[datas] === "function" ? searchCommon.select2InitValue[datas](this) : searchCommon.select2InitValue[datas]));
-        console.log(searchCommon.select2InitValue);
         $select2Container.select2($.extend({
             width: "100%",
             multiple: true,

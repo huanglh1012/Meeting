@@ -1420,6 +1420,66 @@ function getUrlRoot(onlyPostPath)
     return prePath+postPath;
 }
 
+function IEVersion() {
+    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+    var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; //判断是否IE<11浏览器
+    var isEdge = userAgent.indexOf("Edge") > -1 && !isIE; //判断是否IE的Edge浏览器
+    var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf("rv:11.0") > -1;
+    if(isIE) {
+        var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+        reIE.test(userAgent);
+        var fIEVersion = parseFloat(RegExp["$1"]);
+        if(fIEVersion == 7) {
+            return 7;
+        } else if(fIEVersion == 8) {
+            return 8;
+        } else if(fIEVersion == 9) {
+            return 9;
+        } else if(fIEVersion == 10) {
+            return 10;
+        } else {
+            return 6;//IE版本<=7
+        }
+    } else if(isEdge) {
+        return 'edge';//edge
+    } else if(isIE11) {
+        return 11; //IE11
+    }else{
+        return -1;//不是ie浏览器
+    }
+}
+
+function isTextType(fileName) {
+    //用于验证文本扩展名的正则表达式
+    var tmpExp = "(.txt|.text|.xml)$";
+    var tmpRegExp = new RegExp(tmpExp);
+    if (tmpRegExp.test(fileName.toLowerCase()))
+        return true;
+    else
+        return false;
+}
+
+//function downloadFile(url) {
+//    if (IEVersion() != -1) {
+//        //用于验证文本扩展名的正则表达式
+//        var tmpExp = "(.txt|.text|.xml)$";
+//        var tmpRegExp = new RegExp(tmpExp);
+//        if (tmpRegExp.test(url.toLowerCase())){
+//            var iWidth = 100;//弹出窗口的宽度
+//            var iHeight = 100;//弹出窗口的高度
+//            var iTop = (window.screen.height-iHeight)/2 -200; //获得窗口的垂直位置;
+//            var iLeft = (window.screen.width-iWidth)/2-200; //获得窗口的水平位置;
+//            var test = window.open(url,"_blank",'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no');
+//            test.document.execCommand("SaveAs");
+//            test.close();
+//        } else {
+//            window.location.href = url;
+//        }
+//    } else {
+//        window.location.href = url;
+//    }
+//}
+
 ////移除普通数组中指定的元素，数组基本格式：["a", "b"], specificElement=["a"]
 //Array.prototype.remove = function(specificElement) {
 //    return this.filter(function(ele) {

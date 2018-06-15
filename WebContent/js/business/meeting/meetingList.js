@@ -357,6 +357,7 @@ var meetingList = function () {
     var handleDatePicker = function () {
         $("#meetingStartTime, #meetingEndTime").datepicker({
             format: "yyyy-mm-dd",
+            language:'zh-CN',
             minViewMode: "days",
             todayHighlight : 1,
             autoclose: true

@@ -16,10 +16,38 @@ var userList = function () {
     var selectTr = null;
 
     var handleSelect2 = function () {
-        $('input[name="departmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
-        $('input[name="postId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
-            ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null});
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null}),
+            success:function(result){
+                $('input[name="departmentId"]').select2({
+                    multiple: true,
+                    allowClear:true,
+                    width:'100%',
+                    data:result
+                });
+            }
+        });
+        $.ajax({
+            type:'post',
+            dataType:"json",
+            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null}),
+            success:function(result){
+                $('input[name="postId"]').select2({
+                    multiple: true,
+                    allowClear:true,
+                    width:'100%',
+                    data:result
+                });
+            }
+        });
+//        $('input[name="departmentId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getDepartmentGroupList',jsonString:null});
+//        $('input[name="postId"]')[0].dataset.url = SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//            ,proxyClass:'securityController',proxyMethod:'getPostList',jsonString:null});
     }
 
     var handleDatePicker = function () {

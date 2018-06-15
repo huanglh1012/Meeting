@@ -1376,7 +1376,7 @@
         _generateUrlParamObject:function(dataType,dataValue){
             var obj = [];
             obj.push(StringUtil.decorateRequestData(dataType,dataValue));
-            return MyJsonUtil.obj2str(obj);
+            return encodeURIComponent(encodeURIComponent(MyJsonUtil.obj2str(obj)));
         },
 
         // This method is exposed to the widget API and allows to query

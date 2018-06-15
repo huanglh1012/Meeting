@@ -77,6 +77,7 @@ var meetingAttachmentList = function () {
     var handleDatePicker = function () {
         $('input[name="meetingStartTimeDateStart"],input[name="meetingStartTimeDateEnd"],input[name="attachmentCreateTimeDateStart"],input[name="attachmentCreateTimeDateEnd"]').datepicker({
             format: "yyyy-mm-dd",
+            language:'zh-CN',
             minViewMode: "days",
             todayHighlight : 1,
             autoclose: true
@@ -146,6 +147,7 @@ var meetingAttachmentList = function () {
         $('#attachmentDownloadBtn').on('click', function (e) {
             var isDownload = true;
             var selectMeetingRecordFiles = [];
+            var tmpLastSelectMeetingRecordFile = null;
             $('#dt_issues :checkbox').each(function(){
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
@@ -167,6 +169,7 @@ var meetingAttachmentList = function () {
                                 || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator
                                 || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                                 selectMeetingRecordFiles.push(tmpRowData.attachmentId);
+                                tmpLastSelectMeetingRecordFile = tmpRowData.attachmentName;
                             } else {
                                 $.pnotify({
                                     text: '只允许下载自己的会议材料'
@@ -192,17 +195,31 @@ var meetingAttachmentList = function () {
                     });
                     var obj = [];
                     obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
-                    $.ajax({
-                        type:'post',
-                        dataType:"json",
-                        url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                    // 下载文件数是否为1、文件名后缀是否为文本类型,使用文件流返回的方式下载文件（解决浏览器下载时直接打开文件的问题）
+                    if (selectMeetingRecordFiles.length == 1 && isTextType(tmpLastSelectMeetingRecordFile)) {
+                        var url = SMController.getUrl({controller:'controllerProxy',method:'callBackByRequestAndResponse'
                             ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
-                            jsonString:MyJsonUtil.obj2str(obj)}),
-                        success:function(result){
-                            $.unblockUI();
-                            window.location.href = '../../../'+result;
-                        }
-                    });
+                            jsonString:MyJsonUtil.obj2str(obj)},"../../");
+                        var temp = document.createElement("form");
+                        temp.action = url;
+                        temp.method = "post";
+                        temp.style.display = "none";
+                        document.body.appendChild(temp);
+                        temp.submit();
+                        $.unblockUI();
+                    } else {
+                        $.ajax({
+                            type:'post',
+                            dataType:"json",
+                            url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                                jsonString:MyJsonUtil.obj2str(obj)}),
+                            success:function(result){
+                                $.unblockUI();
+                                window.location.href = '../../../'+result;
+                            }
+                        });
+                    }
                 }
             }
         });

@@ -82,8 +82,10 @@ var login = function () {
         // 初始化表单提交事件
         function initTopEvent() {
             var tmpLoginDTO= JSON.parse(sessionStorage.getItem("LoginDTO"));
-            if (tmpLoginDTO == null)
+            if (tmpLoginDTO == null) {
                 window.location.href = '../../login.html';
+                return false;
+            }
 
             // 设置登录名
             document.getElementById("loginUser").innerHTML = tmpLoginDTO.employeeName;
