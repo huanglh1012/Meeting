@@ -71,7 +71,7 @@ public class ControllerProxy {
 						classArray[i] = cls;
 						paramValueArray[i] = paramValue;
 					} else {
-						String exceptionMessage = "json转化异常";
+						String exceptionMessage = "系统异常，请联系管理员";
 						throw new RuntimeException(exceptionMessage);
 					}
 				}
@@ -129,7 +129,7 @@ public class ControllerProxy {
 					classArray[i] = cls;
 					paramValueArray[i] = paramValue;
 				} else {
-					String exceptionMessage = "json转化异常";
+					String exceptionMessage = "系统异常，请联系管理员";
 					throw new RuntimeException(exceptionMessage);
 				}
 			}
@@ -184,7 +184,7 @@ public class ControllerProxy {
 					classArray[i] = cls;
 					paramValueArray[i] = paramValue;
 				} else {
-					String exceptionMessage = "json转化异常";
+					String exceptionMessage = "系统异常，请联系管理员";
 					throw new RuntimeException(exceptionMessage);
 				}
 			}
