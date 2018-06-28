@@ -1,11 +1,9 @@
 package mis.shortmessage.service;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,12 +169,10 @@ public class ShortMessageService extends BaseService {
 			tmpShortMessageResultDTO.setShortMessageCenterId(inShortMessageCenterDTO.getShortMessageCenterId());
 			
 			return tmpShortMessageResultDTO;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "调用短信发送接口异常，请联系管理员.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
 		}
-		
-		return null;
 	}
 }
