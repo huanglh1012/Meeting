@@ -83,7 +83,7 @@ var departmentList = function () {
                             className: 'btn'
                         }
                     },
-                    message: '确定删除这一行吗 ?',
+                    message: '确定删除【'+zTreeObj.getSelectedNodes()[0].name+'】部门吗 ?',
                     title: "消息提示",
                     callback: function(result) {
                         if(result) {
@@ -133,6 +133,7 @@ var departmentList = function () {
         });
 
         function clearModalData(){
+            $('#errorTips').text("");
             $('input[name="departmentId"]').val('');
             $('input[name="parentDepartmentId"]').val('');
             $('input[name="parentDepartmentName"]').val('');
@@ -153,20 +154,7 @@ var departmentList = function () {
             addData['departmentName'] = departmentName;
             addData['isParent'] = isParent;
             if (departmentName == '') {
-                bootbox.alert({
-                    className: 'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message: "部门名称不能为空",
-                    callback: function () {
-
-                    },
-                    title: "错误提示"
-                });
+                $('#errorTips').text("部门名称不能为空");
             } else {
                 obj.push(StringUtil.decorateRequestData('DepartmentDTO', addData));
                 //进度条
@@ -216,20 +204,7 @@ var departmentList = function () {
 
                         } else {
                             $.unblockUI();
-                            bootbox.alert({
-                                title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
-                                message:result.msg,
-                                className:'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
-                                        className: 'btn blue'
-                                    }
-                                },
-                                callback: function() {
-
-                                }
-                            });
+                            $('#errorTips').text(result.msg);
                         }
                     }
                 });

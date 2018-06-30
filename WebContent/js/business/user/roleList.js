@@ -132,7 +132,7 @@ var roleList = function () {
                                 className: 'btn'
                             }
                         },
-                        message: '确定删除这一行吗 ?',
+                        message: '确定删除【'+zTreeObj.getSelectedNodes()[0].name+'】角色吗 ?',
                         title: "消息提示",
                         callback: function(result) {
                             if(result) {
@@ -183,6 +183,7 @@ var roleList = function () {
         });
 
         function clearModalData(){
+            $('#errorTips').text("");
             $('input[name="roleId"]').val('');
             $('input[name="roleName"]').val('');
         }
@@ -197,20 +198,7 @@ var roleList = function () {
             addData['roleName'] = roleName;
 
             if (roleName == '') {
-                bootbox.alert({
-                    className: 'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message: "角色名称不能为空",
-                    callback: function () {
-
-                    },
-                    title: "错误提示"
-                });
+                $('#errorTips').text("角色名称不能为空");
             } else {
                 obj.push(StringUtil.decorateRequestData('RoleDTO', addData));
                 //进度条
@@ -260,20 +248,7 @@ var roleList = function () {
 
                         } else {
                             $.unblockUI();
-                            bootbox.alert({
-                                title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
-                                message:result.msg,
-                                className:'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
-                                        className: 'btn blue'
-                                    }
-                                },
-                                callback: function() {
-
-                                }
-                            });
+                            $('#errorTips').text(result.msg);
                         }
                     }
                 });

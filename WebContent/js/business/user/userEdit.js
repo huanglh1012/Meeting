@@ -28,6 +28,7 @@ var userEdit = function () {
                     url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                         ,proxyClass:'securityController',proxyMethod:'getEmployeeInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
                     success:function(result){
+                        $('#passwordDiv').hide();
                         DomUtil.setFormElementsValueViaJSONObject('userForm',JSON.parse(result));
                     }
                 });
@@ -98,6 +99,9 @@ var userEdit = function () {
                 password: {
                     required: true
                 },
+                confirmPassword: {
+                    required: true
+                },
                 telephone: {
                     required: true
                 },
@@ -120,6 +124,9 @@ var userEdit = function () {
                 },
                 password:{
                     required:"密码不能为空！！！"
+                },
+                confirmPassword:{
+                    required:"确认密码不能为空！！！"
                 },
                 telephone:{
                     required:"电话不能为空！！！"
@@ -157,7 +164,7 @@ var userEdit = function () {
                                 className: 'btn blue'
                             }
                         },
-                        message: "密码不一致，请重新输入",
+                        message: "确认密码与密码不一致，请重新输入",
                         callback: function () {
 
                         },

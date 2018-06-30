@@ -149,118 +149,136 @@ var meetingView = function () {
         $('#meetingRecordFileDownloadBtn').on('click', function (e) {
             var isDownload = true;
             var selectMeetingRecordFiles = [];
+            var tmpLastSelectMeetingRecordFile = null;
             $('#meetingRecordFiles :checkbox').each(function(){
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
                     // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
-                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         selectMeetingRecordFiles.push(tmpRowData.attachmentId);
+                        tmpLastSelectMeetingRecordFile = tmpRowData.attachmentName;
                     } else {
-                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许下载自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
-                            });
-                            isDownload = false;
-                            return false;
-                        }
+                        $.pnotify({
+                            text: '只允许下载自己的会议材料'
+                        });
+                        isDownload = false;
+                        return false;
                     }
                 }
             });
             if (isDownload) {
-                $.blockUI({
-                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
-                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
-                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
-                        '</div>'
-                });
-                var obj = [];
-                obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
-                $.ajax({
-                    type:'post',
-                    dataType:"json",
-                    url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                        ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
-                        jsonString:MyJsonUtil.obj2str(obj)}),
-                    success:function(result){
+                if (selectMeetingRecordFiles.length == 0) {
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
+                    });
+                }else{
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                            '</div>'
+                    });
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
+                    // 下载文件数是否为1、文件名后缀是否为文本类型,使用文件流返回的方式下载文件（解决IE浏览器下载时直接打开文件的问题）
+                    if (selectMeetingRecordFiles.length == 1 && isTextType(tmpLastSelectMeetingRecordFile)) {
+                        var url = SMController.getUrl({controller:'controllerProxy',method:'callBackByRequestAndResponse'
+                            ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                            jsonString:MyJsonUtil.obj2str(obj)},"../../");
+                        var temp = document.createElement("form");
+                        temp.action = url;
+                        temp.method = "post";
+                        temp.style.display = "none";
+                        document.body.appendChild(temp);
+                        temp.submit();
                         $.unblockUI();
-                        window.location.href = '../../../'+result;
+                    } else {
+                        $.ajax({
+                            type:'post',
+                            dataType:"json",
+                            url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                                jsonString:MyJsonUtil.obj2str(obj)}),
+                            success:function(result){
+                                $.unblockUI();
+                                window.location.href = '../../../'+result;
+                            }
+                        });
                     }
-                });
+                }
             }
         });
 
         $('#meetingFileDownloadBtn').on('click', function (e) {
             var isDownload = true;
             var selectMeetingFiles = [];
+            var tmpLastSelectMeetingFile = null;
             $('#meetingFiles :checkbox').each(function(){
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingFilesTable.fnGetData(tr);
                     // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
-                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
                         selectMeetingFiles.push(tmpRowData.attachmentId);
+                        tmpLastSelectMeetingFile = tmpRowData.attachmentName;
                     } else {
-                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许下载自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
-                            });
-                            isDownload = false;
-                            return false;
-                        }
+                        $.pnotify({
+                            text: '只允许下载自己的会议材料'
+                        });
+                        isDownload = false;
+                        return false;
                     }
                 }
             });
             if (isDownload) {
-                $.blockUI({
-                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
-                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
-                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
-                        '</div>'
-                });
-                var obj = [];
-                obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
-                $.ajax({
-                    type:'post',
-                    dataType:"json",
-                    url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                        ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
-                        jsonString:MyJsonUtil.obj2str(obj)}),
-                    success:function(result){
+                if (selectMeetingFiles.length == 0) {
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
+                    });
+                }else{
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                            '</div>'
+                    });
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
+                    // 下载文件数是否为1、文件名后缀是否为文本类型,使用文件流返回的方式下载文件（解决IE浏览器下载时直接打开文件的问题）
+                    if (selectMeetingFiles.length == 1 && isTextType(tmpLastSelectMeetingFile)) {
+                        var url = SMController.getUrl({controller:'controllerProxy',method:'callBackByRequestAndResponse'
+                            ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                            jsonString:MyJsonUtil.obj2str(obj)},"../../");
+                        var temp = document.createElement("form");
+                        temp.action = url;
+                        temp.method = "post";
+                        temp.style.display = "none";
+                        document.body.appendChild(temp);
+                        temp.submit();
                         $.unblockUI();
-                        window.location.href = '../../../'+result;
+                    } else {
+                        $.ajax({
+                            type:'post',
+                            dataType:"json",
+                            url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                                jsonString:MyJsonUtil.obj2str(obj)}),
+                            success:function(result){
+                                $.unblockUI();
+                                window.location.href = '../../../'+result;
+                            }
+                        });
                     }
-                });
+                }
             }
         });
     }

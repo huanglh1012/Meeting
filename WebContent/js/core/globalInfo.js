@@ -35,9 +35,9 @@ GlobalInfo.SpringMvcController = {
                 myBaseUrl = baseUrl;
             if (config['proxyClass'] && config['proxyMethod']) {
                 return myBaseUrl + config['controller'] + '.do?method=' + config['method']
-                    + '&proxyClass=' + config['proxyClass'] + '&proxyMethod=' + config['proxyMethod'] + '&jsonString=' + config['jsonString'];
+                    + '&proxyClass=' + config['proxyClass'] + '&proxyMethod=' + config['proxyMethod'] + '&jsonString=' + encodeURIComponent(encodeURIComponent(config['jsonString']));
             } else {
-                return myBaseUrl + config['controller']+'.do?method='+Math.random()+config['method'] + '&jsonString=' + config['jsonString'];
+                return myBaseUrl + config['controller']+'.do?method='+Math.random()+config['method'] + '&jsonString=' + encodeURIComponent(encodeURIComponent(config['jsonString']));
             }
 		}
 };

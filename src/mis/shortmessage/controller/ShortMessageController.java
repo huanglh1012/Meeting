@@ -43,6 +43,31 @@ public class ShortMessageController  {
 	}
 	
 	/**
+	 * 测试发送短信
+	 * 
+	 * @param inShortMessageCenterDTO
+	 * 			短信中心信息
+	 * @return
+	 * 			返回短信中心保存情况
+	 * @throws Exception
+	 */
+	public AjaxResult testSendMessage(ShortMessageCenterDTO inShortMessageCenterDTO) throws Exception {
+		ActionResult result = null;	
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		try {
+			result = this.shortMessageService.testSendMessage(inShortMessageCenterDTO);
+			ajaxResult.setSuccess(result.getIsSuccessful());
+			ajaxResult.setMsg(result);
+		} catch (Exception e) {
+			ajaxResult.setSuccess(false);
+			ajaxResult.setMsg(e.getMessage());
+		}	
+		
+		return ajaxResult;
+	}
+	
+	/**
 	 * 获取短信中心信息
 	 * 
 	 * @return

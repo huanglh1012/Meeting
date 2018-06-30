@@ -71,7 +71,9 @@ var postList = function () {
                 selectTr = oTable.fnGetData(this);
             }
         });
+    };
 
+    var handleButton = function() {
         // "添加"按钮
         $('#post_add').click(function (e) {
             clearModalData();
@@ -86,12 +88,16 @@ var postList = function () {
                 $('#postId').val(selectTr.postId);
                 $('#postName').val(selectTr.postName);
                 $('#postSummary').val(selectTr.postSummary);
+            } else {
+                $.pnotify({
+                    text: '请选择需要修改的职务信息'
+                });
             }
         });
 
         // “删除” 按钮
         $('#post_delete').click(function (e) {
-            if(selectTr!=null){
+            if(selectTr != null){
                 bootbox.confirm({
                     buttons: {
                         confirm: {
@@ -103,7 +109,7 @@ var postList = function () {
                             className: 'btn'
                         }
                     },
-                    message: '确定删除这一行吗 ?',
+                    message: '确定删除【'+selectTr.postName+'】职务吗 ?',
                     title: "消息提示",
                     callback: function(result) {
                         if(result) {
@@ -117,6 +123,7 @@ var postList = function () {
                                     ,proxyClass:'securityController',proxyMethod:'deletePost',jsonString:MyJsonUtil.obj2str(obj)}),
                                 success:function(result){
                                     if(result.success){
+                                        selectTr = null;
                                         oTable.api().ajax.reload();
                                         $.pnotify({
                                             text: result.msg
@@ -132,17 +139,20 @@ var postList = function () {
                         }
                     }
                 });
+            } else {
+                $.pnotify({
+                    text: '请选择需要删除的职务信息'
+                });
             }
         });
 
         function clearModalData(){
+            $('#errorTips').text("");
             $('#postId').val('');
             $('#postName').val('');
             $('#postSummary').val('');
         }
-    };
 
-    var handleButton = function() {
         $('#submitPost').on('click', function (e) {
             var postId = $('#postId').val();
             var postName = $('#postName').val();
@@ -155,20 +165,7 @@ var postList = function () {
             addData['postSummary'] = postSummary;
 
             if (postName == '') {
-                bootbox.alert({
-                    className: 'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message: "职务名称不能为空",
-                    callback: function () {
-
-                    },
-                    title: "错误提示"
-                });
+                $('#errorTips').text("职务名称不能为空");
             } else {
                 obj.push(StringUtil.decorateRequestData('PostDTO', addData));
                 //进度条
@@ -196,6 +193,7 @@ var postList = function () {
                             $("#processStatus").text("提交成功，正在返回上一页面...");
                             setTimeout(function(){
                                 $.unblockUI();
+                                selectTr = null;
                                 $('#myModal').modal('hide');
                                 oTable.api().ajax.reload();
                                 $.pnotify({
@@ -205,20 +203,7 @@ var postList = function () {
 
                         } else {
                             $.unblockUI();
-                            bootbox.alert({
-                                title: '提示',//I18n.getI18nPropByKey("ProductionExecution.errorPrompt"),
-                                message:result.msg,
-                                className:'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '关闭',//I18n.getI18nPropByKey("ProductionExecution.confirm"),
-                                        className: 'btn blue'
-                                    }
-                                },
-                                callback: function() {
-
-                                }
-                            });
+                            $('#errorTips').text(result.msg);
                         }
                     }
                 });

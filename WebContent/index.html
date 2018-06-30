@@ -81,4 +81,11 @@
 <script src="js/plugin/destop/clock.js"></script>
 <script src="js/plugin/destop/desktop.js"></script>
 </body>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        var tmpLoginDTO= JSON.parse(sessionStorage.getItem("LoginDTO"));
+        if (tmpLoginDTO == null)
+            window.location.href = 'login.html';
+    });
+</script>
 </html>

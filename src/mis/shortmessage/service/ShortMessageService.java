@@ -1,17 +1,17 @@
 package mis.shortmessage.service;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import mis.shortmessage.constant.ShortMessageConst;
 import mis.shortmessage.dao.ShortMessageDAO;
 import mis.shortmessage.dto.ShortMessageCenterDTO;
 import mis.shortmessage.dto.ShortMessageResultDTO;
@@ -26,7 +26,6 @@ import ecp.bsp.system.commons.constant.ExceptionCodeConst;
 import ecp.bsp.system.commons.dto.ActionResult;
 import ecp.bsp.system.commons.utils.ActionResultUtil;
 import ecp.bsp.system.commons.utils.LoggerUtil;
-import ecp.bsp.system.commons.utils.PropertiesUtil;
 import ecp.bsp.system.core.BaseService;
 
 @Service
@@ -73,19 +72,63 @@ public class ShortMessageService extends BaseService {
 		return this.shortMessageDAO.getShortMessageCenterInfo();
 	}
 	
-	public ShortMessageResultDTO sendMessage(String inSendTelePhones, String inMessageParam) {
+	public ActionResult testSendMessage(ShortMessageCenterDTO inShortMessageCenterDTO) throws Exception {	
+		// 判断输入数据合法性
+		if (inShortMessageCenterDTO.getMessageParam() == null || inShortMessageCenterDTO.getMessageModel() == null) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "模板内容和模板参数不能为空，请重新输入.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		if (inShortMessageCenterDTO.getSendMessagePhoneNumber() == null) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "信息发送号码不能为空，请重新输入.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		
+		// 检查模板变量和模板参数合法性
+		Pattern tmpPattern = Pattern.compile("\\{@(\\w+)\\}");  
+		Matcher tmpMatcher = tmpPattern.matcher(inShortMessageCenterDTO.getMessageModel());
+		List<String> tmpVariableParamList = new ArrayList<String>();
+		while(tmpMatcher.find()){
+			tmpVariableParamList.add(tmpMatcher.group(1));
+		}
+		String[] tmpMessageParam = inShortMessageCenterDTO.getMessageParam().split(",");
+		if (tmpMessageParam.length != tmpVariableParamList.size()) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "模板内容的变量值个数与模板参数的参数个数不一致，请重新输入.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
+		}
+		
+		// 将模板变量替换成模板参数值
+		for (int i = 0; i < tmpMessageParam.length; i++) {
+			String tmpVariableParam = "{@" + tmpVariableParamList.get(i) + "}";
+			inShortMessageCenterDTO.setMessageModel(inShortMessageCenterDTO.getMessageModel().replace(tmpVariableParam, tmpMessageParam[i]));
+		}
+		inShortMessageCenterDTO.setMessageParam(inShortMessageCenterDTO.getMessageModel());
+		
+		// 发送信息
+		ShortMessageResultDTO tmpShortMessageResultDTO = this.sendMessage(inShortMessageCenterDTO);
+		
+		return ActionResultUtil.getActionResult(tmpShortMessageResultDTO, "发送测试短信成功");
+	}
+	
+	public ShortMessageResultDTO sendMessage(String inSendTelePhones, String inMessageParam) throws Exception {
+		ShortMessageCenterDTO tmpShortMessageCenterDTO  = this.getShortMessageCenterInfo();
+		tmpShortMessageCenterDTO.setSendMessagePhoneNumber(inSendTelePhones);
+		tmpShortMessageCenterDTO.setMessageParam(inMessageParam);
+		return this.sendMessage(tmpShortMessageCenterDTO);
+	}
+	
+	public ShortMessageResultDTO sendMessage(ShortMessageCenterDTO inShortMessageCenterDTO) throws Exception {
 		try {
-			PropertiesUtil tmpPropertiesUtil = new PropertiesUtil(ShortMessageConst.PROPERTIES_NAME_FILE_DIR_PATH);
-			String tmpSendUrl= tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_SEND_URL);
-			String tmpCallerId = tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_CALLER_ID);
-			String tmpPassword = tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_PASSOWRD);
-			String tmpTmplateId = tmpPropertiesUtil.readPropertiesByName(ShortMessageConst.PROPERTIES_KEY_TEMPLATE_ID);
-			String tmpCollectPostSMS = "<SMSEntity callerId=\"" + tmpCallerId + "\">" + "<password>" + tmpPassword + "</password>" + 
-				    "<templateId>" + tmpTmplateId + "</templateId>" + "<param>" + inMessageParam + "</param>" 
-					+ "<phone>" + inSendTelePhones + "</phone>"+ "</SMSEntity>";
+			String tmpCollectPostSMS = "<SMSEntity callerId=\"" + inShortMessageCenterDTO.getCallerId() + "\">" 
+					+ "<password>" + inShortMessageCenterDTO.getCallerPassword() + "</password>" 
+					+ "<templateId>" + inShortMessageCenterDTO.getMessageTemplateId() + "</templateId>" 
+					+ "<param>" + inShortMessageCenterDTO.getMessageParam() + "</param>" 
+					+ "<phone>" + inShortMessageCenterDTO.getSendMessagePhoneNumber() + "</phone>"+ "</SMSEntity>";
 			
 			// 第一步：建立连接
-			URL tmpPostUrl = new URL(tmpSendUrl);
+			URL tmpPostUrl = new URL(inShortMessageCenterDTO.getSendUrl());
 			
 			// 第二步：根据拼凑的URL，打开连接，URL.openConnection函数会根据URL的类型
 			HttpURLConnection tmpHttpURLConnection = (HttpURLConnection) tmpPostUrl.openConnection();
@@ -123,14 +166,13 @@ public class ShortMessageService extends BaseService {
 				tmpShortMessageResultDTO.setCode(tmpResult);
 			}
 			tmpShortMessageResultDTO.setMessageSendResult(tmpResult);
+			tmpShortMessageResultDTO.setShortMessageCenterId(inShortMessageCenterDTO.getShortMessageCenterId());
 			
 			return tmpShortMessageResultDTO;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			String exceptionMessage = ExceptionCodeConst.SYSTEM_EXCEPTION_CODE + "调用短信发送接口异常，请联系管理员.";
+			LoggerUtil.instance(this.getClass()).error(exceptionMessage);
+			throw new RuntimeException(exceptionMessage);
 		}
-		
-		return null;
 	}
 }

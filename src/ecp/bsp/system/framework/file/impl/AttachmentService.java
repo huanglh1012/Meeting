@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import ecp.bsp.system.commons.utils.ZipUtil;
 import ecp.bsp.system.core.BaseDTO;
 import ecp.bsp.system.core.BaseService;
 import ecp.bsp.system.framework.file.FileCopyTask;
+import ecp.bsp.system.framework.file.FileDownload;
 import ecp.bsp.system.framework.file.data.constant.AttachmentDAOConst;
 import ecp.bsp.system.framework.file.data.dto.AttachmentDTO;
 import ecp.bsp.system.framework.file.data.dto.FileDownloadEntity;
@@ -218,6 +221,27 @@ public class AttachmentService  extends BaseService {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public void downloadFile(List downloadFileList, HttpServletRequest request, HttpServletResponse response) throws IOException{
+		List<FileEntity> fileList = new ArrayList<FileEntity>();
+		
+		if (downloadFileList != null) {
+			for (Object attachmentId : downloadFileList) {
+				AttachmentEntity attachmentEntity = this.attachmentDAO.getAttachmentEntityById((String)attachmentId);
+				FileEntity fileEntity = new FileEntity();
+				fileEntity.setFileName(attachmentEntity.getAttachmentName());
+				fileEntity.setPath(attachmentEntity.getAttachmentPath());
+				fileList.add(fileEntity);
+			}
+		}
+		
+		if (fileList.size() > 1) {
+			this.getFileToZipPath(request,response,fileList, true);
+		} else{
+			this.getFileToZipPath(request,response,fileList, false);
+		}
+	}
+	
 	/**
 	 * 鑾峰彇涓嬭浇鏂囦欢璺緞
 	 * @param files
@@ -250,6 +274,32 @@ public class AttachmentService  extends BaseService {
 		}
 		
 		return filePath;
+	}
+	
+	private void getFileToZipPath(HttpServletRequest request, HttpServletResponse response,List<FileEntity> files, Boolean isZipable){
+		FileDownloadEntity fileDownloadEntity = new FileDownloadEntity();
+		fileDownloadEntity.setZipable(isZipable);
+		fileDownloadEntity.setFiles(files);
+		Long zipTime = System.currentTimeMillis();
+		String zipName = java.lang.Long.toString(zipTime)+".zip";
+		String filePath = "";
+		//压缩时执行
+		FileDownload fileDownload = new FileDownload ();
+		try {
+			if(fileDownloadEntity.getIsZipable()){
+				//压缩文件
+				filePath = this.zipFiles(zipName,fileDownloadEntity);
+					fileDownload.downloadFile(request,response,request.getParameter("zipFileName"),filePath,true);
+			}else{        
+				//不需要压缩时执行
+				filePath = fileDownloadEntity.getFiles().get(0).getPath();
+				String fileName = fileDownloadEntity.getFiles().get(0).getFileName();
+				String fileFullName = filePath + File.separator + fileName;
+				fileDownload.downloadFile(request, response, fileName, fileFullName,false);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

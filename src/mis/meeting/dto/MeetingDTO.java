@@ -58,6 +58,7 @@ public class MeetingDTO extends BaseDTO{
 	@JsonDeserialize(using=JsonDateDeSerializer.class)
 	private Date meetingUploadEndTime;
 	private String meetingRoomId;
+	private String oldMeetingRoomId;
 	private String meetingRoomName;
 	private String employeeId;
 	private String meetingCreator;
@@ -359,6 +360,14 @@ public class MeetingDTO extends BaseDTO{
 
 	public void setOldMeetingStartTime(Date oldMeetingStartTime) {
 		this.oldMeetingStartTime = oldMeetingStartTime;
+	}
+
+	public String getOldMeetingRoomId() {
+		return oldMeetingRoomId;
+	}
+
+	public void setOldMeetingRoomId(String oldMeetingRoomId) {
+		this.oldMeetingRoomId = oldMeetingRoomId;
 	}
 	
 }

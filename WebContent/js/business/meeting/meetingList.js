@@ -75,22 +75,12 @@ var meetingList = function () {
     }
 
     var handleButton = function () {
-        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+        var tmpEmployeeDTO = JSON.parse(sessionStorage.getItem("EmployeeDTO"));
 
         $('#modifyMeetingBtn').on('click', function (e) {
             if (selectTr == null) {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要修改的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要修改的会议信息'
                 });
             }else{
                 if (selectTr.meetingStateId == '1') {
@@ -99,18 +89,8 @@ var meetingList = function () {
                         || tmpEmployeeDTO.roleIdList.indexOf('0') > -1) {
                         window.location.href='meeting_new.html?meetingId='+ selectTr.meetingId;
                     } else {
-                        bootbox.alert({
-                            className:'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message:'该会议已关闭，不允许修改',
-                            callback: function() {
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '该会议已关闭，不允许修改'
                         });
                     }
                 } else {
@@ -130,18 +110,8 @@ var meetingList = function () {
                                 || tmpEmployeeDTO.employeeId == tmpJsonObject.meetingCreator) {
                                 window.location.href='meeting_new.html?meetingId='+ selectTr.meetingId;
                             } else {
-                                bootbox.alert({
-                                    className:'span4 alert-error',
-                                    buttons: {
-                                        ok: {
-                                            label: '确定',
-                                            className: 'btn blue'
-                                        }
-                                    },
-                                    message:'你不是该会议的参会人或者发起人，没有权限修改会议信息.',
-                                    callback: function() {
-                                    },
-                                    title: "错误提示"
+                                $.pnotify({
+                                    text: '你不是管理员角色或者不是该会议的发起人和参会人，没有权限修改会议信息.'
                                 });
                             }
                         }
@@ -153,18 +123,8 @@ var meetingList = function () {
         $('#closeMeetingBtn').on('click', function (e) {
             if(selectTr != null){
                 if (selectTr.meetingStateId == '1') {
-                    bootbox.alert({
-                        className:'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message:'该会议已关闭',
-                        callback: function() {
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '该会议已关闭，无法操作.'
                     });
                 } else {
                     var obj = [];
@@ -205,6 +165,7 @@ var meetingList = function () {
                                                     ,proxyClass:'meetingController',proxyMethod:'closeMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                                 success:function(result){
                                                     if(result.success){
+                                                        selectTr = null;
                                                         oTable.api().ajax.reload();
                                                         $.pnotify({
                                                             text: '会议关闭成功'
@@ -222,36 +183,16 @@ var meetingList = function () {
                                     }
                                 });
                             } else {
-                                bootbox.alert({
-                                    className:'span4 alert-error',
-                                    buttons: {
-                                        ok: {
-                                            label: '确定',
-                                            className: 'btn blue'
-                                        }
-                                    },
-                                    message:'你不是该会议的发起人或者管理员，没有权限关闭会议信息.',
-                                    callback: function() {
-                                    },
-                                    title: "错误提示"
+                                $.pnotify({
+                                    text: '你不是管理员角色或者不是该会议的发起人，没有权限关闭会议信息.'
                                 });
                             }
                         }
                     });
                 }
             } else {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
-                        }
-                    },
-                    message:'请选择需要关闭的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                $.pnotify({
+                    text: '请选择需要关闭的会议信息'
                 });
             }
         });
@@ -272,7 +213,7 @@ var meetingList = function () {
                                     className: 'btn'
                                 }
                             },
-                            message: '确定删除该会议信息吗 ?',
+                            message: '确定删除【'+selectTr.meetingSubject+'】会议吗 ?',
                             title: "消息提示",
                             callback: function(result) {
                                 if(result) {
@@ -286,6 +227,7 @@ var meetingList = function () {
                                             ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                         success:function(result){
                                             if(result.success){
+                                                selectTr = null;
                                                 oTable.api().ajax.reload();
                                                 $.pnotify({
                                                     text: '会议删除成功'
@@ -303,18 +245,8 @@ var meetingList = function () {
                             }
                         });
                     } else {
-                        bootbox.alert({
-                            className:'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message:'该会议已关闭，不允许删除',
-                            callback: function() {
-                            },
-                            title: "错误提示"
+                        $.pnotify({
+                            text: '该会议已关闭，不允许删除'
                         });
                     }
                 } else {
@@ -342,7 +274,7 @@ var meetingList = function () {
                                             className: 'btn'
                                         }
                                     },
-                                    message: '确定删除该会议信息吗 ?',
+                                    message: '确定删除【'+selectTr.meetingSubject+'】会议吗 ?',
                                     title: "消息提示",
                                     callback: function(result) {
                                         if(result) {
@@ -356,6 +288,7 @@ var meetingList = function () {
                                                     ,proxyClass:'meetingController',proxyMethod:'deleteMeeting',jsonString:MyJsonUtil.obj2str(obj)}),
                                                 success:function(result){
                                                     if(result.success){
+                                                        selectTr = null;
                                                         oTable.api().ajax.reload();
                                                         $.pnotify({
                                                             text: '会议删除成功'
@@ -373,36 +306,49 @@ var meetingList = function () {
                                     }
                                 });
                             } else {
-                                bootbox.alert({
-                                    className:'span4 alert-error',
-                                    buttons: {
-                                        ok: {
-                                            label: '确定',
-                                            className: 'btn blue'
-                                        }
-                                    },
-                                    message:'你不是该会议的发起人或者管理员，没有权限删除会议信息.',
-                                    callback: function() {
-                                    },
-                                    title: "错误提示"
+                                $.pnotify({
+                                    text: '你不是管理员角色或者不是该会议的发起人，没有权限删除会议信息'
                                 });
                             }
                         }
                     });
                 }
             } else {
-                bootbox.alert({
-                    className:'span4 alert-error',
-                    buttons: {
-                        ok: {
-                            label: '确定',
-                            className: 'btn blue'
+                $.pnotify({
+                    text: '请选择需要删除的会议信息'
+                });
+            }
+        });
+
+        $('#viewMeetingBtn').on('click', function (e) {
+            if (selectTr == null) {
+                $.pnotify({
+                    text: '请选择需要查看的会议信息'
+                });
+            }else{
+                var obj = [];
+                obj.push(StringUtil.decorateRequestData('String',selectTr.meetingId));
+                $.ajax({
+                    type:'post',
+                    Type:"json",
+                    async:false,
+                    url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                        ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
+                    success:function(result){
+                        var tmpJsonObject = JSON.parse(result);
+                        // 管理员、领导、发起人、参与人可以查看会议信息
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                            || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
+                            window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
+                        } else {
+                            $.pnotify({
+                                text: '你不是管理员和领导角色或者不是该会议的发起人和参会人，没有权限查看该会议'
+                            });
                         }
-                    },
-                    message:'请选择需要删除的会议信息',
-                    callback: function() {
-                    },
-                    title: "错误提示"
+                    }
                 });
             }
         });
@@ -411,6 +357,7 @@ var meetingList = function () {
     var handleDatePicker = function () {
         $("#meetingStartTime, #meetingEndTime").datepicker({
             format: "yyyy-mm-dd",
+            language:'zh-CN',
             minViewMode: "days",
             todayHighlight : 1,
             autoclose: true
@@ -465,42 +412,42 @@ var meetingList = function () {
             }
         });
 
-        $('#dt_issues tbody').on('dblclick','tr', function () {
-            var obj = [];
-            obj.push(StringUtil.decorateRequestData('String',oTable.fnGetData(this).meetingId));
-            $.ajax({
-                type:'post',
-                Type:"json",
-                async:false,
-                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                    ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
-                success:function(result){
-                    var tmpJsonObject = JSON.parse(result);
-                    // 管理员、领导、发起人、参与人可以查看会议信息
-                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
-                        || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
-                        window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
-                    } else {
-                        bootbox.alert({
-                            className:'span4 alert-error',
-                            buttons: {
-                                ok: {
-                                    label: '确定',
-                                    className: 'btn blue'
-                                }
-                            },
-                            message:'你不是该会议的参与者或发起人或管理员，没有权限查看该会议',
-                            callback: function() {
-                            },
-                            title: "错误提示"
-                        });
-                    }
-                }
-            });
-        });
+//        $('#dt_issues tbody').on('dblclick','tr', function () {
+//            var obj = [];
+//            obj.push(StringUtil.decorateRequestData('String',oTable.fnGetData(this).meetingId));
+//            $.ajax({
+//                type:'post',
+//                Type:"json",
+//                async:false,
+//                url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+//                    ,proxyClass:'meetingController',proxyMethod:'getMeetingInfoById',jsonString:MyJsonUtil.obj2str(obj)}),
+//                success:function(result){
+//                    var tmpJsonObject = JSON.parse(result);
+//                    // 管理员、领导、发起人、参与人可以查看会议信息
+//                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+//                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+//                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+//                        || tmpJsonObject.meetingParticipants.indexOf(JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId) > -1
+//                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
+//                        window.location.href='meeting_view.html?meetingId='+ tmpJsonObject.meetingId;
+//                    } else {
+//                        bootbox.alert({
+//                            className:'span4 alert-error',
+//                            buttons: {
+//                                ok: {
+//                                    label: '确定',
+//                                    className: 'btn blue'
+//                                }
+//                            },
+//                            message:'你不是该会议的参与者或发起人或管理员，没有权限查看该会议',
+//                            callback: function() {
+//                            },
+//                            title: "错误提示"
+//                        });
+//                    }
+//                }
+//            });
+//        });
     }
 
     return {

@@ -16,7 +16,8 @@
             <div class="navbar-container" id="navbar-container">
                 <div class="navbar-header pull-left">
                     <a href="#" class="navbar-brand">
-                        <img alt="会议管理系统" width="250px" src="../../img/logo1_white-.png" class="txt-color-white" style="margin-top:-5px;">
+                        <!--<img alt="会议管理系统" width="250px" src="../../img/logo1_white-.png" class="txt-color-white" style="margin-top:-5px;">-->
+                        <span>会议管理系统</span>
                     </a>
 
                 </div>
@@ -61,37 +62,38 @@
                     </button>
                     <h4 class="modal-title" id="myModalLabel">修改密码</h4>
                 </div>
-                <div class="modal-body">
-                    <form id="password-form" method="post" class=" vlidate-form client-form">
+                <form id="password-form" method="post" class="validate-form client-form">
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div>
                                         <label> 旧  密  码</label>
-                                        <input id="password" name="password" type="password" class="form-control"/>
+                                        <input name="password" type="password" class="form-control required"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div>
                                         <label> 新  密  码</label>
-                                        <input id="newPassword" name="newPassword" type="password" class="form-control"/>
+                                        <input name="newPassword" type="password" class="form-control required"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div>
                                         <label> 确认密码</label>
-                                        <input id="passwordConfirm" name="passwordConfirm" type="password" class="form-control"/>
+                                        <input name="passwordConfirm" type="password" class="form-control required"/>
                                     </div>
                                 </div>
-
+                                <label class="col-sm-12 text-danger text-align-left control-label" style="font-weight:bold;" id="errorTips">
+                                </label>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="btn-modifiedPassword" class="btn btn-primary">提交</button>
-                    <button type="button" id="btn-cancel" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-modifiedPassword" class="btn btn-primary">提交</button>
+                        <button type="button" id="btn-cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

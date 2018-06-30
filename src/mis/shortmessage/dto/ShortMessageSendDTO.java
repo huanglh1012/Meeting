@@ -23,6 +23,14 @@ public class ShortMessageSendDTO extends BaseDTO implements Serializable {
 	private String meetingRoomId;
 	private String meetingRoomName;
 	private String employeeId;
+	private String meetingCreator;
+	private String meetingCreatorName;
+	private String meetingCreatorDepartmentId;
+	private String meetingCreatorDepartmentName;
+	private String meetingPresenter;
+	private String meetingPresenterName;
+	private String meetingPresenterDepartmentId;
+	private String meetingPresenterDepartmentName;
 	@JsonSerialize(using=JsonDateSerializer.class)
 	@JsonDeserialize(using=JsonDateDeSerializer.class)
 	private Date meetingStartTime;
@@ -121,6 +129,55 @@ public class ShortMessageSendDTO extends BaseDTO implements Serializable {
 	}
 	public void setMeetingUploadEndTime(Date meetingUploadEndTime) {
 		this.meetingUploadEndTime = meetingUploadEndTime;
+	}
+	public String getMeetingCreator() {
+		return meetingCreator;
+	}
+	public void setMeetingCreator(String meetingCreator) {
+		this.meetingCreator = meetingCreator;
+	}
+	public String getMeetingCreatorName() {
+		return meetingCreatorName;
+	}
+	public void setMeetingCreatorName(String meetingCreatorName) {
+		this.meetingCreatorName = meetingCreatorName;
+	}
+	public String getMeetingCreatorDepartmentId() {
+		return meetingCreatorDepartmentId;
+	}
+	public void setMeetingCreatorDepartmentId(String meetingCreatorDepartmentId) {
+		this.meetingCreatorDepartmentId = meetingCreatorDepartmentId;
+	}
+	public String getMeetingCreatorDepartmentName() {
+		return meetingCreatorDepartmentName;
+	}
+	public void setMeetingCreatorDepartmentName(String meetingCreatorDepartmentName) {
+		this.meetingCreatorDepartmentName = meetingCreatorDepartmentName;
+	}
+	public String getMeetingPresenter() {
+		return meetingPresenter;
+	}
+	public void setMeetingPresenter(String meetingPresenter) {
+		this.meetingPresenter = meetingPresenter;
+	}
+	public String getMeetingPresenterName() {
+		return meetingPresenterName;
+	}
+	public void setMeetingPresenterName(String meetingPresenterName) {
+		this.meetingPresenterName = meetingPresenterName;
+	}
+	public String getMeetingPresenterDepartmentId() {
+		return meetingPresenterDepartmentId;
+	}
+	public void setMeetingPresenterDepartmentId(String meetingPresenterDepartmentId) {
+		this.meetingPresenterDepartmentId = meetingPresenterDepartmentId;
+	}
+	public String getMeetingPresenterDepartmentName() {
+		return meetingPresenterDepartmentName;
+	}
+	public void setMeetingPresenterDepartmentName(
+			String meetingPresenterDepartmentName) {
+		this.meetingPresenterDepartmentName = meetingPresenterDepartmentName;
 	}
 	
 }

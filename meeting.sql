@@ -1,50 +1,49 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018-05-29 20:52:45                          */
+/* Created on:     2018-06-05 9:56:56                           */
 /*==============================================================*/
-
-
-drop table if exists ATTACHMENT;
-
-drop table if exists ATTACHMENT_CATEGORY;
 
 drop table if exists ATTACHMENT_TEMP;
 
-drop table if exists DEPARTMENT;
+drop table if exists SHORT_MESSAGE_SEND_LOG;
 
-drop table if exists EMPLOYEE;
-
-drop table if exists EMPLOYEE_ROLE_RF;
-
-drop table if exists MEETING;
-
-drop table if exists MEETING_ATTACHMENT;
-
-drop table if exists MEETING_MEMBER_RF;
-
-drop table if exists MEETING_MEMBER_ROLE;
-
-drop table if exists MEETING_ROOM;
-
-drop table if exists MEETING_STATE;
+drop table if exists SHORT_MESSAGE_CENTER;
 
 drop table if exists MESSAGE_SEND_CENTER;
 
 drop table if exists MESSAGE_SEND_STATE;
 
-drop table if exists POST;
+drop table if exists MEETING_ATTACHMENT;
 
-drop table if exists ROLE;
+drop table if exists ATTACHMENT;
+
+drop table if exists ATTACHMENT_CATEGORY;
+
+drop table if exists MEETING_MEMBER_RF;
+
+drop table if exists MEETING_MEMBER_ROLE;
+
+drop table if exists MEETING;
+
+drop table if exists MEETING_ROOM;
+
+drop table if exists MEETING_STATE;
+
+drop table if exists EMPLOYEE_ROLE_RF;
 
 drop table if exists ROLE_SECURITY_RF;
 
+drop table if exists EMPLOYEE;
+
+drop table if exists ROLE;
+
 drop table if exists SECURITY;
+
+drop table if exists POST;
 
 drop table if exists SEX;
 
-drop table if exists SHORT_MESSAGE_CENTER;
-
-drop table if exists SHORT_MESSAGE_SEND_LOG;
+drop table if exists DEPARTMENT;
 
 /*==============================================================*/
 /* Table: ATTACHMENT                                            */
@@ -315,9 +314,13 @@ create table SHORT_MESSAGE_CENTER
 (
    SHORT_MESSAGE_CENTER_ID varchar(32) not null,
    SHORT_MESSAGE_CENTER_NAME varchar(128) not null,
-   CENTER_PHONE_NUMBER  varchar(128) not null,
-   SEND_MESSAGE_PHONE_NUMBER varchar(128) not null,
-   MESSAGE_MODEL        varchar(1024),
+   SEND_URL             varchar(256) not null,
+   CALLER_ID            varchar(256) not null,
+   CALLER_PASSWORD      varchar(256) not null,
+   MESSAGE_TEMPLATE_ID  varchar(256) not null,
+   MESSAGE_MODEL        varchar(1024) not null,
+   CENTER_PHONE_NUMBER  varchar(128),
+   SEND_MESSAGE_PHONE_NUMBER varchar(128),
    primary key (SHORT_MESSAGE_CENTER_ID)
 );
 

@@ -23,7 +23,7 @@ function _get(name){
 }
 
 (function($){
-    var tmpLoginDTO = JSON.parse(localStorage.getItem("LoginDTO"));
+    var tmpLoginDTO = JSON.parse(sessionStorage.getItem("LoginDTO"));
     if (tmpLoginDTO != null) {
         var obj = [];
         obj.push(StringUtil.decorateRequestData('String', tmpLoginDTO.employeeId));
@@ -35,8 +35,8 @@ function _get(name){
             url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                 ,proxyClass:'securityController',proxyMethod:'getEmployeeDetailInfoByEmployeeId',jsonString:MyJsonUtil.obj2str(obj)}),
             success:function(result){
-                localStorage.removeItem("EmployeeDTO");
-                localStorage.setItem("EmployeeDTO", JSON.stringify(result));
+                sessionStorage.removeItem("EmployeeDTO");
+                sessionStorage.setItem("EmployeeDTO", JSON.stringify(result));
             }
         });
     }

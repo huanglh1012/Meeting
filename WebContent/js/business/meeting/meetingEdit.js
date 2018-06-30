@@ -38,19 +38,27 @@ var meetingEdit = function () {
                         DomUtil.setFormElementsValueViaJSONObject('createMeetingForm',tmpJsonObject);
                         if (tmpJsonObject.isSendMessageNotice == 1)
                             $('input[name="isSendMessageNotice"]').prop('checked',true);
+                        // 初始化下拉框
                         $('#meetingPresenter').select2('val',tmpJsonObject.meetingPresenter);
                         $('#meetingRoomId').select2('val',tmpJsonObject.meetingRoomId);
                         $('#meetingCreatorDepartmentId').select2('val',tmpJsonObject.meetingCreatorDepartmentId);
+                        // 初始化材料表格
                         if (tmpJsonObject.meetingFileList.length > 0)
                             meetingFilesTable.fnAddData(tmpJsonObject.meetingFileList);
                         if (tmpJsonObject.meetingRecordFileList.length > 0)
                             meetingRecordFilesTable.fnAddData(tmpJsonObject.meetingRecordFileList);
+                        // 初始化树形控件
+//                        var tmpTreeData = tmpJsonObject.meetingParticipants.split(',');
+//                        for(var i = 0;i < tmpTreeData.length; i++){
+//                            zTreeObj.checkNode(zTreeObj.getNodesByParam("id", tmpTreeData[i],null)[0],true, true);
+//                        }
                         // 判断操作人是否为发起人员或者管理员，如果不是，则只允许上传，删除和下载自己的会议材料，不允许修改会议内容，不允许下载其他部门会议材料
-                        if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                            || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                            || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpJsonObject.meetingCreator) {
                         } else {
                             $('input,select,textarea',$('#createMeetingForm')).attr('readonly',true);
+                            $('#meetingFileUploadBtn,#meetingRecordFileUploadBtn').attr('readonly',false);
                             $("#messageNoticeTime,#meetingStartTime,#meetingEndTime,#meetingProposeTime,#meetingJoiner").attr('disabled',true);
                             $('input[name="isSendMessageNotice"]').attr('disabled',true);
                         }
@@ -136,7 +144,7 @@ var meetingEdit = function () {
     }
 
     var handleForm = function () {
-        var tmpEmployeeDTO = JSON.parse(localStorage.getItem("EmployeeDTO"));
+        var tmpEmployeeDTO = JSON.parse(sessionStorage.getItem("EmployeeDTO"));
         // 隐藏域赋值
         $("#meetingProposeTime").datetimepicker('setDate', new Date());
         $('input[name="meetingCreatorName"]').val(tmpEmployeeDTO.employeeName);
@@ -219,19 +227,8 @@ var meetingEdit = function () {
                 var isSendMessageNotice = $('input[name="isSendMessageNotice"]').prop('checked');
                 var addData = DomUtil.getJSONObjectFromForm('createMeetingForm', null);
                 if (isSendMessageNotice && addData.messageNoticeTime == '') {
-                    bootbox.alert({
-                        className: 'span4 alert-error',
-                        buttons: {
-                            ok: {
-                                label: '确定',
-                                className: 'btn blue'
-                            }
-                        },
-                        message: "短信提醒时间不能为空",
-                        callback: function () {
-
-                        },
-                        title: "错误提示"
+                    $.pnotify({
+                        text: '短信提醒时间不能为空'
                     });
                 } else {
                     // 添加会议记录附件表格记录
@@ -273,7 +270,6 @@ var meetingEdit = function () {
                         url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
                             ,proxyClass:'meetingController',proxyMethod:'isMeetingExistByPlanDatetimeRang',jsonString:MyJsonUtil.obj2str(obj)}),
                         success:function(result){
-                            console.log(result);
                             if (!result.success) {
                                 bootbox.confirm({
                                     buttons: {
@@ -451,6 +447,11 @@ var meetingEdit = function () {
         $('#meetingJoiner').on('click', function (e) {
             $('input[name="searchEmployeeText"]').val('');
             $('#meetingJoinerModal').modal('show',true);
+            // 初始化树形控件
+            var tmpTreeData = $('input[name="meetingParticipants"]').val().split(',');
+            for(var i = 0;i < tmpTreeData.length; i++){
+                zTreeObj.checkNode(zTreeObj.getNodesByParam("id", tmpTreeData[i],null)[0],true, true);
+            }
         });
 
         $('#searchEmployeeBtn').on('click', function (e) {
@@ -517,7 +518,6 @@ var meetingEdit = function () {
                 tmpMeetingParticipantNames += tmpDepartmentEmployeeMapKeys[i] + ":" + tmpDepartmentEmployeeMap.get(tmpDepartmentEmployeeMapKeys[i]) + "\n";
             }
 
-            console.log(tmpMeetingParticipantNames);
             $('input[name="meetingParticipants"]').val(tmpMeetingParticipantIds);
             $('textarea[name="meetingParticipantNames"]').val(tmpMeetingParticipantNames);
 
@@ -552,69 +552,90 @@ var meetingEdit = function () {
                 var tempAttachmentObject = {};
                 tempAttachmentObject.attachmentId = tmpFileData.id;
                 tempAttachmentObject.attachmentName = tmpFileData.name;
-                tempAttachmentObject.employeeName = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeName;
-                tempAttachmentObject.departmentName = JSON.parse(localStorage.getItem("EmployeeDTO")).departmentName;
+                tempAttachmentObject.employeeName = JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeName;
+                tempAttachmentObject.departmentName = JSON.parse(sessionStorage.getItem("EmployeeDTO")).departmentName;
                 tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");
                 tempAttachmentObject.attachmentId = tmpFileData.id;
-                tempAttachmentObject.employeeId = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId;
+                tempAttachmentObject.employeeId = JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId;
                 meetingRecordFilesTable.fnAddData(tempAttachmentObject);
             });
 
         $('#meetingRecordFileDeleteBtn').on('click', function (e) {
             var isDelete = true;
+            var tmpDeleteFile = [];
             $('#meetingRecordFiles :checkbox').each(function(){
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
                     // 如果不是发起人或者管理员，则只允许删除自己的会议材料
-                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()) {
+                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                        tmpDeleteFile.push(tmpRowData);
                     } else {
-                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许删除自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
-                            });
-                            isDelete = false;
-                            return false;
-                        }
+                        $.pnotify({
+                            text: '只允许删除自己的会议材料'
+                        });
+                        isDelete = false;
+                        return false;
                     }
                 }
             });
             if (isDelete) {
-                $('#meetingRecordFiles :checkbox').each(function(){
-                    if($(this).prop("checked") && $(this).prop("id") == "") {
-                        var tr = $(this).parents('tr');
-                        var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
-                        var obj = [];
-                        obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
-                        $.ajax({
-                            type:'post',
-                            dataType:"json",
-                            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                                ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
-                                jsonString:MyJsonUtil.obj2str(obj)}),
-                            success :function(result) {
-                                if(result) {
-                                    meetingRecordFilesTable.fnDeleteRow(tr);
-                                    meetingRecordFilesTable.remove(tmpRowData.attachmentId);
-                                }else {
-                                }
+                if (tmpDeleteFile.length == 0) {
+                    $.pnotify({
+                        text: '请选择需要删除的材料信息'
+                    });
+                } else {
+                    bootbox.confirm({
+                        buttons: {
+                            confirm: {
+                                label: '确认',
+                                className: 'btn green'
+                            },
+                            cancel: {
+                                label: '取消',
+                                className: 'btn'
                             }
-                        });
-                    }
-                });
+                        },
+                        message: '所选附件一旦删除将无法恢复，确定删除吗 ?',
+                        title: "消息提示",
+                        callback: function(result) {
+                            if(result) {
+                                $.blockUI({
+                                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在删除文件...</span></div>' +
+                                        '</div>'
+                                });
+                                $('#meetingRecordFiles :checkbox').each(function(){
+                                    if($(this).prop("checked") && $(this).prop("id") == "") {
+                                        var tr = $(this).parents('tr');
+                                        var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
+                                        var obj = [];
+                                        obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
+                                        $.ajax({
+                                            type:'post',
+                                            dataType:"json",
+                                            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                                ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
+                                                jsonString:MyJsonUtil.obj2str(obj)}),
+                                            success :function(result) {
+                                                if(result) {
+                                                    meetingRecordFilesTable.fnDeleteRow(tr);
+                                                    meetingRecordFilesTable.remove(tmpRowData.attachmentId);
+                                                }else {
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                                $.unblockUI();
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -646,69 +667,245 @@ var meetingEdit = function () {
             var tempAttachmentObject = {};
             tempAttachmentObject.attachmentId = tmpFileData.id;
             tempAttachmentObject.attachmentName = tmpFileData.name;
-            tempAttachmentObject.employeeName = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeName;
-            tempAttachmentObject.departmentName = JSON.parse(localStorage.getItem("EmployeeDTO")).departmentName;
+            tempAttachmentObject.employeeName = JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeName;
+            tempAttachmentObject.departmentName = JSON.parse(sessionStorage.getItem("EmployeeDTO")).departmentName;
             tempAttachmentObject.attachmentCreateTime = new Date().pattern("yyyy-MM-dd hh:mm:ss");;
             tempAttachmentObject.attachmentId = tmpFileData.id;
-            tempAttachmentObject.employeeId = JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId;
+            tempAttachmentObject.employeeId = JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId;
             meetingFilesTable.fnAddData(tempAttachmentObject);
         });
 
         $('#meetingFileDeleteBtn').on('click', function (e) {
             var isDelete = true;
+            var tmpDeleteFile = [];
             $('#meetingFiles :checkbox').each(function(){
                 if($(this).prop("checked") && $(this).prop("id") == "") {
                     var tr = $(this).parents('tr');
                     var tmpRowData = meetingFilesTable.fnGetData(tr);
                     // 如果不是发起人或者管理员，则只允许删除自己的会议材料
-                    if(JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
-                        || JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()) {
+                    if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                        || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                        tmpDeleteFile.push(tmpRowData);
                     } else {
-                        if (tmpRowData.employeeId != JSON.parse(localStorage.getItem("EmployeeDTO")).employeeId) {
-                            bootbox.alert({
-                                className: 'span4 alert-error',
-                                buttons: {
-                                    ok: {
-                                        label: '确定',
-                                        className: 'btn blue'
-                                    }
-                                },
-                                message: "只允许删除自己的会议材料",
-                                callback: function () {
-
-                                },
-                                title: "错误提示"
-                            });
-                            isDelete = false;
-                            return false;
-                        }
+                        $.pnotify({
+                            text: '只允许删除自己的会议材料'
+                        });
+                        isDelete = false;
+                        return false;
                     }
                 }
             });
             if (isDelete) {
-                $('#meetingFiles :checkbox').each(function(){
-                    if($(this).prop("checked") && $(this).prop("id") == "") {
-                        var tr = $(this).parents('tr');
-                        var tmpRowData = meetingFilesTable.fnGetData(tr);
-                        var obj = [];
-                        obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
+                if (tmpDeleteFile.length == 0) {
+                    $.pnotify({
+                        text: '请选择需要删除的材料信息'
+                    });
+                } else {
+                    bootbox.confirm({
+                        buttons: {
+                            confirm: {
+                                label: '确认',
+                                className: 'btn green'
+                            },
+                            cancel: {
+                                label: '取消',
+                                className: 'btn'
+                            }
+                        },
+                        message: '所选附件一旦删除将无法恢复，确定删除吗 ?',
+                        title: "消息提示",
+                        callback: function(result) {
+                            if(result) {
+                                $.blockUI({
+                                    message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                                        '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                                        '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在删除文件...</span></div>' +
+                                        '</div>'
+                                });
+                                $('#meetingFiles :checkbox').each(function(){
+                                    if($(this).prop("checked") && $(this).prop("id") == "") {
+                                        var tr = $(this).parents('tr');
+                                        var tmpRowData = meetingFilesTable.fnGetData(tr);
+                                        var obj = [];
+                                        obj.push(StringUtil.decorateRequestData('String',tmpRowData.attachmentId));
+                                        $.ajax({
+                                            type:'post',
+                                            dataType:"json",
+                                            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                                ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
+                                                jsonString:MyJsonUtil.obj2str(obj)}),
+                                            success :function(result) {
+                                                if(result) {
+                                                    meetingFilesTable.fnDeleteRow(tr);
+                                                    meetingFilesTable.remove(tmpRowData.attachmentId);
+                                                }else {
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                                $.unblockUI();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#meetingRecordFileDownloadBtn').on('click', function (e) {
+            var isDownload = true;
+            var selectMeetingRecordFiles = [];
+            var tmpLastSelectMeetingRecordFile = null;
+            $('#meetingRecordFiles :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "") {
+                    var tr = $(this).parents('tr');
+                    var tmpRowData = meetingRecordFilesTable.fnGetData(tr);
+                    // 只允许下载已上传保存后的会议材料
+                    if (tmpRowData.attachmentCreateId != null) {
+                        // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                            selectMeetingRecordFiles.push(tmpRowData.attachmentId);
+                            tmpLastSelectMeetingRecordFile = tmpRowData.attachmentName;
+                        } else {
+                            $.pnotify({
+                                text: '只允许下载自己的会议材料'
+                            });
+                            isDownload = false;
+                            return false;
+                        }
+                    } else {
+                        $.pnotify({
+                            text: '只允许下载已上传保存后的会议材料'
+                        });
+                        isDownload = false;
+                        return false;
+                    }
+                }
+            });
+
+            if (isDownload) {
+                if (selectMeetingRecordFiles.length == 0) {
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
+                    });
+                }else{
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                            '</div>'
+                    });
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('List',selectMeetingRecordFiles));
+                    // 下载文件数是否为1、文件名后缀是否为文本类型,使用文件流返回的方式下载文件（解决IE浏览器下载时直接打开文件的问题）
+                    if (selectMeetingRecordFiles.length == 1 && isTextType(tmpLastSelectMeetingRecordFile)) {
+                        var url = SMController.getUrl({controller:'controllerProxy',method:'callBackByRequestAndResponse'
+                            ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                            jsonString:MyJsonUtil.obj2str(obj)},"../../");
+                        var temp = document.createElement("form");
+                        temp.action = url;
+                        temp.method = "post";
+                        temp.style.display = "none";
+                        document.body.appendChild(temp);
+                        temp.submit();
+                        $.unblockUI();
+                    } else {
                         $.ajax({
                             type:'post',
                             dataType:"json",
-                            url:SMController.getUrl({controller:'controllerProxy',method:'callBack'
-                                ,proxyClass:'meetingController',proxyMethod:'deleteAttachmentByAttachmentId',
+                            url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
                                 jsonString:MyJsonUtil.obj2str(obj)}),
-                            success :function(result) {
-                                if(result) {
-                                    meetingFilesTable.fnDeleteRow(tr);
-                                    meetingFilesTable.remove(tmpRowData.attachmentId);
-                                }else {
-                                }
+                            success:function(result){
+                                $.unblockUI();
+                                window.location.href = '../../../'+result;
                             }
                         });
                     }
-                });
+                }
+            }
+        });
+
+        $('#meetingFileDownloadBtn').on('click', function (e) {
+            var isDownload = true;
+            var selectMeetingFiles = [];
+            var tmpLastSelectMeetingFile = null;
+            $('#meetingFiles :checkbox').each(function(){
+                if($(this).prop("checked") && $(this).prop("id") == "") {
+                    var tr = $(this).parents('tr');
+                    var tmpRowData = meetingFilesTable.fnGetData(tr);
+                    // 只允许下载已上传保存后的会议材料
+                    if (tmpRowData.attachmentCreateId != null) {
+                        // 如果不是发起人、管理员、领导，则只允许下载自己的会议材料
+                        if(JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('-1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('0') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).roleIdList.indexOf('1') > -1
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == $('input[name="meetingCreator"]').val()
+                            || JSON.parse(sessionStorage.getItem("EmployeeDTO")).employeeId == tmpRowData.employeeId) {
+                            selectMeetingFiles.push(tmpRowData.attachmentId);
+                            tmpLastSelectMeetingFile = tmpRowData.attachmentName;
+                        } else {
+                            $.pnotify({
+                                text: '只允许下载自己的会议材料'
+                            });
+                            isDownload = false;
+                            return false;
+                        }
+                    } else {
+                        $.pnotify({
+                            text: '只允许下载已上传保存后的会议材料'
+                        });
+                        isDownload = false;
+                        return false;
+                    }
+                }
+            });
+            if (isDownload) {
+                if (selectMeetingFiles.length == 0) {
+                    $.pnotify({
+                        text: '请勾选需要下载的记录'
+                    });
+                }else{
+                    $.blockUI({
+                        message: '<div class="progress progress-lg progress-striped active" style="margin-bottom: 0px;">' +
+                            '<div style="width: 100%" role="progressbar" class="progress-bar bg-color-darken">' +
+                            '<span id="processStatus" style="position: relative; top: 5px;font-size:15px;">正在下载文件，请稍候...</span></div>' +
+                            '</div>'
+                    });
+                    var obj = [];
+                    obj.push(StringUtil.decorateRequestData('List',selectMeetingFiles));
+                    // 下载文件数是否为1、文件名后缀是否为文本类型,使用文件流返回的方式下载文件（解决浏览器下载时直接打开文件的问题）
+                    if (selectMeetingFiles.length == 1 && isTextType(tmpLastSelectMeetingFile)) {
+                        var url = SMController.getUrl({controller:'controllerProxy',method:'callBackByRequestAndResponse'
+                            ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                            jsonString:MyJsonUtil.obj2str(obj)},"../../");
+                        var temp = document.createElement("form");
+                        temp.action = url;
+                        temp.method = "post";
+                        temp.style.display = "none";
+                        document.body.appendChild(temp);
+                        temp.submit();
+                        $.unblockUI();
+                    } else {
+                        $.ajax({
+                            type:'post',
+                            dataType:"json",
+                            url: SMController.getUrl({controller:'controllerProxy',method:'callBack'
+                                ,proxyClass:'attachmentController',proxyMethod:'downloadFile',
+                                jsonString:MyJsonUtil.obj2str(obj)}),
+                            success:function(result){
+                                $.unblockUI();
+                                window.location.href = '../../../'+result;
+                            }
+                        });
+                    }
+                }
             }
         });
     }

@@ -17,6 +17,10 @@ public class ShortMessageCenterEntity extends ecp.bsp.system.core.BaseEntity imp
 	private String centerPhoneNumber;
 	private String sendMessagePhoneNumber;
 	private String messageModel;
+	private String sendUrl;
+	private String callerId;
+	private String callerPassword;
+	private String messageTemplateId;
 
 
 	@Id
@@ -67,4 +71,41 @@ public class ShortMessageCenterEntity extends ecp.bsp.system.core.BaseEntity imp
 	public void setMessageModel(String messageModel) {
 		this.messageModel = messageModel;
 	}
+
+	@Column(name="SEND_URL", nullable=false, length=256)
+	public String getSendUrl() {
+		return sendUrl;
+	}
+
+	public void setSendUrl(String sendUrl) {
+		this.sendUrl = sendUrl;
+	}
+
+	@Column(name="CALLER_ID", nullable=false, length=256)
+	public String getCallerId() {
+		return callerId;
+	}
+
+	public void setCallerId(String callerId) {
+		this.callerId = callerId;
+	}
+
+	@Column(name="CALLER_PASSWORD", nullable=false, length=256)
+	public String getCallerPassword() {
+		return callerPassword;
+	}
+
+	public void setCallerPassword(String callerPassword) {
+		this.callerPassword = callerPassword;
+	}
+
+	@Column(name="MESSAGE_TEMPLATE_ID", nullable=false, length=256)
+	public String getMessageTemplateId() {
+		return messageTemplateId;
+	}
+
+	public void setMessageTemplateId(String messageTemplateId) {
+		this.messageTemplateId = messageTemplateId;
+	}
+	
 }
